@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pandas
+scikit-learn
+streamlit
+langchain
+langgraph
+langchain-core
+pydantic
+joblib
+numpy
+chromadb
+
+langchain-groq
+langgraph-checkpoint

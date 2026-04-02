@@ -1,0 +1,1224 @@
+country,cost_of_living_index,rent_index,cost_of_living_plus_rent_index,groceries_index,restaurant_price_index,local_purchasing_power_index,year,period,continent
+Bermuda,135.8,108.2,123.5,143.4,147.5,101.3,2026,year,North America
+Cayman Islands,115.6,76.1,97.9,124.0,101.5,149.6,2026,year,North America
+US Virgin Islands,111.3,46.8,82.5,127.4,94.8,89.8,2026,year,North America
+Switzerland,110.7,51.5,84.3,109.7,111.3,170.6,2026,year,Europe
+Solomon Islands,102.3,19.5,65.4,64.8,46.0,12.6,2026,year,Oceania
+Bahamas,98.8,50.2,77.1,100.9,109.0,57.1,2026,year,North America
+Iceland,97.2,49.5,75.9,104.5,104.9,113.7,2026,year,Europe
+Jersey,88.7,52.4,72.5,79.0,102.3,103.4,2026,year,Europe
+Singapore,87.7,73.1,81.2,77.3,55.5,105.5,2026,year,Asia
+Norway,83.7,29.2,59.4,85.4,88.6,124.7,2026,year,Europe
+Israel,79.7,31.2,58.0,74.0,89.9,119.6,2026,year,Asia
+Denmark,78.9,28.9,56.6,72.7,93.7,146.6,2026,year,Europe
+Luxembourg,78.0,49.3,65.2,77.7,83.3,160.5,2026,year,Europe
+Grenada,76.4,15.8,49.4,68.9,53.5,34.6,2026,year,North America
+Hong Kong,75.2,63.1,69.8,75.1,51.1,91.6,2026,year,Asia
+Isle Of Man,74.7,32.0,55.7,65.3,91.8,116.6,2026,year,Europe
+Guernsey,73.4,55.3,65.3,77.9,71.2,132.8,2026,year,Europe
+Netherlands,73.4,38.7,57.9,66.9,81.6,131.9,2026,year,Europe
+Austria,71.3,25.1,50.7,72.6,71.5,120.0,2026,year,Europe
+Ireland,70.6,43.8,58.7,68.8,76.6,114.4,2026,year,Europe
+Gibraltar,70.3,56.0,63.9,60.8,78.7,86.1,2026,year,Europe
+Finland,69.0,21.9,48.0,68.7,74.1,129.4,2026,year,Europe
+United States,68.8,40.7,56.3,74.0,72.8,146.0,2026,year,North America
+Germany,68.7,24.6,49.0,64.9,66.9,138.3,2026,year,Europe
+Belgium,68.6,23.8,48.6,66.4,80.7,124.2,2026,year,Europe
+Sweden,68.0,22.6,47.8,68.4,70.8,133.5,2026,year,Europe
+Australia,67.9,33.7,52.7,76.5,65.6,137.3,2026,year,Oceania
+United Kingdom,67.8,32.1,51.9,62.8,72.9,122.6,2026,year,Europe
+France,67.7,22.3,47.5,73.2,66.2,118.5,2026,year,Europe
+Seychelles,64.5,27.6,48.0,74.8,66.2,34.3,2026,year,Africa
+Canada,63.0,31.5,48.9,69.6,64.1,119.4,2026,year,North America
+Puerto Rico,62.6,21.7,44.3,67.3,56.4,115.9,2026,year,North America
+South Korea,61.6,16.1,41.3,77.5,35.8,111.5,2026,year,Asia
+Italy,61.4,20.5,43.1,62.7,64.7,89.2,2026,year,Europe
+Macao,60.5,28.5,46.3,67.5,44.3,85.4,2026,year,Asia
+New Zealand,60.3,26.2,45.0,65.4,59.3,123.8,2026,year,Oceania
+Estonia,59.7,16.7,40.5,54.1,64.9,88.3,2026,year,Europe
+Cyprus,58.8,26.9,44.6,54.5,60.9,87.7,2026,year,Europe
+Malta,56.8,28.2,44.1,55.9,64.1,81.1,2026,year,Europe
+Uruguay,55.6,14.7,37.3,55.1,59.6,55.1,2026,year,South America
+United Arab Emirates,55.2,39.6,48.2,44.4,56.5,126.4,2026,year,Asia
+Andorra,55.1,32.8,45.2,51.4,56.1,126.1,2026,year,Europe
+Jamaica,54.5,19.2,38.7,63.5,46.8,35.4,2026,year,North America
+Slovenia,54.1,20.6,39.1,52.4,51.3,87.5,2026,year,Europe
+Greece,54.0,13.7,36.0,51.0,59.2,64.1,2026,year,Europe
+Yemen,53.1,5.9,32.0,64.7,38.2,18.2,2026,year,Asia
+Czech Republic,53.0,20.7,38.6,50.5,43.1,91.4,2026,year,Europe
+Costa Rica,52.9,20.3,38.3,59.2,47.5,49.5,2026,year,North America
+Croatia,52.4,18.0,37.1,48.9,55.3,86.5,2026,year,Europe
+Latvia,52.3,11.9,34.3,47.5,54.6,77.7,2026,year,Europe
+Trinidad And Tobago,52.0,14.4,35.2,55.3,47.4,48.6,2026,year,North America
+Spain,51.6,23.2,39.0,50.6,55.1,104.4,2026,year,Europe
+Lithuania,51.2,15.6,35.3,46.3,56.3,87.6,2026,year,Europe
+Guyana,50.4,24.8,39.0,62.6,53.8,52.1,2026,year,South America
+Qatar,50.4,40.0,45.8,41.6,55.4,153.1,2026,year,Asia
+DR Congo,50.2,32.8,42.4,48.0,66.1,26.3,2026,year,Africa
+Taiwan,49.7,14.2,33.9,64.6,27.4,98.9,2026,year,Asia
+Slovakia,49.6,17.3,35.2,50.0,43.3,78.1,2026,year,Europe
+Maldives,48.9,24.6,38.1,52.7,42.9,46.2,2026,year,Asia
+Portugal,48.8,25.2,38.3,46.9,45.6,66.4,2026,year,Europe
+Senegal,48.5,19.3,35.5,45.0,42.9,22.2,2026,year,Africa
+Brunei,48.2,15.5,33.6,66.1,33.3,134.4,2026,year,Asia
+Palestine,48.1,9.6,30.9,49.8,38.8,49.0,2026,year,Asia
+Bahrain,47.6,21.4,35.9,45.2,47.0,119.3,2026,year,Asia
+Papua New Guinea,47.5,29.0,39.2,54.1,34.9,20.2,2026,year,Oceania
+Japan,47.5,14.7,32.8,56.8,30.3,118.3,2026,year,Asia
+Poland,47.3,18.4,34.4,41.1,48.1,97.1,2026,year,Europe
+Hungary,46.9,14.1,32.3,45.4,44.7,78.4,2026,year,Europe
+Belize,46.9,13.6,32.0,52.6,39.3,67.6,2026,year,North America
+Cape Verde,46.3,8.8,29.6,57.2,35.6,21.3,2026,year,Africa
+Albania,45.8,14.1,31.7,46.2,43.5,45.6,2026,year,Europe
+Panama,45.5,23.2,35.6,51.3,42.9,44.2,2026,year,North America
+Ivory Coast,44.8,21.8,34.5,41.3,39.1,12.7,2026,year,Africa
+Saudi Arabia,43.9,13.5,30.4,41.2,34.5,132.8,2026,year,Asia
+Oman,43.6,13.2,30.0,42.4,41.8,152.7,2026,year,Asia
+Montenegro,42.7,16.6,31.0,40.5,44.8,65.1,2026,year,Europe
+Serbia,42.6,13.1,29.5,39.1,42.2,63.2,2026,year,Europe
+Mexico,42.6,17.8,31.5,46.6,43.6,48.4,2026,year,North America
+Kuwait,42.5,22.0,33.3,35.8,43.4,176.6,2026,year,Asia
+Angola,42.3,24.8,34.5,39.2,35.0,200.8,2026,year,Africa
+Suriname,42.3,10.7,28.2,51.5,39.9,19.3,2026,year,South America
+Cuba,41.8,11.4,28.3,41.2,26.3,2.4,2026,year,North America
+Ethiopia,41.8,18.3,31.3,44.5,22.9,12.5,2026,year,Africa
+Lebanon,41.7,14.3,29.5,34.4,44.2,37.4,2026,year,Asia
+Bulgaria,41.6,11.1,28.0,42.6,42.6,84.1,2026,year,Europe
+Argentina,41.3,12.1,28.3,41.1,47.9,47.5,2026,year,South America
+Armenia,40.9,15.2,29.5,36.1,40.3,41.4,2026,year,Asia
+Cameroon,40.7,19.1,31.1,37.8,45.5,10.5,2026,year,Africa
+Romania,40.6,12.0,27.8,39.0,43.5,76.8,2026,year,Europe
+Guatemala,40.4,16.0,29.5,45.1,38.8,37.8,2026,year,North America
+El Salvador,39.6,16.6,29.4,42.5,34.4,32.1,2026,year,North America
+Jordan,39.4,7.9,25.3,36.3,40.7,54.3,2026,year,Asia
+Turkey,39.2,13.3,27.6,39.1,37.1,72.8,2026,year,Asia
+Chile,39.0,11.6,26.8,42.1,39.7,52.8,2026,year,South America
+Bosnia And Herzegovina,38.7,8.1,25.0,39.0,32.1,66.9,2026,year,Europe
+Mauritius,38.3,10.9,26.1,41.1,32.5,55.1,2026,year,Africa
+Dominican Republic,38.2,14.0,27.4,38.9,35.9,38.6,2026,year,North America
+Thailand,38.0,13.9,27.2,44.4,25.0,45.5,2026,year,Asia
+Myanmar,38.0,11.1,26.0,38.2,16.3,19.8,2026,year,Asia
+Venezuela,37.7,7.1,24.0,42.2,40.7,17.4,2026,year,South America
+South Africa,37.1,13.0,26.4,32.6,35.6,109.2,2026,year,Africa
+Mozambique,36.9,12.2,25.9,34.1,35.1,30.9,2026,year,Africa
+Honduras,36.6,12.1,25.7,39.8,34.1,41.3,2026,year,North America
+Russia,36.5,12.3,25.7,35.7,35.4,61.6,2026,year,Europe
+Namibia,36.3,14.2,26.4,37.8,29.6,73.4,2026,year,Africa
+Zimbabwe,35.9,9.6,24.2,35.0,33.8,27.6,2026,year,Africa
+Moldova,35.8,14.7,26.4,33.6,32.5,54.1,2026,year,Europe
+North Macedonia,35.5,7.9,23.2,34.9,29.1,64.9,2026,year,Europe
+Cambodia,34.8,10.0,23.7,41.6,25.4,22.7,2026,year,Asia
+Fiji,34.3,17.2,26.7,43.3,32.5,59.9,2026,year,Oceania
+Nicaragua,34.2,7.9,22.5,41.6,26.0,26.2,2026,year,North America
+Malaysia,34.0,9.2,22.9,42.0,25.2,80.1,2026,year,Asia
+Ghana,33.9,10.9,23.7,37.0,35.2,18.1,2026,year,Africa
+Sri Lanka,33.9,7.2,22.0,48.1,24.3,19.0,2026,year,Asia
+Peru,33.5,11.3,23.6,37.7,28.3,48.5,2026,year,South America
+Georgia,33.1,12.7,24.0,32.3,36.2,43.0,2026,year,Asia
+Botswana,32.6,6.6,21.0,31.7,30.2,78.8,2026,year,Africa
+Colombia,31.7,10.9,22.4,32.8,27.0,39.9,2026,year,South America
+Morocco,31.4,8.3,21.1,33.0,25.0,45.6,2026,year,Africa
+Mongolia,31.4,17.3,25.1,35.5,24.7,43.0,2026,year,Asia
+Ecuador,30.9,8.7,21.0,33.8,27.0,48.4,2026,year,South America
+Azerbaijan,30.7,9.7,21.3,29.2,35.3,40.3,2026,year,Asia
+Belarus,30.5,10.3,21.5,30.8,33.3,63.9,2026,year,Europe
+China,30.5,10.4,21.5,34.7,21.0,94.0,2026,year,Asia
+Brazil,30.1,8.5,20.5,30.0,26.0,46.1,2026,year,South America
+Philippines,30.1,7.8,20.2,35.4,19.7,33.9,2026,year,Asia
+Zambia,29.9,12.2,22.0,30.7,23.1,24.7,2026,year,Africa
+Kazakhstan,29.8,10.9,21.4,30.0,31.2,55.3,2026,year,Asia
+Kosovo,29.1,7.6,19.5,30.8,24.2,60.5,2026,year,Europe
+Tunisia,29.1,5.3,18.5,34.9,17.9,35.8,2026,year,Africa
+Kenya,28.9,7.8,19.5,30.4,25.9,35.9,2026,year,Africa
+Paraguay,28.5,10.2,20.3,27.9,26.4,49.3,2026,year,South America
+Iraq,28.4,7.3,19.0,28.1,25.5,58.0,2026,year,Asia
+Ukraine,28.2,8.2,19.2,28.8,25.4,50.0,2026,year,Europe
+Algeria,28.0,3.5,17.1,37.2,16.5,36.3,2026,year,Africa
+Tajikistan,27.9,9.7,19.8,35.2,20.0,39.5,2026,year,Asia
+Nigeria,27.7,22.8,25.5,31.4,21.0,8.3,2026,year,Africa
+Uzbekistan,27.3,12.2,20.6,30.1,23.0,47.8,2026,year,Asia
+Bolivia,27.3,8.6,19.0,28.4,22.2,43.6,2026,year,South America
+Kyrgyzstan,27.3,12.0,20.4,27.6,23.6,40.6,2026,year,Asia
+Uganda,27.0,10.5,19.6,29.1,25.1,19.6,2026,year,Africa
+Tanzania,26.6,9.0,18.8,26.6,21.3,26.8,2026,year,Africa
+Vietnam,26.4,9.9,19.1,31.8,15.6,42.5,2026,year,Asia
+Indonesia,26.1,9.1,18.5,33.6,15.3,29.3,2026,year,Asia
+Syria,25.0,5.1,16.1,27.1,20.1,6.2,2026,year,Asia
+Rwanda,25.0,12.4,19.4,23.5,21.9,26.7,2026,year,Africa
+Iran,22.8,8.0,16.2,20.7,16.2,30.3,2026,year,Asia
+Bangladesh,22.8,2.6,13.8,26.8,17.5,34.6,2026,year,Asia
+Nepal,22.6,2.9,13.8,23.2,17.4,29.4,2026,year,Asia
+Madagascar,22.5,7.4,15.8,23.8,15.4,13.7,2026,year,Africa
+Egypt,21.6,4.0,13.8,22.2,20.1,21.8,2026,year,Africa
+Afghanistan,21.1,2.3,12.7,18.2,15.1,40.6,2026,year,Asia
+Pakistan,19.6,3.4,12.4,18.2,17.2,29.5,2026,year,Asia
+India,18.9,4.3,12.4,21.6,15.6,76.4,2026,year,Asia
+Libya,18.3,4.9,12.3,22.8,12.4,51.1,2026,year,Africa
+US Virgin Islands,98.4,46.4,75.4,106.3,90.5,72.3,2025,year,North America
+Switzerland,98.4,45.2,74.8,103.1,98.4,159.7,2025,year,Europe
+Iceland,83.4,43.7,65.9,90.3,94.7,123.5,2025,year,Europe
+Bahamas,81.4,46.9,66.1,79.1,94.5,58.4,2025,year,North America
+Singapore,79.1,67.0,73.7,70.8,53.5,93.8,2025,year,Asia
+Hong Kong,73.6,55.7,65.7,75.9,49.7,101.0,2025,year,Asia
+Barbados,70.0,20.1,47.9,78.1,70.3,45.9,2025,year,North America
+Norway,69.0,24.8,49.4,71.9,74.6,119.5,2025,year,Europe
+Papua New Guinea,67.4,36.6,53.7,51.9,37.9,14.0,2025,year,Oceania
+Denmark,66.9,25.7,48.6,61.0,80.8,133.6,2025,year,Europe
+Guernsey,66.1,45.7,57.1,70.5,65.9,136.6,2025,year,Europe
+Israel,65.2,27.1,48.3,61.2,74.5,110.0,2025,year,Asia
+United States,64.9,40.9,54.3,71.7,69.3,146.2,2025,year,North America
+Luxembourg,64.8,42.2,54.8,65.3,72.8,177.1,2025,year,Europe
+Australia,60.9,29.8,47.1,67.9,59.2,135.4,2025,year,Oceania
+Austria,60.7,22.0,43.6,62.2,59.7,107.1,2025,year,Europe
+Netherlands,60.5,32.1,47.9,56.8,67.7,129.9,2025,year,Europe
+Ireland,59.8,39.0,50.6,56.9,65.8,108.9,2025,year,Europe
+United Kingdom,59.2,30.0,46.3,54.8,65.3,119.9,2025,year,Europe
+Puerto Rico,58.7,19.9,41.5,63.1,53.4,111.0,2025,year,North America
+Finland,58.7,19.1,41.1,59.4,64.7,124.5,2025,year,Europe
+Canada,58.7,30.3,46.1,65.3,59.9,109.1,2025,year,North America
+Germany,58.4,22.4,42.4,56.7,57.5,127.1,2025,year,Europe
+France,58.0,19.4,41.0,63.6,56.1,110.0,2025,year,Europe
+Macao,56.8,29.4,44.6,68.2,40.4,103.8,2025,year,Asia
+South Korea,56.5,15.1,38.2,74.5,32.8,105.0,2025,year,Asia
+Belgium,56.5,19.3,40.1,54.6,67.1,116.1,2025,year,Europe
+New Zealand,55.3,23.4,41.2,62.2,53.8,130.5,2025,year,Oceania
+Sweden,54.2,19.1,38.7,55.5,56.0,130.3,2025,year,Europe
+United Arab Emirates,54.1,39.7,47.8,42.4,59.9,128.3,2025,year,Asia
+Italy,51.0,17.7,36.3,53.5,53.0,85.1,2025,year,Europe
+Jamaica,50.3,17.7,35.9,59.6,42.8,36.4,2025,year,North America
+Costa Rica,50.1,18.5,36.1,56.2,47.8,50.9,2025,year,North America
+Cyprus,49.5,24.0,38.2,47.0,52.7,80.4,2025,year,Europe
+Estonia,49.4,14.1,33.8,45.1,54.0,84.2,2025,year,Europe
+Trinidad And Tobago,48.9,13.7,33.3,54.1,45.2,46.1,2025,year,North America
+Yemen,48.4,5.9,29.6,61.5,33.9,20.0,2025,year,Asia
+Bahrain,48.3,20.4,36.0,46.2,47.6,117.5,2025,year,Asia
+Malta,48.0,23.3,37.1,48.1,55.1,75.3,2025,year,Europe
+Qatar,47.5,34.4,41.7,42.2,46.4,177.9,2025,year,Asia
+Greece,46.5,11.8,31.1,44.4,51.1,59.5,2025,year,Europe
+Uruguay,46.3,12.5,31.3,46.5,49.5,54.1,2025,year,South America
+Slovenia,46.2,18.9,34.1,45.8,43.9,83.6,2025,year,Europe
+Japan,45.6,14.1,31.6,54.5,29.4,119.8,2025,year,Asia
+Maldives,45.3,22.0,35.0,50.5,34.1,51.9,2025,year,Asia
+Brunei,44.4,15.2,31.5,64.6,29.5,117.6,2025,year,Asia
+Taiwan,44.4,13.1,30.5,58.0,25.5,101.2,2025,year,Asia
+Lithuania,44.0,14.4,30.9,40.1,49.1,79.8,2025,year,Europe
+Panama,43.9,22.5,34.4,49.6,41.9,46.3,2025,year,North America
+Spain,43.5,21.2,33.6,43.0,46.1,98.1,2025,year,Europe
+Latvia,43.4,10.0,28.6,40.6,43.2,75.8,2025,year,Europe
+Croatia,43.2,14.5,30.5,40.9,46.8,78.8,2025,year,Europe
+Ethiopia,43.2,15.7,31.0,46.5,22.8,13.3,2025,year,Africa
+Czech Republic,42.6,17.6,31.5,41.0,35.3,88.5,2025,year,Europe
+Slovakia,42.1,14.1,29.7,43.1,35.7,74.0,2025,year,Europe
+Saudi Arabia,41.9,11.5,28.4,40.2,33.9,146.1,2025,year,Asia
+Belize,41.4,11.6,28.2,46.7,34.7,69.9,2025,year,North America
+Portugal,41.2,22.2,32.8,40.5,38.4,59.7,2025,year,Europe
+Cuba,40.8,11.6,27.9,41.1,26.6,2.5,2025,year,North America
+Kuwait,40.4,21.9,32.2,33.7,40.8,174.0,2025,year,Asia
+Albania,39.9,11.7,27.4,40.4,38.2,42.7,2025,year,Europe
+Oman,39.8,12.0,27.5,38.9,38.4,150.3,2025,year,Asia
+Armenia,39.6,17.6,29.9,34.5,42.3,37.6,2025,year,Asia
+Palestine,39.5,7.8,25.5,41.0,32.8,48.9,2025,year,Asia
+Botswana,39.5,5.6,24.5,28.1,24.9,63.5,2025,year,Africa
+Mozambique,38.9,13.2,27.5,33.6,37.1,25.3,2025,year,Africa
+Poland,38.9,16.1,28.8,34.7,39.5,91.4,2025,year,Europe
+Lebanon,38.8,13.6,27.7,31.2,40.9,35.1,2025,year,Asia
+Ivory Coast,38.8,14.5,28.0,34.6,32.2,13.3,2025,year,Africa
+Somalia,38.7,3.5,23.1,30.7,23.3,27.7,2025,year,Africa
+El Salvador,37.9,15.6,28.0,42.8,32.4,33.8,2025,year,North America
+Jordan,37.2,7.7,24.1,35.3,37.2,51.7,2025,year,Asia
+Guatemala,36.8,12.6,26.1,41.7,34.8,38.6,2025,year,North America
+Hungary,36.6,11.1,25.3,35.4,36.2,70.7,2025,year,Europe
+Montenegro,36.3,14.9,26.8,34.7,37.7,56.8,2025,year,Europe
+Cameroon,36.2,17.2,27.8,34.7,42.2,9.7,2025,year,Africa
+Serbia,35.9,12.2,25.4,34.1,35.5,57.6,2025,year,Europe
+Venezuela,35.9,5.8,22.6,39.5,39.9,15.8,2025,year,South America
+Argentina,35.7,9.9,24.3,37.0,39.8,41.1,2025,year,South America
+Mauritius,35.6,9.7,24.1,39.1,29.9,49.4,2025,year,Africa
+Bulgaria,35.4,10.1,24.2,36.7,36.7,74.4,2025,year,Europe
+Chile,35.1,10.6,24.3,38.1,36.8,51.0,2025,year,South America
+Zimbabwe,34.7,8.5,23.1,33.9,33.2,29.6,2025,year,Africa
+Turkey,34.7,12.8,25.0,35.6,34.1,51.2,2025,year,Asia
+Rwanda,34.6,8.2,22.9,23.8,21.2,20.7,2025,year,Africa
+Honduras,34.6,10.2,23.8,39.0,31.5,42.5,2025,year,North America
+Mexico,34.5,14.1,25.4,38.2,36.0,46.9,2025,year,North America
+Dominican Republic,34.3,9.8,23.5,36.2,33.3,31.4,2025,year,North America
+Romania,34.0,9.6,23.2,33.9,35.7,73.1,2025,year,Europe
+Cambodia,33.9,9.4,23.0,40.9,24.4,26.7,2025,year,Asia
+Zambia,33.8,9.8,23.1,29.0,22.1,23.0,2025,year,Africa
+Thailand,33.7,11.9,24.1,40.5,21.4,46.0,2025,year,Asia
+Sri Lanka,33.5,6.3,21.5,49.9,23.3,18.2,2025,year,Asia
+Fiji,32.0,15.6,24.8,40.8,30.4,56.9,2025,year,Oceania
+Tanzania,31.8,8.8,21.6,27.1,22.0,22.1,2025,year,Africa
+Bosnia And Herzegovina,31.6,6.1,20.3,32.9,24.1,63.3,2025,year,Europe
+Moldova,30.8,12.6,22.7,29.5,27.2,46.3,2025,year,Europe
+China,30.7,11.6,22.2,34.2,21.8,77.9,2025,year,Asia
+Ghana,30.6,12.1,22.4,33.3,30.1,16.7,2025,year,Africa
+Mongolia,30.6,14.3,23.4,38.6,24.2,30.8,2025,year,Asia
+Georgia,30.4,12.8,22.6,31.2,33.5,39.6,2025,year,Asia
+North Macedonia,30.3,6.8,19.9,30.2,24.7,59.7,2025,year,Europe
+Ecuador,30.0,8.0,20.3,33.2,27.1,45.6,2025,year,South America
+South Africa,30.0,11.1,21.6,27.5,29.3,111.2,2025,year,Africa
+Malaysia,29.7,8.1,20.1,37.3,22.1,83.8,2025,year,Asia
+Azerbaijan,29.5,9.0,20.4,28.3,33.1,41.4,2025,year,Asia
+Peru,29.4,9.2,20.5,32.4,25.3,38.2,2025,year,South America
+Namibia,29.3,11.4,21.4,31.3,28.9,62.2,2025,year,Africa
+Philippines,28.8,6.9,19.1,34.3,19.0,37.3,2025,year,Asia
+Kenya,28.2,7.6,19.1,30.2,25.0,35.1,2025,year,Africa
+Morocco,27.2,7.1,18.3,28.8,22.2,41.7,2025,year,Africa
+Iraq,26.9,7.3,18.2,27.9,22.9,54.5,2025,year,Asia
+Vietnam,26.6,9.2,18.9,32.1,16.8,42.3,2025,year,Asia
+Kazakhstan,26.6,10.5,19.4,27.4,28.0,50.8,2025,year,Asia
+Nigeria,26.4,21.8,24.4,31.8,21.6,10.6,2025,year,Africa
+Uganda,26.0,8.5,18.2,28.3,24.7,16.4,2025,year,Africa
+Colombia,26.0,8.1,18.1,27.7,22.9,36.0,2025,year,South America
+Kosovo,25.7,6.7,17.3,27.1,20.9,52.9,2025,year,Europe
+Brazil,25.6,7.2,17.4,25.9,22.5,42.3,2025,year,South America
+Tunisia,25.5,4.6,16.3,31.0,16.1,34.7,2025,year,Africa
+Kyrgyzstan,25.4,10.8,18.9,28.0,21.4,35.6,2025,year,Asia
+Bolivia,25.2,8.3,17.7,25.9,22.4,43.9,2025,year,South America
+Belarus,25.0,8.7,17.8,24.7,27.5,54.7,2025,year,Europe
+Indonesia,24.6,7.7,17.1,32.5,15.2,33.9,2025,year,Asia
+Ukraine,24.6,7.8,17.1,25.2,21.9,46.3,2025,year,Europe
+Algeria,24.5,3.4,15.2,33.2,14.5,34.5,2025,year,Africa
+Uzbekistan,24.2,12.0,18.8,26.6,20.8,44.5,2025,year,Asia
+Iran,23.6,8.5,16.9,20.8,16.9,28.4,2025,year,Asia
+Syria,23.3,3.5,14.5,24.5,17.8,5.4,2025,year,Asia
+Paraguay,23.0,8.6,16.6,22.7,19.8,41.0,2025,year,South America
+Nepal,23.0,3.0,14.1,24.0,18.7,29.0,2025,year,Asia
+Russia,22.3,7.5,15.8,21.8,21.8,56.2,2025,year,Europe
+Bangladesh,20.9,2.4,12.7,25.2,15.4,35.6,2025,year,Asia
+Madagascar,20.7,4.5,13.5,21.6,14.3,15.0,2025,year,Africa
+Afghanistan,19.9,2.0,12.0,17.3,14.3,35.0,2025,year,Asia
+India,19.5,5.0,13.1,22.5,16.6,82.2,2025,year,Asia
+Egypt,19.0,3.5,12.2,19.7,18.2,21.1,2025,year,Africa
+Libya,18.6,3.9,12.1,22.8,13.9,51.6,2025,year,Africa
+Pakistan,17.8,2.9,11.2,17.2,15.0,30.5,2025,year,Asia
+Bermuda,133.6,91.4,113.6,143.6,124.2,84.3,2024,year,North America
+Switzerland,112.2,52.8,84.0,116.7,104.1,118.9,2024,year,Europe
+Cayman Islands,111.7,76.0,94.8,109.0,99.5,73.7,2024,year,North America
+US Virgin Islands,102.6,47.9,76.7,104.1,83.5,55.8,2024,year,North America
+Bahamas,88.5,41.8,66.3,80.5,80.4,38.0,2024,year,North America
+Iceland,85.7,41.0,64.5,86.5,88.0,109.1,2024,year,Europe
+Singapore,81.9,71.9,77.1,75.0,55.3,103.0,2024,year,Asia
+Barbados,79.4,19.9,51.2,78.6,71.8,34.4,2024,year,North America
+Norway,79.2,27.8,54.8,77.5,75.9,94.9,2024,year,Europe
+Denmark,75.2,28.6,53.1,65.0,82.6,103.3,2024,year,Europe
+Jersey,74.3,52.5,64.0,64.1,93.6,72.0,2024,year,Europe
+United States,72.9,44.7,59.5,74.2,68.4,120.9,2024,year,North America
+Australia,72.8,36.6,55.6,73.9,66.9,93.6,2024,year,Oceania
+Hong Kong,71.5,61.4,66.7,79.6,47.0,84.1,2024,year,Asia
+Canada,68.4,36.0,53.1,70.7,64.0,83.3,2024,year,North America
+New Zealand,68.2,28.8,49.5,71.7,58.8,93.0,2024,year,Oceania
+Guernsey,67.5,46.7,57.6,68.8,63.6,83.2,2024,year,Europe
+Israel,67.2,31.2,50.1,60.2,71.9,79.5,2024,year,Asia
+Austria,66.8,23.7,46.4,64.8,59.0,84.4,2024,year,Europe
+Ireland,66.5,47.3,57.4,58.9,65.9,82.0,2024,year,Europe
+France,66.0,22.3,45.3,68.6,57.9,83.4,2024,year,Europe
+Finland,65.5,20.8,44.3,61.6,63.8,97.3,2024,year,Europe
+Luxembourg,65.3,42.4,54.4,65.1,69.4,148.9,2024,year,Europe
+Puerto Rico,64.4,25.3,45.9,64.1,50.3,77.1,2024,year,North America
+South Korea,64.4,17.1,42.0,83.1,32.4,90.6,2024,year,Asia
+Netherlands,64.3,34.5,50.2,57.4,61.0,103.3,2024,year,Europe
+United Kingdom,63.7,33.5,49.4,55.5,63.9,90.1,2024,year,Europe
+Belgium,63.0,21.4,43.3,56.1,67.8,90.7,2024,year,Europe
+Germany,62.7,26.3,45.4,57.6,52.5,101.0,2024,year,Europe
+Sweden,62.2,23.1,43.6,61.8,56.1,94.6,2024,year,Europe
+Isle Of Man,59.8,27.4,44.5,48.7,67.9,167.1,2024,year,Europe
+Italy,58.9,21.1,41.0,56.8,55.0,62.8,2024,year,Europe
+United Arab Emirates,57.8,46.9,52.6,45.0,50.0,98.7,2024,year,Asia
+Cyprus,57.1,25.0,41.8,49.3,54.0,59.4,2024,year,Europe
+Macao,56.2,30.5,44.0,64.0,38.6,96.9,2024,year,Asia
+Yemen,56.1,7.1,32.8,64.0,30.2,17.1,2024,year,Asia
+Uruguay,55.3,15.2,36.3,50.3,50.4,47.0,2024,year,South America
+Malta,55.1,25.3,40.9,49.9,57.5,58.3,2024,year,Europe
+Qatar,55.0,40.4,48.1,44.3,49.5,127.4,2024,year,Asia
+Greece,54.2,13.6,34.9,47.9,52.9,42.1,2024,year,Europe
+Bahrain,53.7,22.6,39.0,46.4,43.4,83.6,2024,year,Asia
+Costa Rica,53.6,16.5,36.0,54.2,44.1,37.0,2024,year,North America
+Trinidad And Tobago,53.6,13.3,34.5,53.9,44.6,35.4,2024,year,North America
+Jamaica,53.1,13.4,34.3,57.2,38.4,28.1,2024,year,North America
+Estonia,53.0,15.5,35.2,45.2,48.8,69.0,2024,year,Europe
+Latvia,51.4,11.7,32.6,42.6,46.2,51.9,2024,year,Europe
+Japan,50.7,15.1,33.8,55.4,30.9,99.5,2024,year,Asia
+Brunei,50.5,17.4,34.8,65.6,25.6,87.0,2024,year,Asia
+Maldives,50.0,23.1,37.3,47.5,28.0,40.8,2024,year,Asia
+Slovenia,49.3,17.0,34.0,46.3,41.2,68.0,2024,year,Europe
+Taiwan,49.0,13.7,32.2,61.8,24.8,80.0,2024,year,Asia
+Czech Republic,48.6,21.0,35.5,44.1,34.5,64.9,2024,year,Europe
+Lithuania,48.4,15.8,32.9,43.6,45.1,61.8,2024,year,Europe
+Spain,48.4,23.6,36.6,45.1,44.0,78.2,2024,year,Europe
+Belize,48.0,10.7,30.3,47.4,27.9,52.4,2024,year,North America
+Slovakia,47.9,15.1,32.4,45.1,35.5,55.8,2024,year,Europe
+Panama,47.4,21.5,35.1,46.4,43.2,34.7,2024,year,North America
+Saudi Arabia,47.4,12.2,30.7,40.8,32.9,105.1,2024,year,Asia
+Croatia,46.9,14.5,31.5,42.6,42.6,58.0,2024,year,Europe
+Portugal,46.6,25.4,36.5,42.9,37.9,46.5,2024,year,Europe
+Lebanon,46.3,16.5,32.2,33.4,37.8,20.7,2024,year,Asia
+Guyana,46.2,11.5,29.8,48.2,44.8,21.9,2024,year,South America
+Cuba,45.6,10.6,29.0,41.3,25.5,1.7,2024,year,North America
+Ivory Coast,44.7,16.8,31.5,38.3,27.5,8.5,2024,year,Africa
+Oman,44.4,13.3,29.7,39.5,33.5,109.6,2024,year,Asia
+Senegal,44.0,22.7,33.9,40.1,37.9,18.0,2024,year,Africa
+Mexico,43.8,17.0,31.1,45.6,36.7,38.0,2024,year,North America
+Kuwait,43.4,24.3,34.4,33.8,36.9,128.5,2024,year,Asia
+Hungary,43.4,11.3,28.2,39.5,36.7,49.8,2024,year,Europe
+Palestine,43.3,8.4,26.8,40.6,27.4,37.4,2024,year,Asia
+Ethiopia,43.1,15.1,29.8,42.4,19.5,10.4,2024,year,Africa
+Jordan,43.0,7.6,26.2,36.9,35.8,36.4,2024,year,Asia
+Mozambique,43.0,20.6,32.4,35.0,37.6,12.5,2024,year,Africa
+Poland,41.9,19.2,31.1,35.9,35.7,66.2,2024,year,Europe
+El Salvador,41.1,16.8,29.6,42.7,30.5,22.2,2024,year,North America
+Montenegro,40.9,16.6,29.4,36.3,35.6,41.8,2024,year,Europe
+Albania,40.8,10.2,26.3,39.4,31.0,31.6,2024,year,Europe
+Chile,39.9,11.5,26.4,40.6,35.1,36.4,2024,year,South America
+Mauritius,39.8,11.0,26.2,41.4,27.1,32.8,2024,year,Africa
+Zambia,39.7,9.0,25.2,30.8,19.6,17.4,2024,year,Africa
+Cameroon,39.6,18.3,29.5,33.4,38.5,8.4,2024,year,Africa
+Venezuela,39.4,5.7,23.4,38.3,38.5,12.6,2024,year,South America
+Dominican Republic,39.0,11.2,25.8,36.6,33.2,23.5,2024,year,North America
+Romania,38.8,10.6,25.4,36.4,35.0,48.4,2024,year,Europe
+Bulgaria,38.7,9.9,25.1,37.6,32.8,52.6,2024,year,Europe
+Armenia,38.6,19.5,29.5,34.1,36.2,32.1,2024,year,Asia
+Myanmar,38.6,15.3,27.5,31.2,16.1,16.0,2024,year,Asia
+Cambodia,38.5,10.2,25.1,41.6,22.2,16.9,2024,year,Asia
+Serbia,38.3,12.7,26.2,35.0,30.4,39.6,2024,year,Europe
+Guatemala,37.7,12.9,25.9,39.1,27.9,29.7,2024,year,North America
+Honduras,37.3,10.3,24.5,36.6,26.5,35.1,2024,year,North America
+Georgia,37.2,15.5,26.9,35.7,34.5,27.9,2024,year,Asia
+Zimbabwe,37.0,10.1,24.2,33.4,26.1,21.5,2024,year,Africa
+Thailand,36.0,12.4,24.8,41.0,18.4,32.9,2024,year,Asia
+Brazil,35.2,9.0,22.8,32.4,26.0,30.1,2024,year,South America
+Fiji,34.8,15.2,25.5,40.0,27.7,64.0,2024,year,Oceania
+Bosnia And Herzegovina,34.7,5.7,21.0,32.7,22.0,47.1,2024,year,Europe
+Moldova,34.6,9.8,22.8,31.0,26.6,35.2,2024,year,Europe
+China,34.1,13.4,24.3,37.6,21.0,60.5,2024,year,Asia
+North Macedonia,34.1,6.8,21.1,31.2,22.8,37.0,2024,year,Europe
+Turkey,33.8,13.2,24.0,30.3,25.8,39.3,2024,year,Asia
+South Africa,33.8,11.8,23.4,27.6,28.7,84.7,2024,year,Africa
+Ecuador,33.6,8.9,21.9,34.0,24.8,36.4,2024,year,South America
+Philippines,33.6,8.3,21.6,35.2,17.9,25.9,2024,year,Asia
+Nicaragua,33.6,8.7,21.8,37.3,21.6,18.1,2024,year,North America
+Kazakhstan,33.5,13.6,24.0,31.9,29.7,36.8,2024,year,Asia
+Sri Lanka,33.2,6.0,20.3,44.6,16.7,14.4,2024,year,Asia
+Mongolia,32.7,11.0,22.4,37.2,21.9,23.5,2024,year,Asia
+Kosovo,31.3,8.5,20.5,29.3,20.7,34.8,2024,year,Europe
+Azerbaijan,31.1,8.1,20.2,28.4,30.1,29.4,2024,year,Asia
+Peru,30.9,9.7,20.8,30.7,21.4,27.3,2024,year,South America
+Namibia,30.8,10.4,21.1,30.0,27.4,51.4,2024,year,Africa
+Vietnam,30.8,9.7,20.8,34.6,14.9,32.5,2024,year,Asia
+Colombia,30.6,8.8,20.3,30.6,20.9,28.1,2024,year,South America
+Malaysia,30.5,8.2,19.9,35.4,18.3,62.1,2024,year,Asia
+Uganda,30.4,7.3,19.4,27.8,21.7,15.2,2024,year,Africa
+Iraq,30.2,8.2,19.8,27.4,20.7,42.0,2024,year,Asia
+Botswana,30.1,6.1,18.7,27.3,22.5,56.5,2024,year,Africa
+Morocco,29.9,7.8,19.4,28.8,19.3,30.4,2024,year,Africa
+Algeria,29.5,4.1,17.5,35.6,13.1,25.4,2024,year,Africa
+Russia,29.5,9.9,20.2,25.9,26.2,41.5,2024,year,Europe
+Egypt,29.1,5.5,17.9,27.8,21.7,15.2,2024,year,Africa
+Somalia,29.0,4.5,17.4,30.9,23.6,30.5,2024,year,Africa
+Tunisia,28.7,5.0,17.4,30.0,15.2,25.7,2024,year,Africa
+Ukraine,28.6,8.5,19.0,26.6,22.2,32.2,2024,year,Europe
+Indonesia,28.5,8.3,18.9,33.6,14.4,25.8,2024,year,Asia
+Bolivia,28.3,7.4,18.4,25.9,19.7,32.3,2024,year,South America
+Argentina,27.8,6.8,17.8,25.6,23.6,35.8,2024,year,South America
+Paraguay,27.6,10.5,19.5,24.9,19.1,28.1,2024,year,South America
+Uzbekistan,27.1,12.1,20.0,27.8,20.1,28.0,2024,year,Asia
+Belarus,27.1,8.2,18.2,24.4,25.3,39.6,2024,year,Europe
+Nepal,26.9,4.0,16.1,24.8,17.6,20.3,2024,year,Asia
+Iran,26.9,8.9,18.4,21.5,16.5,21.2,2024,year,Asia
+Kyrgyzstan,26.9,11.1,19.4,25.9,20.0,24.5,2024,year,Asia
+Rwanda,26.3,9.5,18.3,26.1,19.1,21.7,2024,year,Africa
+Tanzania,26.0,8.0,17.5,25.8,20.3,21.6,2024,year,Africa
+Ghana,26.0,11.0,18.8,27.2,22.9,14.8,2024,year,Africa
+Madagascar,25.2,8.0,17.0,23.6,13.7,12.3,2024,year,Africa
+Syria,25.0,4.1,15.1,23.5,16.5,4.7,2024,year,Asia
+Bangladesh,24.9,2.7,14.4,26.6,14.0,25.8,2024,year,Asia
+Kenya,24.8,7.1,16.4,23.8,18.3,30.6,2024,year,Africa
+Afghanistan,22.8,2.8,13.3,17.3,13.0,22.4,2024,year,Asia
+India,22.2,6.2,14.6,23.5,15.6,60.7,2024,year,Asia
+Libya,21.2,4.4,13.3,21.5,15.2,33.7,2024,year,Africa
+Nigeria,19.3,15.4,17.4,21.4,13.3,9.4,2024,year,Africa
+Pakistan,18.5,2.9,11.1,16.4,12.7,24.5,2024,year,Asia
+Bermuda,141.8,96.3,120.0,143.3,142.0,79.5,2023,year,North America
+Switzerland,114.2,50.2,83.5,113.9,109.5,118.7,2023,year,Europe
+Cayman Islands,103.4,75.7,90.1,96.4,92.4,76.7,2023,year,North America
+Bahamas,90.9,39.6,66.3,74.1,94.8,43.2,2023,year,North America
+Barbados,88.8,21.2,56.4,80.1,82.7,36.8,2023,year,North America
+Norway,88.6,30.9,60.9,81.8,90.6,95.0,2023,year,Europe
+Singapore,85.9,85.3,85.6,74.0,58.4,95.6,2023,year,Asia
+Iceland,83.3,36.7,61.0,78.3,86.9,90.1,2023,year,Europe
+Jersey,80.0,53.9,67.4,62.4,90.8,72.6,2023,year,Europe
+Denmark,78.6,30.4,55.5,62.4,91.9,105.0,2023,year,Europe
+Israel,76.4,30.4,54.4,63.8,85.0,80.5,2023,year,Asia
+Hong Kong,75.7,66.3,71.2,79.5,53.6,67.7,2023,year,Asia
+Australia,75.3,39.0,57.9,73.3,66.2,110.9,2023,year,Oceania
+Luxembourg,73.2,48.3,61.3,67.0,78.9,127.1,2023,year,Europe
+New Zealand,72.9,31.9,53.2,69.4,69.7,93.0,2023,year,Oceania
+United States,72.4,47.1,60.3,71.4,70.8,115.7,2023,year,North America
+Guernsey,71.0,46.2,59.1,66.1,70.5,77.2,2023,year,Europe
+Ireland,70.5,44.4,58.0,55.8,71.9,82.6,2023,year,Europe
+South Korea,70.4,17.5,45.0,87.5,37.6,85.5,2023,year,Asia
+Macao,68.8,34.9,52.5,74.4,48.2,80.2,2023,year,Asia
+France,68.7,24.6,47.5,65.1,66.9,86.2,2023,year,Europe
+Netherlands,68.6,33.4,51.7,57.4,67.6,107.8,2023,year,Europe
+Finland,67.5,22.7,46.0,58.2,70.4,98.8,2023,year,Europe
+Puerto Rico,67.0,23.2,46.0,66.4,59.0,62.1,2023,year,North America
+Canada,66.1,33.4,50.4,64.2,62.8,102.1,2023,year,North America
+Austria,66.0,23.1,45.4,58.0,63.5,91.2,2023,year,Europe
+Lebanon,65.8,19.2,43.5,65.3,48.0,22.7,2023,year,Asia
+Belgium,65.6,22.4,44.9,54.5,69.0,94.5,2023,year,Europe
+Japan,64.6,20.8,43.6,66.5,37.9,100.4,2023,year,Asia
+Germany,62.9,26.1,45.3,50.9,56.2,107.6,2023,year,Europe
+Sweden,62.9,22.7,43.6,55.2,64.3,101.2,2023,year,Europe
+Isle Of Man,61.8,27.8,45.5,50.1,76.5,167.7,2023,year,Europe
+United Kingdom,61.5,30.3,46.6,47.7,67.9,98.9,2023,year,Europe
+Malta,61.4,25.7,44.3,52.0,64.7,50.6,2023,year,Europe
+Italy,61.3,20.5,41.7,51.9,61.9,66.5,2023,year,Europe
+United Arab Emirates,60.3,34.0,47.6,46.6,56.6,123.4,2023,year,Asia
+Uruguay,59.9,15.9,38.8,48.1,59.5,38.4,2023,year,South America
+Qatar,59.5,50.0,54.9,47.7,58.3,123.6,2023,year,Asia
+Yemen,58.8,7.9,34.4,66.6,31.2,18.6,2023,year,Asia
+Cyprus,55.9,27.4,42.2,45.0,55.0,54.8,2023,year,Europe
+Brunei,55.2,17.9,37.3,64.5,33.8,60.7,2023,year,Asia
+Maldives,55.0,27.0,41.6,49.8,34.6,33.9,2023,year,Asia
+Estonia,54.8,16.4,36.4,42.4,55.1,61.4,2023,year,Europe
+Greece,54.6,12.9,34.6,42.4,50.1,41.9,2023,year,Europe
+Taiwan,54.2,15.3,35.5,63.3,27.9,71.3,2023,year,Asia
+Jamaica,53.6,13.6,34.4,55.1,37.1,28.9,2023,year,North America
+Trinidad And Tobago,53.3,13.7,34.3,51.5,50.4,38.9,2023,year,North America
+Bahrain,52.7,25.4,39.6,40.9,47.3,81.7,2023,year,Asia
+Cuba,52.6,16.0,35.1,48.6,29.9,1.6,2023,year,North America
+Latvia,50.9,10.9,31.7,40.2,43.7,52.9,2023,year,Europe
+Slovenia,50.8,16.6,34.4,43.9,43.6,61.7,2023,year,Europe
+Palestine,50.7,9.6,31.0,43.7,37.5,39.8,2023,year,Asia
+Spain,50.6,21.7,36.7,41.0,51.5,82.5,2023,year,Europe
+Saudi Arabia,50.6,12.0,32.1,41.7,38.0,101.9,2023,year,Asia
+Czech Republic,48.9,19.1,34.7,40.7,36.6,71.8,2023,year,Europe
+Costa Rica,48.8,14.9,32.5,46.7,41.4,41.5,2023,year,North America
+Lithuania,48.8,16.8,33.4,39.0,48.1,56.7,2023,year,Europe
+Panama,48.2,19.7,34.5,46.0,41.4,36.4,2023,year,North America
+Belize,48.0,11.7,30.6,44.8,30.8,49.2,2023,year,North America
+Oman,47.8,15.8,32.5,42.6,40.1,108.2,2023,year,Asia
+Guyana,47.3,9.5,29.2,48.7,42.2,23.3,2023,year,South America
+Kuwait,46.8,27.1,37.4,32.9,42.2,96.7,2023,year,Asia
+Jordan,46.8,8.8,28.6,38.7,40.6,38.0,2023,year,Asia
+Croatia,46.7,12.2,30.2,39.5,39.5,56.2,2023,year,Europe
+Senegal,46.4,22.2,34.8,38.1,43.3,21.7,2023,year,Africa
+Portugal,45.3,21.9,34.1,36.0,38.7,51.7,2023,year,Europe
+Cambodia,44.5,13.8,29.8,43.9,26.2,15.5,2023,year,Asia
+Slovakia,44.2,14.9,30.2,40.0,33.6,56.3,2023,year,Europe
+Chile,44.1,13.4,29.4,39.9,42.4,37.3,2023,year,South America
+El Salvador,43.3,14.8,29.6,43.5,31.3,22.7,2023,year,North America
+Ivory Coast,42.7,15.5,29.6,35.2,27.5,7.8,2023,year,Africa
+Ethiopia,42.3,17.1,30.2,34.3,19.7,11.6,2023,year,Africa
+Mauritius,42.2,10.9,27.2,41.6,32.3,30.8,2023,year,Africa
+Dominican Republic,41.8,11.9,27.5,36.8,33.9,23.0,2023,year,North America
+Venezuela,41.6,7.4,25.2,37.1,43.6,12.4,2023,year,South America
+Russia,40.8,12.8,27.4,33.4,39.2,40.9,2023,year,Europe
+Armenia,40.8,23.5,32.5,34.3,36.1,25.5,2023,year,Asia
+Zimbabwe,40.8,11.5,26.7,35.0,32.5,18.7,2023,year,Africa
+Thailand,40.7,13.3,27.6,42.0,21.0,33.2,2023,year,Asia
+Bulgaria,40.5,10.0,25.9,35.7,35.8,51.2,2023,year,Europe
+Guatemala,40.2,13.8,27.5,38.9,28.5,29.7,2023,year,North America
+Hungary,39.2,11.6,26.0,34.8,32.3,53.1,2023,year,Europe
+China,39.2,18.8,29.4,41.0,27.0,62.3,2023,year,Asia
+Georgia,38.9,19.3,29.5,33.9,36.7,25.9,2023,year,Asia
+Montenegro,38.9,13.5,26.7,32.4,32.9,40.4,2023,year,Europe
+Honduras,38.8,9.3,24.7,33.1,26.2,35.4,2023,year,North America
+Poland,38.6,16.0,27.8,30.8,34.0,64.0,2023,year,Europe
+Fiji,38.5,15.1,27.3,41.9,30.7,65.5,2023,year,Oceania
+South Africa,37.8,14.0,26.4,30.1,34.8,83.9,2023,year,Africa
+Albania,37.4,9.1,23.9,31.3,26.5,30.1,2023,year,Europe
+Romania,37.4,9.9,24.2,32.0,33.0,52.5,2023,year,Europe
+Mexico,37.3,12.8,25.5,36.6,34.0,43.5,2023,year,North America
+Serbia,37.2,10.6,24.4,30.6,30.2,39.6,2023,year,Europe
+Nicaragua,36.8,7.8,22.9,34.3,26.0,21.7,2023,year,North America
+Namibia,35.8,11.8,24.3,30.9,39.1,51.3,2023,year,Africa
+Vietnam,35.7,11.2,24.0,35.9,18.1,31.5,2023,year,Asia
+Belarus,35.4,10.0,23.2,31.0,37.2,36.4,2023,year,Europe
+Iran,35.2,14.6,25.3,26.2,24.6,21.1,2023,year,Asia
+Bosnia And Herzegovina,35.1,5.9,21.1,30.8,21.8,48.6,2023,year,Europe
+Ecuador,35.1,9.7,22.9,31.9,26.6,37.0,2023,year,South America
+Malaysia,35.0,9.8,22.9,36.7,20.5,65.7,2023,year,Asia
+Brazil,34.7,8.3,22.1,29.3,26.4,28.7,2023,year,South America
+Botswana,34.4,7.5,21.5,30.5,32.7,63.6,2023,year,Africa
+Philippines,34.0,9.8,22.4,33.4,20.9,22.4,2023,year,Asia
+Cameroon,33.6,5.7,20.3,33.8,22.3,18.4,2023,year,Africa
+Myanmar,32.9,20.0,26.7,33.8,18.4,29.7,2023,year,Asia
+Peru,32.4,11.1,22.2,29.4,22.3,31.3,2023,year,South America
+Kenya,32.4,7.8,20.6,29.8,27.0,32.8,2023,year,Africa
+Moldova,32.3,8.3,20.8,26.8,27.7,33.1,2023,year,Europe
+Uganda,32.1,9.0,21.0,27.8,23.1,12.5,2023,year,Africa
+Bolivia,31.9,8.2,20.5,27.8,23.4,37.4,2023,year,South America
+Iraq,31.4,9.2,20.8,26.6,25.1,44.5,2023,year,Asia
+North Macedonia,31.4,5.7,19.1,27.1,21.3,38.2,2023,year,Europe
+Mongolia,31.2,8.3,20.2,31.2,25.5,24.3,2023,year,Asia
+Argentina,31.2,6.9,19.5,25.7,26.8,36.8,2023,year,South America
+Indonesia,31.2,8.3,20.2,33.1,16.0,27.5,2023,year,Asia
+Nigeria,30.9,33.3,32.0,32.4,22.2,8.4,2023,year,Africa
+Tanzania,30.8,9.9,20.8,28.4,21.9,20.5,2023,year,Africa
+Rwanda,30.0,14.2,22.4,26.3,24.2,30.0,2023,year,Africa
+Morocco,29.3,7.5,18.8,25.4,19.7,33.6,2023,year,Africa
+Azerbaijan,28.9,7.5,18.7,25.4,26.9,32.0,2023,year,Asia
+Paraguay,28.6,9.3,19.4,24.4,21.4,27.8,2023,year,South America
+Kosovo,28.4,8.0,18.6,25.1,19.6,37.6,2023,year,Europe
+Kazakhstan,28.1,11.5,20.2,25.0,26.4,38.1,2023,year,Asia
+Turkey,28.1,7.2,18.1,23.2,18.3,31.0,2023,year,Asia
+Algeria,27.6,4.3,16.5,30.1,13.6,26.9,2023,year,Africa
+Uzbekistan,27.0,10.7,19.2,25.4,22.9,24.8,2023,year,Asia
+Ghana,26.7,14.6,20.9,26.5,23.6,17.2,2023,year,Africa
+Bangladesh,26.6,3.2,15.4,25.2,16.6,26.9,2023,year,Asia
+Tunisia,26.5,5.0,16.2,25.6,14.4,30.0,2023,year,Africa
+Syria,26.1,4.5,15.7,23.7,19.0,5.5,2023,year,Asia
+Kyrgyzstan,25.9,9.3,18.0,24.7,23.5,25.5,2023,year,Asia
+Ukraine,25.6,8.1,17.2,22.2,21.2,38.1,2023,year,Europe
+Sri Lanka,25.3,5.4,15.8,31.0,12.0,16.0,2023,year,Asia
+Nepal,24.8,3.7,14.7,22.8,17.3,21.8,2023,year,Asia
+Libya,24.2,5.2,15.1,23.1,19.3,32.1,2023,year,Africa
+Colombia,23.1,7.0,15.4,21.0,17.3,31.1,2023,year,South America
+India,22.4,5.5,14.3,23.3,15.7,64.6,2023,year,Asia
+Egypt,21.6,4.3,13.3,19.6,18.0,21.9,2023,year,Africa
+Pakistan,18.0,3.4,11.0,15.4,13.7,24.4,2023,year,Asia
+Bermuda,146.0,98.6,123.8,148.7,159.2,81.1,2022,year,North America
+Switzerland,123.3,53.5,90.6,128.1,122.1,118.4,2022,year,Europe
+Norway,100.9,34.7,69.9,97.3,105.5,83.1,2022,year,Europe
+Iceland,94.9,41.9,70.1,90.2,99.4,77.1,2022,year,Europe
+Barbados,92.4,22.0,59.4,87.8,78.2,32.1,2022,year,North America
+Jersey,92.0,65.3,79.5,76.9,94.6,79.1,2022,year,Europe
+Israel,88.1,33.9,62.7,76.7,95.3,75.6,2022,year,Asia
+Denmark,84.1,33.2,60.3,68.6,98.8,99.5,2022,year,Europe
+Bahamas,84.0,35.3,61.2,70.6,89.1,45.1,2022,year,North America
+Singapore,84.0,66.4,75.8,77.1,61.2,91.3,2022,year,Asia
+Guernsey,83.6,54.0,69.7,76.8,90.0,71.6,2022,year,Europe
+Hong Kong,80.7,74.6,77.8,84.7,58.6,65.7,2022,year,Asia
+Luxembourg,80.5,60.1,70.9,74.7,88.8,98.8,2022,year,Europe
+Australia,77.7,36.8,58.6,77.4,73.0,104.6,2022,year,Oceania
+Japan,77.0,25.9,53.0,81.3,45.4,87.1,2022,year,Asia
+Ireland,76.1,42.1,60.1,62.1,80.4,82.3,2022,year,Europe
+Netherlands,75.7,36.1,57.1,65.5,76.4,88.0,2022,year,Europe
+New Zealand,74.5,34.4,55.7,72.0,70.1,83.6,2022,year,Oceania
+France,74.1,25.3,51.3,73.6,71.8,85.4,2022,year,Europe
+South Korea,73.2,20.0,48.3,92.0,42.1,76.9,2022,year,Asia
+Finland,73.2,25.9,51.0,65.2,77.6,91.0,2022,year,Europe
+Belgium,72.6,25.8,50.7,63.3,78.6,79.7,2022,year,Europe
+Sweden,71.7,25.9,50.2,65.8,72.6,98.1,2022,year,Europe
+Austria,71.0,27.1,50.5,65.9,66.0,77.3,2022,year,Europe
+Canada,70.2,34.3,53.4,70.0,67.9,88.0,2022,year,North America
+United States,70.1,42.1,57.0,70.4,70.1,106.3,2022,year,North America
+United Kingdom,69.7,31.8,51.9,56.6,76.8,88.8,2022,year,Europe
+Lebanon,69.6,24.8,48.6,66.8,54.2,35.1,2022,year,Asia
+Malta,67.8,29.7,50.0,59.6,72.4,44.2,2022,year,Europe
+Macao,66.8,43.0,55.6,67.9,51.3,69.3,2022,year,Asia
+Puerto Rico,66.5,18.4,44.0,69.6,55.6,72.8,2022,year,North America
+Italy,66.5,20.6,44.9,58.0,70.6,61.7,2022,year,Europe
+Seychelles,65.9,32.4,50.2,61.5,77.0,19.4,2022,year,Africa
+Germany,65.6,27.6,47.8,52.3,60.9,103.1,2022,year,Europe
+Qatar,62.8,48.2,56.0,55.0,63.0,93.7,2022,year,Asia
+Taiwan,62.4,17.7,41.4,76.2,29.4,58.3,2022,year,Asia
+Cyprus,59.0,22.4,41.8,49.2,61.1,57.3,2022,year,Europe
+United Arab Emirates,58.3,43.3,51.3,46.7,61.5,92.2,2022,year,Asia
+Palestine,58.1,11.0,36.0,51.2,44.6,39.8,2022,year,Asia
+Maldives,57.7,30.2,44.8,56.6,34.7,28.6,2022,year,Asia
+Greece,56.2,12.7,35.8,44.7,52.2,39.7,2022,year,Europe
+Cuba,55.0,15.2,36.4,47.9,33.5,1.4,2022,year,North America
+Trinidad And Tobago,54.9,16.0,36.6,54.0,53.7,38.5,2022,year,North America
+Bahrain,54.8,29.2,42.8,44.6,48.9,61.4,2022,year,Asia
+Slovenia,53.9,17.9,37.0,47.7,46.7,59.5,2022,year,Europe
+Spain,53.9,21.3,38.6,45.7,54.0,70.0,2022,year,Europe
+Estonia,53.7,16.4,36.2,42.3,56.4,63.5,2022,year,Europe
+Yemen,53.1,6.7,31.4,67.1,24.7,14.4,2022,year,Asia
+Uruguay,52.1,13.9,34.2,44.0,49.4,30.1,2022,year,South America
+Suriname,51.8,9.7,32.1,45.9,79.6,13.4,2022,year,South America
+Panama,51.4,21.7,37.5,52.2,43.4,33.1,2022,year,North America
+Belize,51.3,11.6,32.7,48.8,36.6,45.7,2022,year,North America
+Saudi Arabia,50.4,11.7,32.2,42.6,35.5,91.8,2022,year,Asia
+Senegal,50.2,23.0,37.5,42.2,46.2,23.5,2022,year,Africa
+Jamaica,49.7,15.1,33.5,53.4,35.0,30.3,2022,year,North America
+Oman,49.4,16.8,34.1,46.5,43.2,84.2,2022,year,Asia
+Jordan,49.2,9.2,30.5,40.8,41.2,31.3,2022,year,Asia
+Cambodia,49.1,15.7,33.4,50.6,22.9,13.3,2022,year,Asia
+Croatia,48.9,13.4,32.3,42.0,41.3,47.5,2022,year,Europe
+Kuwait,48.7,31.3,40.5,35.6,47.5,78.6,2022,year,Asia
+Latvia,48.5,11.8,31.3,38.4,42.1,51.6,2022,year,Europe
+Libya,48.3,12.9,31.7,54.0,34.1,33.2,2022,year,Africa
+Czech Republic,48.2,18.4,34.3,42.8,36.7,66.5,2022,year,Europe
+Portugal,47.9,20.7,35.2,39.0,40.3,46.8,2022,year,Europe
+Ethiopia,47.5,16.9,33.1,36.7,18.0,10.1,2022,year,Africa
+Ivory Coast,47.0,17.7,33.3,40.2,32.0,6.9,2022,year,Africa
+Costa Rica,47.0,14.7,31.9,45.5,41.7,39.9,2022,year,North America
+Zimbabwe,45.7,8.8,28.4,39.9,38.1,19.1,2022,year,Africa
+Lithuania,45.6,15.0,31.3,36.2,46.6,58.7,2022,year,Europe
+Slovakia,44.7,16.1,31.3,39.7,36.1,54.7,2022,year,Europe
+El Salvador,44.4,13.2,29.8,44.3,35.5,21.2,2022,year,North America
+Mauritius,44.1,11.0,28.6,45.6,33.4,29.6,2022,year,Africa
+Chile,43.9,13.5,29.7,38.9,43.3,33.3,2022,year,South America
+Guatemala,43.5,15.6,30.4,41.9,32.6,26.4,2022,year,North America
+Thailand,43.2,14.7,29.8,45.1,22.6,31.6,2022,year,Asia
+Venezuela,43.2,10.0,27.6,37.3,46.2,15.4,2022,year,South America
+Fiji,43.2,17.8,31.3,48.1,37.4,35.9,2022,year,Oceania
+South Africa,42.1,16.6,30.1,34.8,41.3,78.4,2022,year,Africa
+Dominican Republic,41.8,9.6,26.7,38.5,34.3,21.1,2022,year,North America
+China,41.8,16.5,29.9,46.0,28.4,60.0,2022,year,Asia
+Hungary,40.7,11.9,27.2,35.2,32.8,52.0,2022,year,Europe
+Honduras,40.5,10.3,26.3,34.7,28.7,32.1,2022,year,North America
+Botswana,40.2,10.2,26.1,35.2,42.5,62.6,2022,year,Africa
+Nicaragua,39.6,8.7,25.1,38.1,27.5,17.6,2022,year,North America
+Cameroon,39.5,6.9,24.2,40.4,26.3,15.4,2022,year,Africa
+Poland,39.0,14.4,27.5,32.4,33.5,60.0,2022,year,Europe
+Montenegro,38.9,12.9,26.7,31.8,33.2,34.2,2022,year,Europe
+Bulgaria,38.4,9.1,24.6,34.0,32.4,46.0,2022,year,Europe
+Vietnam,37.5,13.2,26.1,38.7,20.0,29.4,2022,year,Asia
+Iran,37.4,17.0,27.9,29.5,25.2,18.0,2022,year,Asia
+Ecuador,37.3,11.3,25.1,34.5,28.6,31.8,2022,year,South America
+Philippines,37.1,9.6,24.2,37.8,20.6,21.5,2022,year,Asia
+Malaysia,37.0,9.9,24.3,39.4,20.8,55.3,2022,year,Asia
+Serbia,36.2,8.7,23.3,28.2,29.2,37.8,2022,year,Europe
+Ghana,36.2,19.3,28.3,37.5,30.1,16.8,2022,year,Africa
+Bosnia And Herzegovina,36.1,6.8,22.4,31.1,25.3,44.1,2022,year,Europe
+Indonesia,35.9,9.8,23.6,38.3,17.7,21.1,2022,year,Asia
+Myanmar,35.7,21.2,28.9,37.6,20.0,13.8,2022,year,Asia
+Albania,35.5,8.5,22.8,29.3,25.8,30.2,2022,year,Europe
+Mexico,35.3,12.6,24.7,34.8,32.7,38.6,2022,year,North America
+Russia,35.3,13.1,24.9,29.9,34.6,37.4,2022,year,Europe
+Romania,35.2,10.2,23.5,31.4,30.0,48.1,2022,year,Europe
+Bolivia,34.8,10.2,23.2,31.3,25.0,36.0,2022,year,South America
+Mongolia,34.7,11.2,23.7,36.1,22.8,24.3,2022,year,Asia
+Argentina,34.7,7.7,22.0,28.2,33.3,30.7,2022,year,South America
+Somalia,34.6,5.2,20.8,39.4,26.6,29.4,2022,year,Africa
+Iraq,34.5,10.6,23.3,30.5,28.3,40.9,2022,year,Asia
+Kenya,33.9,8.7,22.1,31.3,28.8,32.2,2022,year,Africa
+Armenia,33.9,11.6,23.4,27.6,30.5,28.9,2022,year,Asia
+Morocco,33.8,9.0,22.2,30.6,24.5,34.4,2022,year,Africa
+Uganda,33.5,9.2,22.1,31.0,24.8,11.4,2022,year,Africa
+Brazil,33.2,8.3,21.5,28.2,25.2,27.8,2022,year,South America
+Bangladesh,33.1,4.4,19.7,30.4,21.7,25.3,2022,year,Asia
+Zambia,33.0,9.3,21.9,31.5,22.5,40.3,2022,year,Africa
+Tanzania,32.8,12.4,23.2,30.0,24.9,16.0,2022,year,Africa
+Peru,32.5,11.2,22.5,30.7,21.5,28.2,2022,year,South America
+Rwanda,31.6,15.9,24.3,27.7,28.0,26.8,2022,year,Africa
+North Macedonia,31.4,6.1,19.5,27.0,21.0,35.4,2022,year,Europe
+Sri Lanka,31.3,8.2,20.5,37.7,17.3,19.3,2022,year,Asia
+Belarus,30.9,9.8,21.0,27.2,31.6,31.8,2022,year,Europe
+Ukraine,30.7,10.6,21.3,26.3,25.7,37.2,2022,year,Europe
+Nigeria,30.5,36.0,33.1,33.7,20.9,9.3,2022,year,Africa
+Moldova,30.3,8.7,20.2,25.0,27.1,33.4,2022,year,Europe
+Paraguay,30.2,10.0,20.8,25.4,24.2,26.1,2022,year,South America
+Georgia,30.2,9.3,20.4,26.4,27.9,31.1,2022,year,Asia
+Azerbaijan,29.7,7.9,19.5,26.6,26.7,27.3,2022,year,Asia
+Egypt,29.5,5.8,18.4,27.4,23.4,21.5,2022,year,Africa
+Syria,28.8,5.2,17.7,29.3,22.8,6.6,2022,year,Asia
+Kazakhstan,28.7,9.4,19.7,25.3,27.2,32.2,2022,year,Asia
+Turkey,28.3,6.6,18.2,22.6,18.4,32.9,2022,year,Asia
+Nepal,28.3,4.0,16.9,26.4,20.4,23.0,2022,year,Asia
+Tunisia,27.9,5.3,17.3,27.4,16.0,27.8,2022,year,Africa
+Uzbekistan,27.3,9.3,18.9,26.8,24.2,22.4,2022,year,Asia
+Kosovo,27.1,8.0,18.1,24.8,19.5,43.9,2022,year,Europe
+Algeria,26.9,4.6,16.4,28.8,14.5,24.6,2022,year,Africa
+Colombia,26.7,8.2,18.0,23.5,19.4,28.9,2022,year,South America
+India,24.4,5.3,15.5,26.4,17.6,49.7,2022,year,Asia
+Afghanistan,20.4,2.7,12.1,14.9,12.4,23.0,2022,year,Asia
+Pakistan,19.9,3.9,12.4,17.8,15.5,26.6,2022,year,Asia
+Bermuda,145.1,92.9,120.1,141.8,157.7,83.4,2021,year,North America
+Switzerland,131.7,55.0,95.1,133.4,126.1,111.0,2021,year,Europe
+Norway,106.1,36.2,72.7,100.6,105.9,79.4,2021,year,Europe
+Iceland,96.8,43.2,71.2,88.8,102.2,71.9,2021,year,Europe
+Denmark,91.7,36.2,65.2,72.6,104.9,94.7,2021,year,Europe
+Luxembourg,88.3,61.6,75.5,80.7,94.7,95.4,2021,year,Europe
+Japan,87.8,28.0,59.2,90.5,49.7,76.5,2021,year,Asia
+Israel,86.6,31.9,60.5,73.7,91.1,70.4,2021,year,Asia
+Bahamas,85.8,34.5,61.3,69.4,89.3,49.3,2021,year,North America
+Singapore,85.6,64.8,75.6,75.3,62.1,83.6,2021,year,Asia
+Australia,84.1,38.4,62.3,81.1,76.3,99.3,2021,year,Oceania
+Ireland,83.1,45.4,65.1,67.8,82.3,73.8,2021,year,Europe
+Barbados,81.5,21.1,52.6,71.5,72.8,45.3,2021,year,North America
+South Korea,81.2,22.9,53.3,99.8,44.0,76.6,2021,year,Asia
+France,80.6,27.8,55.4,77.5,75.5,74.1,2021,year,Europe
+Hong Kong,79.9,74.2,77.2,81.7,58.6,62.4,2021,year,Asia
+Sweden,79.2,28.1,54.8,71.7,77.2,90.6,2021,year,Europe
+New Zealand,79.1,35.4,58.2,75.0,69.2,81.4,2021,year,Oceania
+Seychelles,78.9,34.3,57.6,78.6,84.2,18.0,2021,year,Africa
+Netherlands,78.6,39.3,59.8,61.6,81.6,83.9,2021,year,Europe
+Belgium,78.5,26.8,53.8,67.3,82.4,76.5,2021,year,Europe
+Finland,77.5,28.0,53.9,65.6,81.2,89.1,2021,year,Europe
+Lebanon,75.9,24.1,51.1,72.5,62.9,29.5,2021,year,Asia
+Austria,75.5,28.4,53.0,67.6,71.0,78.2,2021,year,Europe
+Malta,73.6,33.0,54.2,63.4,77.0,41.9,2021,year,Europe
+Italy,73.1,22.9,49.1,62.5,75.6,58.7,2021,year,Europe
+United States,71.9,41.1,57.2,70.2,69.4,102.6,2021,year,North America
+United Kingdom,71.0,31.6,52.2,56.4,74.7,82.6,2021,year,Europe
+Germany,70.6,29.6,51.0,54.7,65.0,93.7,2021,year,Europe
+Canada,70.1,32.5,52.1,68.5,64.0,82.8,2021,year,North America
+Macao,69.6,44.4,57.6,66.3,48.9,67.6,2021,year,Asia
+Puerto Rico,69.5,19.4,45.6,72.1,58.1,69.2,2021,year,North America
+Taiwan,65.2,17.9,42.6,79.1,28.8,56.1,2021,year,Asia
+Qatar,64.2,46.6,55.8,56.7,62.6,93.1,2021,year,Asia
+Cyprus,64.0,22.7,44.3,51.7,66.3,52.3,2021,year,Europe
+United Arab Emirates,61.7,40.6,51.6,48.8,61.3,85.7,2021,year,Asia
+Greece,61.0,13.1,38.1,47.7,55.7,38.9,2021,year,Europe
+Slovenia,59.4,18.9,40.0,51.5,47.9,56.1,2021,year,Europe
+Spain,59.1,23.6,42.1,48.7,57.0,62.7,2021,year,Europe
+Bahrain,57.7,29.5,44.2,47.0,52.3,53.2,2021,year,Asia
+Estonia,56.5,16.3,37.3,43.3,56.3,61.2,2021,year,Europe
+Croatia,56.4,14.9,36.6,49.1,46.1,43.1,2021,year,Europe
+Palestine,55.9,10.0,34.0,50.2,36.2,39.1,2021,year,Asia
+Cuba,55.5,14.9,36.1,46.9,32.9,1.4,2021,year,North America
+Trinidad And Tobago,55.5,16.4,36.8,53.1,52.2,39.0,2021,year,North America
+Ivory Coast,54.6,20.3,38.2,47.2,34.5,6.3,2021,year,Africa
+Ethiopia,54.3,15.6,35.8,37.5,18.2,10.1,2021,year,Africa
+Panama,54.1,22.6,39.0,54.8,45.5,32.1,2021,year,North America
+Jamaica,53.2,15.9,35.4,55.9,33.1,32.2,2021,year,North America
+Portugal,52.9,22.3,38.3,42.0,43.2,45.0,2021,year,Europe
+Latvia,52.9,13.2,33.9,41.4,44.9,45.9,2021,year,Europe
+Mauritius,52.6,12.3,33.3,54.1,37.6,27.4,2021,year,Africa
+Belize,52.4,11.6,32.9,47.8,36.1,45.7,2021,year,North America
+Jordan,52.2,9.7,31.9,42.8,42.1,33.1,2021,year,Asia
+Suriname,51.9,10.4,32.1,50.4,62.6,16.5,2021,year,South America
+Zimbabwe,51.5,9.4,31.4,45.6,39.3,22.1,2021,year,Africa
+Yemen,51.5,6.2,29.8,61.2,23.6,14.7,2021,year,Asia
+Uruguay,51.1,13.6,33.2,40.8,49.0,30.6,2021,year,South America
+Costa Rica,50.6,14.5,33.4,48.0,41.3,39.0,2021,year,North America
+Oman,50.2,17.3,34.5,46.9,41.9,84.4,2021,year,Asia
+Saudi Arabia,49.9,11.6,31.6,41.7,32.0,88.2,2021,year,Asia
+Kuwait,49.4,31.4,40.8,35.9,45.1,75.3,2021,year,Asia
+Brunei,49.4,23.4,37.0,47.2,35.9,89.0,2021,year,Asia
+Chile,49.3,14.7,32.8,41.8,46.0,33.3,2021,year,South America
+Thailand,49.3,16.3,33.6,50.6,24.2,31.4,2021,year,Asia
+Czech Republic,49.2,19.8,35.1,42.8,34.7,56.4,2021,year,Europe
+Slovakia,49.1,17.4,34.0,43.0,37.5,50.4,2021,year,Europe
+Fiji,48.5,17.8,33.8,53.4,38.6,30.0,2021,year,Oceania
+Cambodia,47.9,14.6,32.0,48.6,23.1,11.4,2021,year,Asia
+Lithuania,47.7,14.6,31.9,37.3,46.0,54.6,2021,year,Europe
+Guatemala,44.8,15.2,30.7,41.7,32.5,25.6,2021,year,North America
+El Salvador,44.6,13.3,29.6,42.7,33.3,20.7,2021,year,North America
+Nicaragua,42.8,8.0,26.2,41.1,29.5,16.7,2021,year,North America
+Hungary,42.7,12.8,28.4,35.5,34.2,49.8,2021,year,Europe
+Cameroon,42.6,7.4,25.8,42.9,24.7,15.4,2021,year,Africa
+China,42.5,16.4,30.1,45.5,28.4,57.5,2021,year,Asia
+Honduras,42.2,10.6,27.1,35.1,28.7,31.1,2021,year,North America
+Poland,42.0,18.1,30.6,33.4,35.4,47.1,2021,year,Europe
+South Africa,41.7,15.9,29.4,34.6,37.2,72.9,2021,year,Africa
+Dominican Republic,41.5,9.8,26.4,36.1,35.3,21.7,2021,year,North America
+Montenegro,41.4,11.8,27.3,32.5,32.5,35.4,2021,year,Europe
+Iran,41.3,17.9,30.1,36.3,25.9,19.0,2021,year,Asia
+Namibia,41.0,14.3,28.2,35.7,35.6,53.3,2021,year,Africa
+Bulgaria,40.9,9.9,26.1,35.2,31.9,40.3,2021,year,Europe
+Philippines,40.7,10.4,26.2,38.9,22.2,19.7,2021,year,Asia
+Ghana,40.6,18.4,30.0,41.2,31.5,15.2,2021,year,Africa
+Botswana,40.4,10.7,26.2,34.6,41.5,61.9,2021,year,Africa
+Albania,40.2,9.2,25.4,32.7,30.7,26.6,2021,year,Europe
+Ecuador,40.1,12.0,26.7,36.4,28.5,30.5,2021,year,South America
+Malaysia,39.5,10.8,25.8,40.2,21.7,56.1,2021,year,Asia
+Serbia,39.2,9.8,25.2,29.7,30.6,35.8,2021,year,Europe
+Bosnia And Herzegovina,38.6,7.1,23.5,31.8,25.7,42.6,2021,year,Europe
+Romania,38.5,10.8,25.2,33.4,32.4,45.2,2021,year,Europe
+Myanmar,38.1,21.7,30.2,39.6,21.2,10.7,2021,year,Asia
+Vietnam,38.0,14.2,26.6,38.3,19.0,27.3,2021,year,Asia
+Argentina,37.9,8.5,23.8,29.2,33.4,34.6,2021,year,South America
+Indonesia,37.4,10.3,24.5,39.4,18.0,20.9,2021,year,Asia
+Somalia,37.4,5.9,22.4,44.5,26.7,27.2,2021,year,Africa
+Morocco,36.9,9.7,23.9,32.8,26.3,32.2,2021,year,Africa
+Kenya,36.3,9.2,23.3,33.4,30.5,27.7,2021,year,Africa
+Peru,36.3,12.3,24.8,33.8,23.6,28.8,2021,year,South America
+Bolivia,36.1,10.8,24.0,31.9,25.2,37.2,2021,year,South America
+Mozambique,35.9,15.1,26.0,29.1,29.3,16.4,2021,year,Africa
+Mexico,35.1,11.6,23.9,33.6,28.9,35.5,2021,year,North America
+Tanzania,34.6,13.1,24.3,30.6,25.2,16.0,2021,year,Africa
+North Macedonia,34.1,6.7,21.0,28.5,22.5,32.0,2021,year,Europe
+Rwanda,34.1,14.9,24.9,28.5,28.5,22.0,2021,year,Africa
+Bangladesh,33.3,4.9,19.7,31.5,20.4,24.1,2021,year,Asia
+Mongolia,33.2,9.9,22.1,33.1,23.3,28.1,2021,year,Asia
+Russia,33.2,9.8,22.0,27.8,30.6,34.6,2021,year,Europe
+Iraq,32.7,9.8,21.8,27.5,25.6,39.8,2021,year,Asia
+Moldova,32.7,8.7,21.2,26.1,26.6,27.0,2021,year,Europe
+Uganda,32.2,7.3,20.3,28.9,22.0,14.0,2021,year,Africa
+Brazil,31.8,8.1,20.5,25.4,22.5,28.7,2021,year,South America
+Armenia,31.7,10.4,21.5,24.6,27.2,26.1,2021,year,Asia
+Turkey,31.5,6.1,19.4,28.1,19.9,35.3,2021,year,Asia
+Sri Lanka,31.3,8.5,20.4,36.5,16.5,20.8,2021,year,Asia
+Colombia,31.0,10.0,20.9,26.3,21.8,26.1,2021,year,South America
+Azerbaijan,30.9,9.0,20.4,26.2,28.7,25.8,2021,year,Asia
+Paraguay,30.7,9.8,20.7,24.5,24.3,27.5,2021,year,South America
+Belarus,30.7,9.2,20.4,26.6,31.0,32.0,2021,year,Europe
+Egypt,30.1,6.0,18.6,26.5,24.9,20.0,2021,year,Africa
+Kazakhstan,29.8,9.3,20.0,25.6,25.8,34.9,2021,year,Asia
+Nigeria,29.7,28.9,29.3,31.2,18.0,9.8,2021,year,Africa
+Tunisia,29.5,5.8,18.2,28.5,15.7,27.8,2021,year,Africa
+Kosovo,29.4,8.8,19.6,26.9,21.1,40.1,2021,year,Europe
+Ukraine,29.2,8.7,19.4,24.3,23.7,30.1,2021,year,Europe
+Syria,29.0,5.7,17.9,28.4,23.5,8.1,2021,year,Asia
+Nepal,28.9,4.5,17.2,26.5,19.7,20.6,2021,year,Asia
+Algeria,28.3,5.0,17.2,29.1,15.0,24.8,2021,year,Africa
+Zambia,28.1,6.7,17.9,27.1,16.2,59.5,2021,year,Africa
+Georgia,28.0,9.4,19.1,24.4,24.2,25.7,2021,year,Asia
+Uzbekistan,27.1,8.1,18.0,23.9,21.4,22.0,2021,year,Asia
+Afghanistan,26.3,3.9,15.6,19.3,17.0,26.6,2021,year,Asia
+India,25.2,5.8,15.9,26.3,17.7,47.1,2021,year,Asia
+Kyrgyzstan,23.0,7.4,15.5,20.6,19.2,22.0,2021,year,Asia
+Libya,22.3,5.7,14.4,25.3,13.3,31.8,2021,year,Africa
+Pakistan,21.6,4.4,13.4,19.1,17.2,27.3,2021,year,Asia
+Switzerland,122.4,50.3,87.9,120.3,123.0,119.5,2020,year,Europe
+Norway,101.4,36.2,70.2,91.1,109.3,88.4,2020,year,Europe
+Iceland,100.5,47.0,74.9,86.9,113.7,79.4,2020,year,Europe
+Japan,83.3,26.0,55.9,81.8,48.9,87.3,2020,year,Asia
+Denmark,83.0,31.9,58.6,61.7,100.8,100.9,2020,year,Europe
+Bahamas,82.5,36.4,60.4,62.7,83.7,54.2,2020,year,North America
+Luxembourg,81.9,54.9,69.0,69.1,89.8,103.9,2020,year,Europe
+Israel,81.2,31.3,57.3,66.3,88.6,78.1,2020,year,Asia
+Singapore,81.1,63.3,72.6,66.8,59.0,89.0,2020,year,Asia
+South Korea,78.2,22.9,51.7,91.3,44.9,85.2,2020,year,Asia
+Hong Kong,77.2,79.6,78.3,75.9,54.4,65.3,2020,year,Asia
+Barbados,76.0,19.7,49.1,65.2,68.1,51.1,2020,year,North America
+Ireland,75.9,43.9,60.6,58.4,81.2,80.9,2020,year,Europe
+France,74.1,25.4,50.8,67.9,72.5,80.4,2020,year,Europe
+Netherlands,73.7,35.2,55.3,55.9,80.5,90.7,2020,year,Europe
+Australia,73.5,34.9,55.0,67.2,70.3,107.3,2020,year,Oceania
+New Zealand,72.5,32.1,53.2,64.7,68.8,92.7,2020,year,Oceania
+Belgium,71.8,25.4,49.6,58.7,80.1,86.3,2020,year,Europe
+Seychelles,71.6,32.3,52.8,64.6,84.9,21.7,2020,year,Africa
+United States,71.1,40.3,56.4,66.6,70.7,109.5,2020,year,North America
+Austria,70.4,26.8,49.5,61.7,68.1,82.4,2020,year,Europe
+Finland,70.3,26.2,49.2,56.5,76.8,99.9,2020,year,Europe
+Sweden,69.8,25.9,48.8,60.5,72.3,101.7,2020,year,Europe
+Canada,67.6,30.7,50.0,63.7,63.5,95.1,2020,year,North America
+Puerto Rico,67.5,19.3,44.5,65.8,58.7,79.4,2020,year,North America
+Malta,67.5,31.0,50.0,54.9,75.9,46.3,2020,year,Europe
+United Kingdom,67.3,29.8,49.4,51.3,74.1,91.7,2020,year,Europe
+Italy,67.3,21.2,45.2,55.4,72.3,65.6,2020,year,Europe
+Germany,65.3,27.1,47.0,49.2,61.6,102.4,2020,year,Europe
+Macao,64.8,44.0,54.9,62.0,43.4,80.9,2020,year,Asia
+Qatar,64.0,47.4,56.1,53.6,66.8,111.7,2020,year,Asia
+United Arab Emirates,62.0,41.1,52.0,47.6,61.3,91.6,2020,year,Asia
+Taiwan,61.4,16.4,39.9,71.5,28.5,65.7,2020,year,Asia
+Lebanon,60.5,24.5,43.3,43.9,58.2,44.5,2020,year,Asia
+Bahrain,58.9,30.9,45.6,48.1,54.5,57.9,2020,year,Asia
+Cyprus,57.9,20.5,40.0,44.2,63.1,57.4,2020,year,Europe
+Jamaica,57.8,15.2,37.5,59.0,38.1,32.4,2020,year,North America
+Greece,55.7,11.7,34.6,41.6,53.7,43.7,2020,year,Europe
+Zimbabwe,55.3,11.0,34.1,50.8,40.8,26.0,2020,year,Africa
+Palestine,54.5,8.8,32.7,46.7,38.9,46.9,2020,year,Asia
+Ethiopia,54.4,20.9,38.4,36.3,19.4,8.3,2020,year,Africa
+Panama,54.2,24.8,40.1,53.0,47.3,34.2,2020,year,North America
+Costa Rica,54.0,15.5,35.6,49.6,43.5,42.6,2020,year,North America
+Spain,53.8,21.8,38.5,42.4,52.1,72.0,2020,year,Europe
+Trinidad And Tobago,53.7,17.3,36.3,49.4,49.8,45.7,2020,year,North America
+Jordan,53.7,11.5,33.5,43.3,47.1,34.9,2020,year,Asia
+Slovenia,53.4,17.1,36.0,43.8,45.4,66.3,2020,year,Europe
+Mauritius,53.0,12.0,33.4,48.9,44.0,30.9,2020,year,Africa
+Uruguay,51.0,14.4,33.5,40.1,47.4,37.5,2020,year,South America
+Estonia,50.9,15.4,33.9,36.6,52.9,71.3,2020,year,Europe
+Kuwait,50.4,31.2,41.2,34.7,47.1,85.6,2020,year,Asia
+Thailand,49.8,17.1,34.1,49.2,24.9,35.5,2020,year,Asia
+Croatia,49.7,13.5,32.4,39.9,42.4,50.4,2020,year,Europe
+Portugal,49.5,21.8,36.3,38.1,42.5,49.4,2020,year,Europe
+Oman,49.3,18.0,34.3,43.5,44.3,81.0,2020,year,Asia
+Belize,49.2,9.7,30.3,41.9,37.0,57.5,2020,year,North America
+Saudi Arabia,48.3,11.4,30.7,37.9,33.5,100.0,2020,year,Asia
+Latvia,47.9,12.3,30.9,34.9,42.9,52.5,2020,year,Europe
+Cambodia,47.5,14.9,31.9,44.6,25.2,11.3,2020,year,Asia
+Fiji,47.5,18.5,33.6,52.7,35.9,33.2,2020,year,Oceania
+Czech Republic,46.1,19.6,33.4,38.1,34.1,62.8,2020,year,Europe
+El Salvador,45.6,13.5,30.2,43.7,34.8,24.7,2020,year,North America
+Brunei,44.7,23.1,34.4,37.1,38.1,87.0,2020,year,Asia
+Nicaragua,44.6,7.6,26.9,41.7,31.4,23.9,2020,year,North America
+Slovakia,44.5,16.1,30.9,37.5,33.8,56.9,2020,year,Europe
+Lithuania,44.3,13.6,29.6,33.6,42.7,57.8,2020,year,Europe
+Dominican Republic,44.1,10.6,28.1,35.9,38.3,24.0,2020,year,North America
+Chile,43.6,13.4,29.2,36.4,41.6,42.5,2020,year,South America
+Cuba,43.5,4.8,25.0,37.4,30.9,2.2,2020,year,North America
+Suriname,43.1,7.8,26.2,45.8,35.0,22.4,2020,year,South America
+Namibia,43.1,16.1,30.2,36.8,39.2,55.6,2020,year,Africa
+South Africa,42.9,16.6,30.3,33.3,40.6,73.6,2020,year,Africa
+Guatemala,42.7,15.3,29.6,37.4,33.0,39.8,2020,year,North America
+Honduras,42.2,10.6,27.1,33.3,30.5,30.3,2020,year,North America
+Myanmar,42.1,23.8,33.3,44.7,19.0,10.2,2020,year,Asia
+Ecuador,41.0,12.0,27.1,35.5,30.7,36.1,2020,year,South America
+Hungary,40.9,14.0,28.0,30.8,34.5,47.6,2020,year,Europe
+Brazil,40.2,10.6,26.1,29.2,30.8,32.8,2020,year,South America
+Kenya,40.2,10.7,26.1,35.4,35.1,27.3,2020,year,Africa
+China,40.0,16.4,28.7,40.4,29.2,60.9,2020,year,Asia
+Poland,40.0,15.7,28.4,30.6,33.4,59.6,2020,year,Europe
+Russia,39.2,11.4,25.9,31.1,39.6,38.9,2020,year,Europe
+Botswana,39.1,11.1,25.7,31.7,40.0,58.1,2020,year,Africa
+Malaysia,39.1,11.0,25.7,37.6,22.9,64.5,2020,year,Asia
+Iraq,39.0,11.3,25.8,31.8,32.7,42.4,2020,year,Asia
+Iran,39.0,14.5,27.3,35.5,25.1,22.7,2020,year,Asia
+Somalia,38.7,4.8,22.5,45.9,27.0,33.2,2020,year,Africa
+Peru,38.7,12.8,26.3,33.8,24.7,34.0,2020,year,South America
+Vietnam,38.3,13.6,26.5,37.1,19.6,28.1,2020,year,Asia
+Montenegro,38.2,10.4,24.9,28.6,33.2,39.8,2020,year,Europe
+Ghana,37.6,19.4,28.9,37.2,26.6,14.7,2020,year,Africa
+Philippines,37.6,9.0,23.9,33.5,20.8,23.5,2020,year,Asia
+Indonesia,37.3,10.6,24.5,37.4,18.3,25.1,2020,year,Asia
+Bulgaria,36.7,9.6,23.8,30.1,29.1,49.4,2020,year,Europe
+Albania,36.4,8.5,23.1,28.4,26.8,29.6,2020,year,Europe
+Bosnia And Herzegovina,36.0,6.7,22.0,28.1,25.1,41.8,2020,year,Europe
+Mexico,35.7,11.5,24.1,32.4,32.1,41.8,2020,year,North America
+Serbia,35.7,9.1,23.0,25.5,28.6,36.7,2020,year,Europe
+Romania,35.3,10.0,23.2,29.0,30.5,48.9,2020,year,Europe
+Tanzania,35.3,14.0,25.1,29.7,22.6,17.6,2020,year,Africa
+Belarus,34.7,10.5,23.1,28.1,38.9,37.0,2020,year,Europe
+Turkey,34.7,6.8,21.3,29.8,24.2,40.8,2020,year,Asia
+Bolivia,34.6,10.9,23.3,28.1,25.1,39.3,2020,year,South America
+Morocco,34.3,8.9,22.2,30.1,24.5,35.2,2020,year,Africa
+Moldova,33.7,8.4,21.6,26.0,27.8,27.6,2020,year,Europe
+Rwanda,33.3,11.9,23.1,26.8,29.2,19.3,2020,year,Africa
+Ukraine,33.2,10.5,22.3,26.0,26.4,31.8,2020,year,Europe
+Argentina,33.0,8.3,21.2,25.8,30.5,47.2,2020,year,South America
+Armenia,32.8,10.9,22.4,25.6,30.4,28.0,2020,year,Asia
+Bangladesh,32.3,5.0,19.2,29.7,19.2,33.2,2020,year,Asia
+Zambia,31.7,7.4,20.1,26.9,22.1,54.1,2020,year,Africa
+Sri Lanka,31.6,7.7,20.2,35.1,18.8,24.5,2020,year,Asia
+North Macedonia,31.6,6.5,19.6,24.9,23.3,37.2,2020,year,Europe
+Paraguay,31.1,9.7,20.8,25.0,25.0,32.6,2020,year,South America
+Nigeria,31.0,23.6,27.5,31.1,17.7,13.5,2020,year,Africa
+Colombia,30.7,9.6,20.6,25.1,22.4,31.1,2020,year,South America
+Kazakhstan,30.6,9.8,20.7,24.3,29.9,38.4,2020,year,Asia
+Uganda,30.2,10.2,20.6,25.3,22.1,20.5,2020,year,Africa
+Algeria,30.1,5.3,18.3,30.7,15.9,28.7,2020,year,Africa
+Azerbaijan,29.9,9.5,20.1,23.7,30.4,30.2,2020,year,Asia
+Egypt,29.5,5.5,18.0,25.5,23.5,22.4,2020,year,Africa
+Nepal,29.0,4.8,17.4,24.9,20.4,21.9,2020,year,Asia
+Georgia,28.5,9.8,19.5,23.1,26.7,24.9,2020,year,Asia
+Kosovo,28.5,8.5,18.9,26.5,21.0,48.9,2020,year,Europe
+Venezuela,27.2,6.8,17.4,28.3,24.4,2.6,2020,year,South America
+Tunisia,27.0,5.5,16.7,25.3,14.9,34.5,2020,year,Africa
+Kyrgyzstan,27.0,9.2,18.5,23.4,21.4,25.0,2020,year,Asia
+Uzbekistan,26.0,7.5,17.2,21.6,20.2,24.3,2020,year,Asia
+Syria,25.3,5.7,15.9,22.4,21.4,11.5,2020,year,Asia
+India,24.6,5.7,15.5,24.5,17.2,54.3,2020,year,Asia
+Afghanistan,24.2,4.0,14.6,17.7,17.4,28.2,2020,year,Asia
+Pakistan,22.0,4.6,13.7,19.1,16.8,30.6,2020,year,Asia
+Switzerland,121.2,50.2,87.1,120.8,123.1,129.7,2019,year,Europe
+Iceland,101.9,48.3,76.1,92.1,111.8,91.8,2019,year,Europe
+Norway,101.0,37.3,70.4,92.7,111.5,103.6,2019,year,Europe
+Bahamas,92.4,33.5,64.1,77.0,99.9,57.0,2019,year,North America
+Luxembourg,86.1,55.6,71.5,75.1,96.1,106.3,2019,year,Europe
+Japan,83.3,28.0,56.7,83.6,48.8,103.1,2019,year,Asia
+Denmark,81.4,32.9,58.1,63.6,95.1,114.4,2019,year,Europe
+Hong Kong,78.1,76.8,77.5,80.3,56.1,69.3,2019,year,Asia
+South Korea,76.9,22.2,50.7,89.7,44.8,103.4,2019,year,Asia
+Ireland,75.3,41.8,59.2,59.1,82.6,95.1,2019,year,Europe
+France,74.9,26.2,51.5,68.3,75.4,91.6,2019,year,Europe
+Netherlands,74.8,34.7,55.6,58.8,83.5,102.5,2019,year,Europe
+Israel,74.3,29.4,52.7,61.9,80.8,92.5,2019,year,Asia
+Belgium,73.0,25.8,50.3,60.9,83.4,95.1,2019,year,Europe
+Finland,72.8,26.1,50.4,60.0,77.9,112.3,2019,year,Europe
+New Zealand,72.6,31.6,52.9,65.7,68.8,101.1,2019,year,Oceania
+Australia,72.1,35.5,54.5,66.9,70.7,122.9,2019,year,Oceania
+Austria,71.8,27.6,50.6,65.6,70.1,96.7,2019,year,Europe
+Sweden,71.6,26.0,49.7,63.5,75.0,111.4,2019,year,Europe
+United States,69.9,39.0,55.1,67.4,69.3,122.0,2019,year,North America
+Singapore,69.8,53.1,61.8,57.5,46.7,103.8,2019,year,Asia
+Italy,69.2,21.7,46.4,58.3,75.7,77.5,2019,year,Europe
+Germany,67.6,26.8,48.0,54.3,63.6,116.2,2019,year,Europe
+United Kingdom,65.3,28.6,47.7,51.9,72.4,105.7,2019,year,Europe
+Canada,65.0,28.3,47.4,62.4,61.8,109.4,2019,year,North America
+Puerto Rico,63.8,18.0,41.8,61.7,54.8,98.4,2019,year,North America
+Malta,63.3,28.7,46.7,51.2,67.3,59.7,2019,year,Europe
+Taiwan,59.8,23.4,42.3,69.6,26.9,56.4,2019,year,Asia
+Qatar,59.1,46.6,53.1,47.7,61.9,138.3,2019,year,Asia
+Jamaica,58.8,14.7,37.6,58.8,42.3,34.7,2019,year,North America
+Lebanon,58.1,26.9,43.1,43.3,56.8,54.0,2019,year,Asia
+Uruguay,57.3,16.2,37.6,45.1,56.3,47.8,2019,year,South America
+Bahrain,56.7,29.6,43.7,51.2,52.2,74.6,2019,year,Asia
+Greece,56.7,10.8,34.6,43.7,54.8,49.6,2019,year,Europe
+United Arab Emirates,56.2,41.0,48.9,43.2,53.9,119.6,2019,year,Asia
+Cyprus,55.6,20.2,38.6,44.3,59.8,75.3,2019,year,Europe
+Jordan,55.0,11.9,34.3,44.4,52.3,41.7,2019,year,Asia
+Spain,54.7,20.7,38.4,44.0,54.1,83.8,2019,year,Europe
+Slovenia,52.5,15.4,34.7,43.3,43.8,75.4,2019,year,Europe
+Mauritius,52.4,11.5,32.8,47.9,39.1,39.8,2019,year,Africa
+Myanmar,52.4,24.7,39.1,54.8,20.2,14.0,2019,year,Asia
+Trinidad And Tobago,52.1,17.1,35.3,50.0,46.0,57.0,2019,year,North America
+Zimbabwe,51.6,11.7,32.4,45.7,36.8,27.7,2019,year,Africa
+Kuwait,51.5,32.9,42.6,39.9,47.3,102.0,2019,year,Asia
+Panama,51.4,24.6,38.6,48.2,47.1,41.3,2019,year,North America
+Ghana,51.1,31.6,41.7,44.8,31.7,18.7,2019,year,Africa
+Estonia,51.0,15.4,33.9,37.1,51.2,76.0,2019,year,Europe
+Fiji,50.9,22.7,37.4,57.6,36.5,35.4,2019,year,Oceania
+Costa Rica,50.9,15.5,33.9,47.9,42.6,47.1,2019,year,North America
+Portugal,50.4,21.1,36.3,40.2,43.1,55.2,2019,year,Europe
+Palestine,50.2,9.0,30.4,43.9,37.3,57.2,2019,year,Asia
+Belize,49.4,8.8,29.9,42.9,36.7,70.8,2019,year,North America
+Latvia,49.2,12.0,31.4,36.7,45.5,55.2,2019,year,Europe
+Croatia,49.2,11.6,31.1,40.3,40.4,60.3,2019,year,Europe
+Chile,47.7,15.2,32.1,40.5,45.1,54.1,2019,year,South America
+Saudi Arabia,47.6,11.4,30.2,39.1,30.9,118.6,2019,year,Asia
+Thailand,47.5,17.7,33.2,50.0,24.6,40.9,2019,year,Asia
+Cambodia,46.8,14.4,31.3,44.2,24.4,12.5,2019,year,Asia
+Oman,46.2,19.9,33.6,40.0,44.4,88.5,2019,year,Asia
+El Salvador,46.1,14.2,30.8,45.6,35.5,30.1,2019,year,North America
+Lithuania,45.9,12.9,30.1,35.4,43.9,60.3,2019,year,Europe
+Nicaragua,45.8,9.5,28.4,46.4,31.1,24.5,2019,year,North America
+Czech Republic,45.1,18.3,32.2,38.1,33.2,71.3,2019,year,Europe
+Slovakia,45.0,16.1,31.1,38.5,33.6,63.2,2019,year,Europe
+Dominican Republic,44.9,10.2,28.3,35.7,42.4,26.0,2019,year,North America
+Namibia,43.2,17.5,30.8,39.9,38.6,63.6,2019,year,Africa
+Brazil,42.8,11.5,27.7,31.3,34.8,37.4,2019,year,South America
+South Africa,42.5,16.5,30.0,33.9,40.8,83.0,2019,year,Africa
+Honduras,42.1,10.8,27.1,33.6,31.5,35.2,2019,year,North America
+Hungary,42.0,13.6,28.4,32.4,33.4,54.7,2019,year,Europe
+Ecuador,42.0,11.6,27.4,37.9,29.4,40.8,2019,year,South America
+Guatemala,41.7,13.9,28.4,38.0,32.3,41.8,2019,year,North America
+Cuba,40.5,8.1,24.9,34.3,28.3,2.5,2019,year,North America
+Iraq,39.6,11.5,26.1,34.1,31.8,47.6,2019,year,Asia
+Montenegro,39.6,9.9,25.4,30.8,34.2,46.3,2019,year,Europe
+Malaysia,39.4,10.9,25.7,39.7,22.7,73.1,2019,year,Asia
+China,39.2,17.4,28.7,39.9,28.2,69.0,2019,year,Asia
+Poland,39.1,14.9,27.5,30.7,32.7,70.0,2019,year,Europe
+Kenya,38.2,10.0,24.7,33.2,31.2,32.5,2019,year,Africa
+Vietnam,37.7,13.1,25.9,37.9,18.9,33.3,2019,year,Asia
+Bulgaria,37.2,9.2,23.7,31.1,29.9,52.2,2019,year,Europe
+Peru,37.2,12.0,25.1,32.7,23.7,37.5,2019,year,South America
+Romania,36.5,10.0,23.7,29.9,32.3,61.2,2019,year,Europe
+Indonesia,36.2,8.4,22.9,38.1,18.0,33.0,2019,year,Asia
+Albania,36.2,8.2,22.7,28.6,29.3,33.8,2019,year,Europe
+Iran,35.8,16.9,26.7,32.6,26.9,37.7,2019,year,Asia
+Bosnia And Herzegovina,35.7,6.3,21.6,28.8,23.8,49.2,2019,year,Europe
+Russia,35.5,12.7,24.5,29.2,37.0,45.4,2019,year,Europe
+Serbia,35.4,8.1,22.3,26.3,27.8,39.9,2019,year,Europe
+Turkey,35.2,7.2,21.8,30.4,23.7,45.3,2019,year,Asia
+Philippines,35.1,8.1,22.1,32.6,19.7,29.5,2019,year,Asia
+Tanzania,34.7,16.0,25.8,28.6,25.2,22.7,2019,year,Africa
+Bolivia,34.4,10.9,23.1,26.9,28.0,44.0,2019,year,South America
+Morocco,34.0,9.5,22.2,29.9,23.9,41.4,2019,year,Africa
+Belarus,33.1,10.0,22.0,27.8,36.0,44.6,2019,year,Europe
+Argentina,33.1,9.5,21.8,26.3,32.5,55.0,2019,year,South America
+Mexico,32.7,10.1,21.8,30.3,30.2,50.0,2019,year,North America
+Armenia,32.5,9.9,21.7,25.8,32.5,33.1,2019,year,Asia
+Paraguay,32.3,9.4,21.3,26.0,25.8,35.6,2019,year,South America
+Moldova,32.3,8.0,20.6,25.0,27.7,30.7,2019,year,Europe
+Bangladesh,31.8,5.4,19.2,29.5,19.0,39.8,2019,year,Asia
+North Macedonia,31.6,6.5,19.5,24.8,23.7,39.8,2019,year,Europe
+Nigeria,31.2,29.0,30.2,31.8,19.2,15.1,2019,year,Africa
+Algeria,30.6,5.5,18.5,32.0,16.4,32.9,2019,year,Africa
+Uganda,30.3,8.5,19.8,26.1,21.9,22.7,2019,year,Africa
+Sri Lanka,30.2,7.6,19.4,33.6,17.4,27.3,2019,year,Asia
+Colombia,30.1,9.2,20.1,24.3,22.5,34.7,2019,year,South America
+Kazakhstan,29.8,9.8,20.2,23.8,29.8,38.8,2019,year,Asia
+Nepal,29.6,4.6,17.6,25.4,19.7,26.3,2019,year,Asia
+Azerbaijan,29.1,8.7,19.3,24.1,30.7,32.0,2019,year,Asia
+Georgia,28.8,8.5,19.1,23.4,27.1,33.2,2019,year,Asia
+Ukraine,27.9,9.5,19.1,22.5,22.1,32.7,2019,year,Europe
+Uzbekistan,27.1,8.3,18.1,23.9,21.1,25.1,2019,year,Asia
+Egypt,26.5,5.0,16.2,23.2,22.3,23.7,2019,year,Africa
+Kosovo,26.2,8.1,17.5,23.2,19.6,61.8,2019,year,Europe
+Venezuela,25.7,5.9,16.2,27.6,22.0,3.7,2019,year,South America
+India,24.2,5.8,15.4,24.2,17.2,66.9,2019,year,Asia
+Tunisia,23.7,5.0,14.7,22.3,13.3,38.0,2019,year,Africa
+Pakistan,20.4,4.5,12.8,18.2,15.4,38.6,2019,year,Asia
+Bermuda,144.9,100.7,123.6,143.4,151.6,104.2,2018,year,North America
+Switzerland,131.4,53.8,94.0,133.3,131.9,126.1,2018,year,Europe
+Iceland,124.0,54.6,90.5,119.0,132.6,87.8,2018,year,Europe
+Norway,113.7,40.9,78.6,106.5,125.0,108.0,2018,year,Europe
+Bahamas,100.7,35.3,69.2,88.4,102.1,71.4,2018,year,North America
+Luxembourg,96.6,59.9,78.9,85.0,107.9,116.7,2018,year,Europe
+Denmark,93.3,36.6,66.0,72.5,113.4,117.5,2018,year,Europe
+Singapore,91.4,71.9,82.0,83.6,64.4,95.9,2018,year,Asia
+Japan,86.6,25.6,57.2,91.6,49.2,107.4,2018,year,Asia
+Israel,86.5,35.6,62.0,72.4,94.9,102.3,2018,year,Asia
+Ireland,85.4,47.2,67.0,69.5,93.2,96.1,2018,year,Europe
+Australia,84.3,41.8,63.8,80.7,81.6,123.0,2018,year,Oceania
+France,83.9,28.6,57.2,78.1,81.9,101.2,2018,year,Europe
+Sweden,83.7,28.0,56.8,76.1,86.7,113.0,2018,year,Europe
+New Zealand,83.4,33.8,59.5,77.0,79.0,98.6,2018,year,Oceania
+Belgium,83.3,28.1,56.7,72.8,93.2,98.9,2018,year,Europe
+South Korea,82.9,23.4,54.2,99.7,49.0,109.4,2018,year,Asia
+Netherlands,82.7,36.2,60.3,65.8,92.7,109.5,2018,year,Europe
+Finland,81.7,29.7,56.6,68.8,86.9,119.4,2018,year,Europe
+Austria,81.5,29.3,56.3,76.8,75.8,98.7,2018,year,Europe
+Italy,79.1,23.1,52.1,68.0,84.7,81.1,2018,year,Europe
+Hong Kong,78.7,79.5,79.1,83.5,56.2,82.9,2018,year,Asia
+United Kingdom,75.8,33.4,55.4,61.0,83.9,108.5,2018,year,Europe
+Germany,74.3,29.1,52.5,58.9,71.2,125.0,2018,year,Europe
+United States,73.0,38.5,56.3,73.9,70.0,127.6,2018,year,North America
+Canada,72.5,30.8,52.4,71.4,68.7,118.9,2018,year,North America
+Malta,70.9,29.3,50.9,59.8,75.1,66.2,2018,year,Europe
+United Arab Emirates,67.2,60.7,64.1,55.6,63.3,124.8,2018,year,Asia
+Puerto Rico,67.0,18.7,43.7,66.3,55.7,103.8,2018,year,North America
+Uruguay,66.9,20.0,44.3,54.5,69.2,34.3,2018,year,South America
+Taiwan,65.4,15.1,41.1,79.2,28.9,106.4,2018,year,Asia
+Qatar,65.4,65.3,65.3,57.5,64.8,125.0,2018,year,Asia
+Greece,63.2,11.8,38.4,50.9,61.7,53.8,2018,year,Europe
+Spain,61.8,22.2,42.7,51.3,60.6,90.7,2018,year,Europe
+Jamaica,60.6,12.5,37.4,60.2,39.7,35.3,2018,year,North America
+Cyprus,60.3,15.4,38.7,49.7,65.4,94.8,2018,year,Europe
+Lebanon,60.2,27.9,44.7,46.2,58.7,56.4,2018,year,Asia
+Ghana,59.8,32.8,46.8,54.9,37.4,16.0,2018,year,Africa
+Slovenia,59.6,15.5,38.4,50.8,48.9,80.3,2018,year,Europe
+Bahrain,59.6,31.0,45.8,58.0,54.2,72.3,2018,year,Asia
+Palestine,58.2,10.3,35.1,54.4,41.8,60.2,2018,year,Asia
+Estonia,57.6,15.8,37.5,43.8,56.8,74.8,2018,year,Europe
+Kuwait,56.9,36.3,47.0,44.0,48.5,100.6,2018,year,Asia
+Costa Rica,56.2,17.6,37.6,55.6,45.9,54.7,2018,year,North America
+Portugal,55.9,20.4,38.8,45.5,46.8,62.0,2018,year,Europe
+Chile,55.2,16.6,36.6,47.8,51.4,54.5,2018,year,South America
+Jordan,55.1,12.1,34.3,46.5,52.7,43.4,2018,year,Asia
+Croatia,55.1,12.0,34.3,46.3,43.4,59.8,2018,year,Europe
+Mauritius,55.0,13.3,34.9,49.5,39.4,46.7,2018,year,Africa
+Trinidad And Tobago,54.6,18.8,37.3,53.4,50.3,54.9,2018,year,North America
+Argentina,53.7,13.8,34.5,44.6,53.7,60.2,2018,year,South America
+Latvia,53.4,13.3,34.1,42.5,48.0,53.1,2018,year,Europe
+Lithuania,53.2,15.2,34.9,41.7,48.9,57.3,2018,year,Europe
+Panama,52.4,26.6,40.0,53.0,44.3,39.1,2018,year,North America
+Brazil,51.3,13.9,33.3,39.7,41.2,41.6,2018,year,South America
+Slovakia,50.4,18.9,35.2,43.7,37.3,67.3,2018,year,Europe
+Czech Republic,50.1,19.1,35.1,43.6,36.0,76.3,2018,year,Europe
+Zimbabwe,49.5,12.3,31.6,44.3,37.7,27.3,2018,year,Africa
+Oman,49.3,20.3,35.3,46.7,46.2,99.2,2018,year,Asia
+Thailand,48.9,17.1,33.6,54.9,23.9,38.6,2018,year,Asia
+Hungary,48.6,15.4,32.6,38.6,37.4,50.6,2018,year,Europe
+South Africa,48.1,17.9,33.5,40.7,45.7,99.8,2018,year,Africa
+Dominican Republic,47.9,10.3,29.8,41.9,43.6,27.4,2018,year,North America
+El Salvador,47.9,11.4,30.3,46.8,36.2,30.9,2018,year,North America
+Saudi Arabia,47.9,13.5,31.3,42.0,32.0,131.5,2018,year,Asia
+Ethiopia,47.5,24.0,36.2,39.1,20.2,15.0,2018,year,Africa
+Guatemala,46.9,14.6,31.3,44.6,36.8,41.3,2018,year,North America
+Zambia,46.5,19.5,33.5,40.4,33.5,101.3,2018,year,Africa
+Cambodia,45.9,13.6,30.3,49.3,23.1,14.9,2018,year,Asia
+Poland,45.2,16.6,31.4,35.9,37.7,74.4,2018,year,Europe
+Tanzania,45.0,19.0,32.4,34.5,29.4,23.1,2018,year,Africa
+Malaysia,44.7,11.5,28.7,48.2,23.2,73.0,2018,year,Asia
+China,44.6,18.4,31.9,47.7,29.6,72.3,2018,year,Asia
+Montenegro,44.4,10.8,28.2,35.8,38.1,48.7,2018,year,Europe
+Ecuador,44.3,11.2,28.3,42.9,30.8,39.4,2018,year,South America
+Honduras,44.3,10.6,28.1,36.6,33.0,34.9,2018,year,North America
+Russia,43.9,16.6,30.7,35.9,45.9,51.1,2018,year,Europe
+Iraq,43.9,12.8,28.9,37.7,38.4,51.2,2018,year,Asia
+Turkey,41.8,10.4,26.6,36.2,31.2,53.8,2018,year,Asia
+Bulgaria,41.2,9.8,26.1,35.2,33.6,54.4,2018,year,Europe
+Indonesia,39.7,8.5,24.7,43.5,19.5,37.5,2018,year,Asia
+Romania,39.7,10.9,25.8,32.8,33.3,66.2,2018,year,Europe
+Peru,39.6,14.4,27.5,35.9,26.3,37.1,2018,year,South America
+Serbia,39.6,8.4,24.6,30.0,31.5,41.8,2018,year,Europe
+Vietnam,39.4,15.1,27.7,39.1,20.0,30.1,2018,year,Asia
+Bosnia And Herzegovina,39.3,6.9,23.7,33.8,26.7,52.4,2018,year,Europe
+Kenya,38.7,8.7,24.2,36.6,31.6,32.1,2018,year,Africa
+Albania,37.9,7.3,23.1,30.9,29.1,37.0,2018,year,Europe
+Morocco,37.1,11.5,24.7,33.3,25.8,45.1,2018,year,Africa
+Bolivia,36.5,9.9,23.7,28.8,28.5,44.7,2018,year,South America
+Philippines,36.0,8.0,22.5,34.3,20.9,34.0,2018,year,Asia
+Colombia,35.3,10.1,23.2,29.5,26.7,38.6,2018,year,South America
+North Macedonia,34.8,6.9,21.4,28.7,23.6,42.6,2018,year,Europe
+Nigeria,34.7,16.0,25.6,35.8,22.1,19.6,2018,year,Africa
+Iran,34.6,15.9,25.6,31.0,27.3,45.6,2018,year,Asia
+Sri Lanka,34.3,8.3,21.8,38.4,19.7,29.6,2018,year,Asia
+Kazakhstan,34.3,11.2,23.2,28.1,35.4,40.8,2018,year,Asia
+Belarus,34.1,10.6,22.7,27.9,35.8,41.3,2018,year,Europe
+Mexico,33.6,9.5,22.0,32.2,29.5,58.2,2018,year,North America
+Armenia,33.5,8.8,21.6,27.8,31.2,31.8,2018,year,Asia
+Moldova,33.1,8.8,21.4,26.6,23.5,29.3,2018,year,Europe
+Uganda,32.7,6.8,20.2,28.3,23.2,21.4,2018,year,Africa
+Nepal,32.6,4.4,19.0,30.2,19.0,25.3,2018,year,Asia
+Venezuela,32.2,7.6,20.3,33.8,26.7,4.0,2018,year,South America
+Algeria,32.1,6.0,19.5,33.8,17.6,36.0,2018,year,Africa
+Bangladesh,32.0,5.5,19.2,30.2,21.2,39.6,2018,year,Asia
+Azerbaijan,30.6,9.5,20.4,27.4,30.6,28.7,2018,year,Asia
+Georgia,29.7,9.8,20.1,24.6,29.2,35.5,2018,year,Asia
+Kosovo,29.4,8.6,19.4,26.3,21.0,59.2,2018,year,Europe
+Syria,27.8,5.1,16.9,26.2,22.2,11.3,2018,year,Asia
+Tunisia,27.7,5.8,17.1,26.4,17.1,38.2,2018,year,Africa
+India,26.9,6.8,17.2,27.5,18.3,79.3,2018,year,Asia
+Ukraine,26.0,8.9,17.7,20.4,18.6,30.2,2018,year,Europe
+Egypt,25.7,5.1,15.7,23.0,21.0,24.7,2018,year,Africa
+Pakistan,25.1,5.3,15.5,23.8,19.0,41.1,2018,year,Asia
