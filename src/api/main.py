@@ -11,8 +11,10 @@ from src.data.cost_of_living_data import get_country_list, get_country_profile
 from src.data.founder_roster import (
     get_classmates,
     get_partner_options,
+    get_celebrity_partners,
+    get_professor_partners,
     get_classmate_by_name,
-    get_partner_by_name,
+    evaluate_partner_team,
     parse_classmate_years_experience,
     parse_classmate_sector_tags,
 )
@@ -60,6 +62,9 @@ class BoardroomRequest(BaseModel):
     sector: str
     pitch: str
     action: str = "start"  # "start" or "resume"
+    partner_name: Optional[str] = None
+    partner_style: Optional[str] = None
+    synergy_bonus: float = 0.0
 
 
 class FounderSetupRequest(BaseModel):
@@ -69,7 +74,8 @@ class FounderSetupRequest(BaseModel):
     cofounder_background: Optional[str] = None
     country: Optional[str] = None
     preferred_sector: Optional[str] = None
-    partner_name: Optional[str] = None
+    celebrity_partner_name: Optional[str] = None
+    professor_partner_name: Optional[str] = None
 
 
 def _extract_experience_years(profile_text: str) -> int:
@@ -333,15 +339,18 @@ def _build_llm_intro(classmate: Dict[str, str], page_snapshot: Dict[str, Any]) -
     return content or _build_roster_intro(classmate)
 
 
-def _seed_startup_physics(exp_years: int, cost_index: float, partner_name: Optional[str] = None) -> Dict[str, Any]:
+def _seed_startup_physics(
+    exp_years: int,
+    cost_index: float,
+    budget_multiplier: float = 1.0,
+    burn_multiplier: float = 1.0,
+    revenue_multiplier: float = 1.0,
+) -> Dict[str, Any]:
     cost_multiplier = max(0.7, min(1.6, cost_index / 65.0))
-    partner = get_partner_by_name(partner_name or "") or {}
-    budget_boost = float(partner.get("budget_multiplier", 1.0))
-    burn_boost = float(partner.get("burn_multiplier", 1.0))
 
-    budget = int((280000 + exp_years * 14000) * (1 + (cost_multiplier - 1) * 0.2) * budget_boost)
-    burn_rate = int((32000 * cost_multiplier + exp_years * 1300) * burn_boost)
-    revenue = int(max(5000, burn_rate * 0.22 + exp_years * 900))
+    budget = int((280000 + exp_years * 14000) * (1 + (cost_multiplier - 1) * 0.2) * budget_multiplier)
+    burn_rate = int((32000 * cost_multiplier + exp_years * 1300) * burn_multiplier)
+    revenue = int(max(5000, burn_rate * 0.22 + exp_years * 900) * revenue_multiplier)
 
     return {
         "budget": budget,
@@ -410,6 +419,16 @@ def list_partners():
     return {"partners": get_partner_options()}
 
 
+@app.get("/api/setup/celebrity-partners")
+def list_celebrity_partners():
+    return {"celebrity_partners": get_celebrity_partners()}
+
+
+@app.get("/api/setup/professor-partners")
+def list_professor_partners():
+    return {"professor_partners": get_professor_partners()}
+
+
 @app.post("/api/setup/founder")
 def setup_founder(req: FounderSetupRequest):
     classmate = get_classmate_by_name(req.classmate_name) or {
@@ -451,17 +470,27 @@ def setup_founder(req: FounderSetupRequest):
     classmate_background = _background_to_code(classmate.get("background", ""))
     founder_background = classmate_background if classmate_background is not None else _infer_founder_background(combined_background or profile_text)
 
-    seeded = _seed_startup_physics(exp_years, country["cost_of_living_index"], req.partner_name)
-    partner = get_partner_by_name(req.partner_name or "") or None
+    partner_team = evaluate_partner_team(
+        req.celebrity_partner_name or "",
+        req.professor_partner_name or "",
+    )
+    seeded = _seed_startup_physics(
+        exp_years,
+        country["cost_of_living_index"],
+        budget_multiplier=float(partner_team.get("budget_multiplier", 1.0)),
+        burn_multiplier=float(partner_team.get("burn_multiplier", 1.0)),
+        revenue_multiplier=float(partner_team.get("revenue_multiplier", 1.0)),
+    )
 
-    synergy_bonus = float(partner.get("synergy_bonus", 0.0)) if partner else 0.0
+    synergy_bonus = float(partner_team.get("synergy_bonus", 0.0))
     budget = int(seeded["budget"] * (1 + synergy_bonus * 0.25))
     burn_rate = int(seeded["burn_rate"] * (1 + synergy_bonus * 0.10))
     revenue = int(seeded["revenue"] * (1 + synergy_bonus * 0.08))
 
     return {
         "classmate": classmate,
-        "partner": partner,
+        "partner": partner_team,
+        "partner_team": partner_team,
         "country": country,
         "founder_experience": exp_years,
         "founder_background": founder_background,
@@ -496,9 +525,17 @@ def run_boardroom(req: BoardroomRequest):
             "revenue": req.revenue,
             "founder_experience": req.founder_experience,
             "sector": req.sector,
-            "pitch": req.pitch
+            "pitch": req.pitch,
+            "partner_name": req.partner_name or "Partner",
+            "partner_style": req.partner_style or "",
+            "synergy_bonus": req.synergy_bonus,
+            "vc_cycle": 0,
+            "partner_satisfaction": 1.0,
+            "disagreement_cycles": 0,
+            "partner_departed": False,
+            "partner_penalty_applied": False,
         }
-        # Runs until the breakpoint (before mentor)
+        # Runs until the breakpoint (before partner)
         boardroom_graph.invoke(initial_state, config)
         
     elif req.action == "resume":
@@ -515,10 +552,32 @@ def run_boardroom(req: BoardroomRequest):
         content = msg.content if hasattr(msg, "content") else str(msg)
         messages_out.append(content)
     
+    # Check if partner departed and apply penalties
+    partner_departed = current_state.values.get("partner_departed", False)
+    partner_penalty_applied = current_state.values.get("partner_penalty_applied", False)
+    new_budget = req.budget
+    new_burn_rate = req.burn_rate
+    new_revenue = req.revenue
+    
+    if partner_departed and not partner_penalty_applied:
+        synergy_bonus = req.synergy_bonus
+        # Reverse the synergy bonuses (lose the multiplier benefit)
+        new_budget = int(req.budget / (1 + synergy_bonus * 0.25)) if synergy_bonus > 0 else req.budget
+        new_burn_rate = int(req.burn_rate / (1 + synergy_bonus * 0.10)) if synergy_bonus > 0 else req.burn_rate
+        new_revenue = int(req.revenue / (1 + synergy_bonus * 0.08)) if synergy_bonus > 0 else req.revenue
+        # Add a penalty message
+        messages_out.append(f"\n[GAME STATE]: Partner has left. You lose synergy bonuses. Budget: ${new_budget:,}, Burn: ${new_burn_rate:,}/month, Revenue: ${new_revenue:,}/month")
+        boardroom_graph.update_state(config, {"partner_penalty_applied": True})
+    
     next_nodes = current_state.next
     status = "paused" if len(next_nodes) > 0 else "done"
     
     return {
         "status": status,
-        "messages": messages_out
+        "messages": messages_out,
+        "partner_departed": partner_departed,
+        "partner_penalty_applied": partner_penalty_applied or partner_departed,
+        "updated_budget": new_budget,
+        "updated_burn_rate": new_burn_rate,
+        "updated_revenue": new_revenue,
     }

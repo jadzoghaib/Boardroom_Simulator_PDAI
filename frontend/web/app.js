@@ -4,13 +4,15 @@ const state = {
   threadId: crypto.randomUUID(),
   setup: null,
   meetingStatus: "idle",
+  selectedCelebrity: null,
+  selectedProfessor: null,
+  partnersForDetail: {},
 };
 
 let introRequestSeq = 0;
 
 const el = {
   classmateSelect: document.getElementById("classmateSelect"),
-  partnerSelect: document.getElementById("partnerSelect"),
   countrySelect: document.getElementById("countrySelect"),
   sectorSelect: document.getElementById("sectorSelect"),
   founderIntro: document.getElementById("founderIntro"),
@@ -35,6 +37,17 @@ const el = {
   statusVal: document.getElementById("statusVal"),
   log: document.getElementById("log"),
   helpBtn: document.getElementById("helpBtn"),
+  // New partner selector elements
+  celebrityPartnerBtn: document.getElementById("celebrityPartnerBtn"),
+  professorPartnerBtn: document.getElementById("professorPartnerBtn"),
+  celebrityPartnerDisplay: document.getElementById("celebrityPartnerDisplay"),
+  professorPartnerDisplay: document.getElementById("professorPartnerDisplay"),
+  celebrityPartnerModal: document.getElementById("celebrityPartnerModal"),
+  professorPartnerModal: document.getElementById("professorPartnerModal"),
+  celebrityDetailModal: document.getElementById("celebrityDetailModal"),
+  professorDetailModal: document.getElementById("professorDetailModal"),
+  celebrityPartnerGrid: document.getElementById("celebrityPartnerGrid"),
+  professorPartnerGrid: document.getElementById("professorPartnerGrid"),
 };
 
 function money(v) {
@@ -54,9 +67,8 @@ function pushLogLine(text) {
 
   const t = String(text || "");
   if (t.includes("[Founder")) item.classList.add("founder");
-  if (t.includes("[Skeptical VC]")) item.classList.add("vc");
-  if (t.includes("[Pragmatic Mentor]")) item.classList.add("mentor");
-  if (t.includes("[Auditor]")) item.classList.add("auditor");
+  if (t.includes("[Tech Visionary VC]") || t.includes("[Finance Returns VC]") || t.includes("[Commercial Growth VC]")) item.classList.add("vc");
+  if (t.includes("[Data Analyst]")) item.classList.add("auditor");
 
   item.textContent = t;
   el.log.appendChild(item);
@@ -72,7 +84,9 @@ function applySetupToUI(setup) {
   el.burnVal.textContent = money(setup.burn_rate);
   el.revenueVal.textContent = money(setup.revenue);
   el.xpVal.textContent = `${setup.founder_experience} years`;
-  el.metaLine.textContent = `Founder: ${setup.classmate?.name || "N/A"} | Partner: ${setup.partner?.name || "N/A"} | Country: ${setup.country?.country || "N/A"} (${setup.country?.year || "N/A"})`;
+  const celebrityName = setup.partner_team?.celebrity?.name || "N/A";
+  const professorName = setup.partner_team?.professor?.name || "N/A";
+  el.metaLine.textContent = `Founder: ${setup.classmate?.name || "N/A"} | Celeb: ${celebrityName} | Prof: ${professorName} | Country: ${setup.country?.country || "N/A"} (${setup.country?.year || "N/A"})`;
 
   el.marketBtn.disabled = false;
   el.startBoardBtn.disabled = false;
@@ -139,14 +153,21 @@ async function updateFounderIntro(name) {
 }
 
 async function loadSetupData() {
-  const [classmateRes, partnerRes, countryRes] = await Promise.all([
+  const [classmateRes, celebrityRes, professorRes, countryRes] = await Promise.all([
     fetchJson("/api/setup/classmates"),
-    fetchJson("/api/setup/partners"),
+    fetchJson("/api/setup/celebrity-partners"),
+    fetchJson("/api/setup/professor-partners"),
     fetchJson("/api/setup/countries"),
   ]);
 
   fillSelect(el.classmateSelect, classmateRes.classmates || []);
-  fillSelect(el.partnerSelect, partnerRes.partners || []);
+  
+  // Populate partner grids
+  const celebrities = celebrityRes.celebrity_partners || [];
+  const professors = professorRes.professor_partners || [];
+  
+  populatePartnerCards("celebrity", celebrities);
+  populatePartnerCards("professor", professors);
 
   el.countrySelect.innerHTML = "";
   (countryRes.countries || []).forEach((country) => {
@@ -166,9 +187,15 @@ async function loadSetupData() {
 }
 
 async function generateSetup() {
+  if (!state.selectedCelebrity || !state.selectedProfessor) {
+    alert("Please select both a Celebrity Co-Founder and an Academic Specialist.");
+    return;
+  }
+
   const payload = {
     classmate_name: el.classmateSelect.value,
-    partner_name: el.partnerSelect.value,
+    celebrity_partner_name: state.selectedCelebrity,
+    professor_partner_name: state.selectedProfessor,
     country: el.countrySelect.value,
     preferred_sector: el.sectorSelect.value,
     founder_background: el.founderBackground.value,
@@ -184,7 +211,10 @@ async function generateSetup() {
   state.threadId = crypto.randomUUID();
   state.meetingStatus = "idle";
   resetLog();
-  pushLogLine(`[Founder Setup] ${setup.classmate?.name} launched with ${setup.partner?.name}.`);
+  pushLogLine(`[Founder Setup] ${setup.classmate?.name} launched with ${setup.partner_team?.name || "partner team"}.`);
+  if ((setup.partner_team?.unlocked_synergies || []).length > 0) {
+    pushLogLine(`[Synergy] Unlocked: ${setup.partner_team.unlocked_synergies.join(", ")}`);
+  }
   applySetupToUI(setup);
 }
 
@@ -223,6 +253,9 @@ async function startBoardMeeting() {
     sector: state.setup.sector,
     pitch: el.pitchText.value,
     action: "start",
+    partner_name: state.setup.partner_team?.name || "Partner Team",
+    partner_style: state.setup.partner_team?.style || "",
+    synergy_bonus: state.setup.partner_team?.synergy_bonus || 0.0,
   };
 
   const data = await fetchJson("/api/boardroom_turn", {
@@ -233,6 +266,10 @@ async function startBoardMeeting() {
   resetLog();
   (data.messages || []).forEach(pushLogLine);
   state.meetingStatus = data.status || "paused";
+  if (typeof data.updated_budget === "number") state.setup.budget = data.updated_budget;
+  if (typeof data.updated_burn_rate === "number") state.setup.burn_rate = data.updated_burn_rate;
+  if (typeof data.updated_revenue === "number") state.setup.revenue = data.updated_revenue;
+  applySetupToUI(state.setup);
   el.statusVal.textContent = state.meetingStatus;
   el.resumeBtn.disabled = state.meetingStatus !== "paused";
   setStep(3);
@@ -250,6 +287,9 @@ async function resumeBoardMeeting() {
     sector: state.setup.sector,
     pitch: el.pitchText.value,
     action: "resume",
+    partner_name: state.setup.partner_team?.name || "Partner Team",
+    partner_style: state.setup.partner_team?.style || "",
+    synergy_bonus: state.setup.partner_team?.synergy_bonus || 0.0,
   };
 
   const data = await fetchJson("/api/boardroom_turn", {
@@ -260,6 +300,10 @@ async function resumeBoardMeeting() {
   resetLog();
   (data.messages || []).forEach(pushLogLine);
   state.meetingStatus = data.status || "done";
+  if (typeof data.updated_budget === "number") state.setup.budget = data.updated_budget;
+  if (typeof data.updated_burn_rate === "number") state.setup.burn_rate = data.updated_burn_rate;
+  if (typeof data.updated_revenue === "number") state.setup.revenue = data.updated_revenue;
+  applySetupToUI(state.setup);
   el.statusVal.textContent = state.meetingStatus;
   el.resumeBtn.disabled = state.meetingStatus !== "paused";
 }
@@ -268,6 +312,8 @@ function hardReset() {
   state.setup = null;
   state.threadId = crypto.randomUUID();
   state.meetingStatus = "idle";
+  state.selectedCelebrity = null;
+  state.selectedProfessor = null;
 
   el.budgetVal.textContent = "$0";
   el.burnVal.textContent = "$0";
@@ -282,8 +328,158 @@ function hardReset() {
   el.startBoardBtn.disabled = true;
   el.resumeBtn.disabled = true;
 
+  el.celebrityPartnerDisplay.textContent = "Select partner...";
+  el.professorPartnerDisplay.textContent = "Select partner...";
+
   resetLog();
   setStep(1);
+}
+
+async function init() {
+  hardReset();
+  await loadSetupData();
+}
+
+// ===== PARTNER CARD FUNCTIONS =====
+
+function getTopStats(stats, limit = 3) {
+  const entries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+  return entries.slice(0, limit).map(([key, val]) => ({ key, val }));
+}
+
+function populatePartnerCards(type, partners) {
+  const gridEl = type === "celebrity" ? el.celebrityPartnerGrid : el.professorPartnerGrid;
+  gridEl.innerHTML = "";
+
+  partners.forEach((partner) => {
+    const card = document.createElement("div");
+    card.className = "partner-card";
+    card.innerHTML = `
+      <div class="flex flex-col items-center gap-3 text-center">
+        <img src="${partner.avatar_url}" alt="${partner.name}" class="partner-avatar w-24 h-24 rounded-lg object-cover shadow-md">
+        <div class="flex-1 min-w-0 w-full">
+          <h3 class="font-bold text-slate-900 text-base leading-tight mb-1">${partner.name}</h3>
+          <p class="text-xs text-slate-600 font-semibold mb-1">${partner.core_ability}</p>
+          <p class="text-xs text-slate-500">${partner.domain}</p>
+        </div>
+      </div>
+    `;
+    
+    card.addEventListener("click", () => {
+      showPartnerDetail(type, partner);
+    });
+    
+    gridEl.appendChild(card);
+  });
+}
+
+function showPartnerModal(type) {
+  if (type === "celebrity") {
+    el.celebrityPartnerModal.classList.remove("hidden");
+    el.celebrityPartnerModal.classList.add("flex");
+  } else {
+    el.professorPartnerModal.classList.remove("hidden");
+    el.professorPartnerModal.classList.add("flex");
+  }
+}
+
+function closePartnerModal(type) {
+  if (type === "celebrity") {
+    el.celebrityPartnerModal.classList.add("hidden");
+    el.celebrityPartnerModal.classList.remove("flex");
+  } else {
+    el.professorPartnerModal.classList.add("hidden");
+    el.professorPartnerModal.classList.remove("flex");
+  }
+}
+
+function closeDetailModal(type) {
+  if (type === "celebrity") {
+    el.celebrityDetailModal.classList.add("hidden");
+    el.celebrityDetailModal.classList.remove("flex");
+  } else {
+    el.professorDetailModal.classList.add("hidden");
+    el.professorDetailModal.classList.remove("flex");
+  }
+}
+
+function showPartnerDetail(type, partner) {
+  state.partnersForDetail = { ...state.partnersForDetail, [type]: partner };
+
+  const detailModal = type === "celebrity" ? el.celebrityDetailModal : el.professorDetailModal;
+  const nameEl = type === "celebrity" ? document.getElementById("detailName") : document.getElementById("detailNameProf");
+  const avatarEl = type === "celebrity" ? document.getElementById("detailAvatar") : document.getElementById("detailAvatarProf");
+  const abilityEl = type === "celebrity" ? document.getElementById("detailAbility") : document.getElementById("detailAbilityProf");
+  const domainEl = type === "celebrity" ? document.getElementById("detailDomain") : document.getElementById("detailDomainProf");
+  const descEl = type === "celebrity" ? document.getElementById("detailDescription") : document.getElementById("detailDescriptionProf");
+  const statsEl = type === "celebrity" ? document.getElementById("detailStats") : document.getElementById("detailStatsProf");
+  const strengthsEl = type === "celebrity" ? document.getElementById("detailStrengths") : document.getElementById("detailStrengthsProf");
+
+  nameEl.textContent = partner.name;
+  avatarEl.src = partner.avatar_url;
+  abilityEl.textContent = partner.core_ability;
+  domainEl.textContent = partner.domain;
+  descEl.textContent = partner.description;
+
+  // Populate stats
+  statsEl.innerHTML = "";
+  const topStats = getTopStats(partner.stats, 4);
+  topStats.forEach(({ key, val }) => {
+    const statBox = document.createElement("div");
+    statBox.className = "stat-box";
+    statBox.innerHTML = `
+      <div class="stat-box-value">${val}</div>
+      <div class="stat-box-label">${key}</div>
+    `;
+    statsEl.appendChild(statBox);
+  });
+
+  // Populate strengths (top 3 stats with descriptions)
+  strengthsEl.innerHTML = "";
+  topStats.slice(0, 3).forEach(({ key, val }) => {
+    const strengthItem = document.createElement("div");
+    strengthItem.className = "strength-item";
+    const statName = key.charAt(0).toUpperCase() + key.slice(1);
+    strengthItem.textContent = `${statName}: ${val}/10 - ${getStrengthDescription(key)}`;
+    strengthsEl.appendChild(strengthItem);
+  });
+
+  // Close the partner modal and show detail
+  closePartnerModal(type);
+  detailModal.classList.remove("hidden");
+  detailModal.classList.add("flex");
+}
+
+function getStrengthDescription(stat) {
+  const descriptions = {
+    growth: "Strong ability to scale and grow user base",
+    brand: "Excellent at building brand value and reputation",
+    product: "Mastery in product development and UX",
+    tech: "Deep technical expertise and innovation",
+    ops: "Exceptional operational execution and efficiency",
+    finance: "Strong financial acumen and capital management",
+    innovation: "Generates breakthrough ideas and solutions",
+    execution: "Delivers results consistently and reliably",
+  };
+  return descriptions[stat] || "Specialized expertise";
+}
+
+function selectCelebrityPartner() {
+  const partner = state.partnersForDetail.celebrity;
+  if (partner) {
+    state.selectedCelebrity = partner.name;
+    el.celebrityPartnerDisplay.textContent = partner.name;
+    closeDetailModal("celebrity");
+  }
+}
+
+function selectProfessorPartner() {
+  const partner = state.partnersForDetail.professor;
+  if (partner) {
+    state.selectedProfessor = partner.name;
+    el.professorPartnerDisplay.textContent = partner.name;
+    closeDetailModal("professor");
+  }
 }
 
 async function init() {
@@ -298,6 +494,8 @@ el.resumeBtn.addEventListener("click", () => resumeBoardMeeting().catch((e) => a
 el.refreshDataBtn.addEventListener("click", () => loadSetupData().catch((e) => alert(e.message)));
 el.resetBtn.addEventListener("click", hardReset);
 el.classmateSelect.addEventListener("change", () => updateFounderIntro(el.classmateSelect.value));
+el.celebrityPartnerBtn.addEventListener("click", () => showPartnerModal("celebrity"));
+el.professorPartnerBtn.addEventListener("click", () => showPartnerModal("professor"));
 el.helpBtn.addEventListener("click", () => {
   document.getElementById("helpModal").classList.remove("hidden");
   document.getElementById("helpModal").classList.add("flex");

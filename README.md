@@ -38,6 +38,22 @@ Then open the UI in your browser:
 
 The backend also serves a JSON health response at `/`.
 
+## Partner Selection Feature
+
+When setting up your startup, you can now select two co-founders from interactive profile card systems:
+
+- **Celebrity Co-Founder**: Choose from 8 industry leaders (Elon Musk, Taylor Swift, Steve Jobs, and more)
+- **Academic Specialist**: Choose from 6 research experts (Jose A. Rodriguez-Serrano, Oriol Rius, and more)
+
+Each partner has:
+- Distinctive avatar image
+- Core ability (special expertise)
+- Domain (area of focus)
+- 8 key stats (Growth, Brand, Product, Tech, Ops, Finance, Innovation, Execution)
+- Strengths highlighting key specializations
+
+Certain partner combinations unlock synergies that boost your startup's capabilities. See [PARTNER_SELECTION_GUIDE.md](PARTNER_SELECTION_GUIDE.md) for the full list of available partners and synergy combinations.
+
 ## Optional: Retrain the ML Model
 
 Training now lives in a notebook instead of a standalone training script.
