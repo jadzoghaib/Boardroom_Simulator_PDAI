@@ -2,7 +2,6 @@ fastapi
 uvicorn
 pandas
 scikit-learn
-streamlit
 langchain
 langgraph
 langchain-core
@@ -10,6 +9,7 @@ pydantic
 joblib
 numpy
 chromadb
+python-dotenv
 
 langchain-groq
 langgraph-checkpoint

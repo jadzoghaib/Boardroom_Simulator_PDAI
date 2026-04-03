@@ -1,6 +1,7 @@
 import os
 import operator
 from typing import TypedDict, Annotated, Sequence
+from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.graph import StateGraph, END
@@ -8,6 +9,8 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from src.agents.prompts import VC_SYSTEM_PROMPT, AUDITOR_SYSTEM_PROMPT, MENTOR_SYSTEM_PROMPT
 from src.agents.tools import check_survival_probability, query_startup_playbook
+
+load_dotenv()
 
 # The State format
 class BoardroomState(TypedDict):
@@ -19,11 +22,12 @@ class BoardroomState(TypedDict):
     sector: str
     pitch: str
 
-# Set Groq API Key explicitly
-os.environ["GROQ_API_KEY"] = "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"
 
-# Use ChatGroq with a fast model
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
+def _get_llm() -> ChatGroq:
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("GROQ_API_KEY is not set. Add it to your .env or environment variables.")
+    return ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7, api_key=api_key)
 
 def auditor_node(state: BoardroomState):
     # Auditor reads structural state and queries the ML explicitly
@@ -39,6 +43,7 @@ def auditor_node(state: BoardroomState):
 
 def vc_node(state: BoardroomState):
     # Pass history to VC LLM to judge
+    llm = _get_llm()
     sys_msg = SystemMessage(content=VC_SYSTEM_PROMPT)
     history = state.get("messages", [])
     response = llm.invoke([sys_msg] + history)
@@ -47,6 +52,7 @@ def vc_node(state: BoardroomState):
 
 def mentor_node(state: BoardroomState):
     # Mentor gets the tool to search the Lean Startup playbook
+    llm = _get_llm()
     agent = llm.bind_tools([query_startup_playbook])
     sys_msg = SystemMessage(content=MENTOR_SYSTEM_PROMPT + f" The startup is in {state['sector']}.")
     

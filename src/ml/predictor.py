@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class MarketPredictor:
-    def __init__(self, model_path: str = "src/ml/models/gb_startup_model.pkl"):
+    def __init__(self, model_path: str = "src/ml/models/startup_best_model.pkl"):
         self.model_path = model_path
         self.model = None
         self._load_model()
@@ -18,26 +18,28 @@ class MarketPredictor:
         else:
             logger.warning(f"Model not found at {self.model_path}. Train the model first.")
 
-    def predict_success_probability(self, burn_rate: float, revenue: float, founder_experience: int, sector: str) -> float:
+    def predict_success_probability(
+        self,
+        burn_rate: float,
+        revenue: float,
+        founder_experience: int,
+        sector: str,
+        founder_background: str = "first_time",
+    ) -> float:
         if not self.model:
             return 0.5 
             
-        # We need to map the backend UI inputs to the ACTUAL columns the model was trained on
-        # (which were loaded from your custom startup_success_dataset.csv!)
-        
-        sector_encoded = hash(sector) % 10 # Fallback 
-        
         features = pd.DataFrame([{
-            'funding_rounds': 1,                    # Default assumption
+            'funding_rounds': 1,
             'founder_experience_years': founder_experience,
-            'team_size': 5,                         # Default assumption
-            'market_size_billion': 10.0,            # Default assumption
-            'product_traction_users': 1000,         # Default assumption
-            'burn_rate_million': burn_rate / 1000000.0, 
+            'team_size': 5,
+            'market_size_billion': 10.0,
+            'product_traction_users': 1000,
+            'burn_rate_million': burn_rate / 1000000.0,
             'revenue_million': revenue / 1000000.0,
-            'investor_type': 0,                     # Default encoded value
-            'sector': sector_encoded, 
-            'founder_background': 0                 # Default encoded value
+            'investor_type': 'none',
+            'sector': sector,
+            'founder_background': founder_background or 'first_time'
         }])
         
         prob = self.model.predict_proba(features)[0][1]
