@@ -1,4 +1,24 @@
-from fastapi import FastAPI
+"""
+Boardroom Sim API — 8-Quarter Startup Simulation
+
+Endpoints:
+  Setup:  GET /api/setup/countries, classmates, classmate-intro, celebrity-partners, professor-partners
+          POST /api/setup/founder  → creates a new game session
+
+  Game:   GET  /api/game/{id}/state
+          POST /api/game/{id}/choose_event
+          POST /api/game/{id}/skip_events
+          POST /api/game/{id}/chat
+          POST /api/game/{id}/end_quarter
+          POST /api/game/{id}/hire
+          POST /api/game/{id}/fire
+          GET  /api/game/{id}/candidates
+          POST /api/game/{id}/raise_funding
+          POST /api/game/{id}/board_review
+          GET  /api/game/{id}/quarter_summary
+"""
+
+from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,7 +26,6 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from src.ml.predictor import MarketPredictor
-from src.agents.graph import boardroom_graph
 from src.data.cost_of_living_data import get_country_list, get_country_profile
 from src.data.founder_roster import (
     get_classmates,
@@ -18,9 +37,23 @@ from src.data.founder_roster import (
     parse_classmate_years_experience,
     parse_classmate_sector_tags,
 )
+from src.game.state import GameState
+from src.game.engine import (
+    create_initial_state,
+    apply_choice,
+    skip_remaining_events,
+    end_quarter,
+    hire_staff,
+    fire_staff,
+    get_funding_offer,
+    accept_funding,
+    get_quarter_summary,
+    draw_quarter_events,
+)
+from src.data.hiring import get_all_candidates, get_candidate_by_id, get_candidates_by_role
 from html import unescape
 from html.parser import HTMLParser
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from functools import lru_cache
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -45,27 +78,37 @@ WEB_DIR = Path(__file__).resolve().parents[2] / "frontend" / "web"
 if WEB_DIR.exists():
     app.mount("/ui", StaticFiles(directory=str(WEB_DIR), html=True), name="ui")
 
+
+# ═══════════════════════════════════════════════════════════════════
+# IN-MEMORY GAME SESSION STORE
+# ═══════════════════════════════════════════════════════════════════
+
+game_sessions: Dict[str, GameState] = {}
+
+
+def _get_game(game_id: str) -> GameState:
+    if game_id not in game_sessions:
+        raise HTTPException(status_code=404, detail=f"Game {game_id} not found")
+    return game_sessions[game_id]
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ROOT
+# ═══════════════════════════════════════════════════════════════════
+
 @app.get("/")
 def read_root():
     return {
         "status": "online",
         "message": "The Boardroom Sim FastAPI backend is running.",
         "ui": "/ui/index.html",
+        "active_games": len(game_sessions),
     }
 
-class BoardroomRequest(BaseModel):
-    thread_id: str
-    budget: float
-    burn_rate: float
-    revenue: float
-    founder_experience: int
-    sector: str
-    pitch: str
-    action: str = "start"  # "start" or "resume"
-    partner_name: Optional[str] = None
-    partner_style: Optional[str] = None
-    synergy_bonus: float = 0.0
 
+# ═══════════════════════════════════════════════════════════════════
+# REQUEST MODELS
+# ═══════════════════════════════════════════════════════════════════
 
 class FounderSetupRequest(BaseModel):
     classmate_name: str
@@ -78,11 +121,31 @@ class FounderSetupRequest(BaseModel):
     professor_partner_name: Optional[str] = None
 
 
+class ChooseEventRequest(BaseModel):
+    event_id: str
+    choice_index: int
+
+
+class ChatRequest(BaseModel):
+    message: str
+
+
+class HireRequest(BaseModel):
+    candidate_id: str
+
+
+class FireRequest(BaseModel):
+    staff_id: str
+
+
+# ═══════════════════════════════════════════════════════════════════
+# SETUP UTILITIES (kept from original)
+# ═══════════════════════════════════════════════════════════════════
+
 def _extract_experience_years(profile_text: str) -> int:
     match = re.search(r"(\d{1,2})\+?\s+years?", profile_text.lower())
     if match:
         return max(0, min(20, int(match.group(1))))
-
     signal_words = ["intern", "junior", "lead", "manager", "director", "founder"]
     score = sum(1 for word in signal_words if word in profile_text.lower())
     return max(1, min(15, score + 2))
@@ -91,18 +154,21 @@ def _extract_experience_years(profile_text: str) -> int:
 def _infer_sector(profile_text: str, preferred_sector: Optional[str]) -> str:
     if preferred_sector:
         return preferred_sector
-
     text = profile_text.lower()
     mapping = {
         "fintech": ["bank", "finance", "payments", "fintech"],
         "healthtech": ["health", "hospital", "medical", "bio"],
         "saas": ["b2b", "software", "saas", "enterprise"],
         "ai": ["ai", "machine learning", "llm", "data science"],
+        "e-commerce": ["ecommerce", "e-commerce", "shop", "retail", "marketplace"],
     }
     for sector, words in mapping.items():
         if any(word in text for word in words):
-            return sector.upper() if sector == "ai" else sector.title()
-
+            if sector == "ai":
+                return "AI"
+            if sector == "e-commerce":
+                return "E-commerce"
+            return sector.title()
     return "AI"
 
 
@@ -181,14 +247,8 @@ def _truncate_text(text: str, max_chars: int = 2500) -> str:
 def _looks_like_blocked_page(text: str) -> bool:
     lowered = (text or "").lower()
     blocked_signals = [
-        "sign in",
-        "sign up",
-        "join linkedin",
-        "log in",
-        "login",
-        "security verification",
-        "captcha",
-        "we are no longer providing this service",
+        "sign in", "sign up", "join linkedin", "log in", "login",
+        "security verification", "captcha", "we are no longer providing this service",
     ]
     return any(signal in lowered for signal in blocked_signals)
 
@@ -197,7 +257,6 @@ def _looks_like_blocked_page(text: str) -> bool:
 def _fetch_html_page(url: str, timeout: int = 12) -> Dict[str, Any]:
     if not url:
         return {}
-
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -206,12 +265,10 @@ def _fetch_html_page(url: str, timeout: int = 12) -> Dict[str, Any]:
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
     }
-
     request = Request(url, headers=headers)
     status = None
     final_url = url
     raw_html = ""
-
     try:
         with urlopen(request, timeout=timeout) as response:
             status = getattr(response, "status", response.getcode())
@@ -231,76 +288,53 @@ def _fetch_html_page(url: str, timeout: int = 12) -> Dict[str, Any]:
         return {}
 
     if not raw_html:
-        return {
-            "status": status,
-            "final_url": final_url,
-            "title": "",
-            "description": "",
-            "text": "",
-        }
+        return {"status": status, "final_url": final_url, "title": "", "description": "", "text": ""}
 
     parser = _PageTextParser()
     parser.feed(raw_html)
-
     title = _clean_text(" ".join(parser.title_parts))
     description = _clean_text(parser.description)
     text = _truncate_text(" ".join(parser.text_parts))
-
-    return {
-        "status": status,
-        "final_url": final_url,
-        "title": title,
-        "description": description,
-        "text": text,
-    }
+    return {"status": status, "final_url": final_url, "title": title, "description": description, "text": text}
 
 
 def _get_profile_llm() -> ChatGroq:
     api_key = os.getenv("GROQ_API_KEY", "").strip()
     if not api_key:
-        raise RuntimeError("GROQ_API_KEY is not set. Add it to your .env or environment variables.")
+        raise RuntimeError("GROQ_API_KEY is not set.")
     return ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2, api_key=api_key)
 
 
 def _build_roster_intro(classmate: Dict[str, str]) -> str:
     name = classmate.get("name", "This founder") or "This founder"
     parts = [f"{name} is listed in the founder roster."]
-
     years = parse_classmate_years_experience(classmate)
     if years is not None:
         parts.append(f"They appear to have about {years} years of experience.")
-
     background = classmate.get("background", "").strip()
     if background:
         parts.append(f"Roster background: {background}.")
-
     sector_tags = parse_classmate_sector_tags(classmate)
     if sector_tags:
         parts.append(f"Relevant sectors: {', '.join(sector_tags)}.")
-
     notes = classmate.get("notes", "").strip()
     if notes:
         parts.append(notes)
-
     return " ".join(part.strip() for part in parts if part.strip())
 
 
 def _build_llm_intro(classmate: Dict[str, str], page_snapshot: Dict[str, Any]) -> str:
     name = classmate.get("name", "This founder") or "This founder"
     roster_bits = []
-
     years = parse_classmate_years_experience(classmate)
     if years is not None:
         roster_bits.append(f"years_experience={years}")
-
     background = classmate.get("background", "").strip()
     if background:
         roster_bits.append(f"background={background}")
-
     sector_tags = parse_classmate_sector_tags(classmate)
     if sector_tags:
         roster_bits.append(f"sector_tags={', '.join(sector_tags)}")
-
     notes = classmate.get("notes", "").strip()
     if notes:
         roster_bits.append(f"notes={notes}")
@@ -317,24 +351,15 @@ def _build_llm_intro(classmate: Dict[str, str], page_snapshot: Dict[str, Any]) -
         "If the page text looks like a login wall or is too thin to be useful, say that briefly and lean on the roster metadata instead. "
         "Do not mention that you are an AI. Do not invent details."
     )
-
     user_message = (
-        f"Founder name: {name}\n"
-        f"LinkedIn URL: {classmate.get('linkedin_url', '')}\n"
-        f"Final URL: {final_url}\n"
-        f"HTTP status: {page_status}\n"
+        f"Founder name: {name}\nLinkedIn URL: {classmate.get('linkedin_url', '')}\n"
+        f"Final URL: {final_url}\nHTTP status: {page_status}\n"
         f"Roster metadata: {'; '.join(roster_bits) if roster_bits else 'none'}\n"
-        f"Page title: {page_title or 'none'}\n"
-        f"Page description: {page_description or 'none'}\n"
+        f"Page title: {page_title or 'none'}\nPage description: {page_description or 'none'}\n"
         f"Page text: {page_text or 'none'}\n"
     )
-
     llm = _get_profile_llm()
-    response = llm.invoke([
-        SystemMessage(content=prompt),
-        HumanMessage(content=user_message),
-    ])
-
+    response = llm.invoke([SystemMessage(content=prompt), HumanMessage(content=user_message)])
     content = _clean_text(getattr(response, "content", ""))
     return content or _build_roster_intro(classmate)
 
@@ -347,11 +372,9 @@ def _seed_startup_physics(
     revenue_multiplier: float = 1.0,
 ) -> Dict[str, Any]:
     cost_multiplier = max(0.7, min(1.6, cost_index / 65.0))
-
     budget = int((280000 + exp_years * 14000) * (1 + (cost_multiplier - 1) * 0.2) * budget_multiplier)
     burn_rate = int((32000 * cost_multiplier + exp_years * 1300) * burn_multiplier)
     revenue = int(max(5000, burn_rate * 0.22 + exp_years * 900) * revenue_multiplier)
-
     return {
         "budget": budget,
         "burn_rate": burn_rate,
@@ -363,6 +386,10 @@ def _seed_startup_physics(
         "investor_type": 1 if exp_years >= 8 else 0,
     }
 
+
+# ═══════════════════════════════════════════════════════════════════
+# SETUP ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════
 
 @app.get("/api/setup/countries")
 def list_countries():
@@ -379,22 +406,17 @@ def classmate_intro(name: str):
     classmate = get_classmate_by_name(name)
     if not classmate:
         return {
-            "name": name,
-            "linkedin_url": "",
+            "name": name, "linkedin_url": "",
             "intro": "Select a founder to see a short intro based on their public profile.",
             "source": "missing",
         }
-
     linkedin_url = classmate.get("linkedin_url", "")
     page_snapshot = _fetch_html_page(linkedin_url) if linkedin_url else {}
-    page_text = " ".join(
-        [
-            _clean_text(page_snapshot.get("title", "")),
-            _clean_text(page_snapshot.get("description", "")),
-            _clean_text(page_snapshot.get("text", "")),
-        ]
-    )
-
+    page_text = " ".join([
+        _clean_text(page_snapshot.get("title", "")),
+        _clean_text(page_snapshot.get("description", "")),
+        _clean_text(page_snapshot.get("text", "")),
+    ])
     if not page_snapshot or _looks_like_blocked_page(page_text) or len(page_text) < 120:
         intro = _build_roster_intro(classmate)
         source = "roster fallback"
@@ -405,13 +427,7 @@ def classmate_intro(name: str):
         except Exception:
             intro = _build_roster_intro(classmate)
             source = "roster fallback"
-
-    return {
-        "name": classmate["name"],
-        "linkedin_url": linkedin_url,
-        "intro": intro,
-        "source": source,
-    }
+    return {"name": classmate["name"], "linkedin_url": linkedin_url, "intro": intro, "source": source}
 
 
 @app.get("/api/setup/partners")
@@ -429,16 +445,15 @@ def list_professor_partners():
     return {"professor_partners": get_professor_partners()}
 
 
+# ═══════════════════════════════════════════════════════════════════
+# FOUNDER SETUP → CREATES GAME SESSION
+# ═══════════════════════════════════════════════════════════════════
+
 @app.post("/api/setup/founder")
 def setup_founder(req: FounderSetupRequest):
     classmate = get_classmate_by_name(req.classmate_name) or {
-        "name": req.classmate_name,
-        "linkedin_url": "",
-        "notes": "",
-        "country": "",
-        "years_experience": "",
-        "background": "",
-        "sector_tags": "",
+        "name": req.classmate_name, "linkedin_url": "", "notes": "",
+        "country": "", "years_experience": "", "background": "", "sector_tags": "",
     }
 
     requested_country = (req.country or "").strip()
@@ -446,17 +461,11 @@ def setup_founder(req: FounderSetupRequest):
     selected_country = classmate_country or requested_country
 
     country = get_country_profile(selected_country) or {
-        "country": selected_country or "Unknown",
-        "year": 0,
-        "continent": "",
-        "cost_of_living_index": 60.0,
-        "rent_index": 50.0,
-        "local_purchasing_power_index": 100.0,
+        "country": selected_country or "Unknown", "year": 0, "continent": "",
+        "cost_of_living_index": 60.0, "rent_index": 50.0, "local_purchasing_power_index": 100.0,
     }
 
     profile_text = req.profile_text or ""
-    
-    # Use split background fields if provided, otherwise fall back to combined profile_text
     founder_bg = (req.founder_background or "").strip()
     cofounder_bg = (req.cofounder_background or "").strip()
     combined_background = f"{founder_bg} {cofounder_bg}".strip() if (founder_bg or cofounder_bg) else profile_text
@@ -474,6 +483,7 @@ def setup_founder(req: FounderSetupRequest):
         req.celebrity_partner_name or "",
         req.professor_partner_name or "",
     )
+
     seeded = _seed_startup_physics(
         exp_years,
         country["cost_of_living_index"],
@@ -483,101 +493,350 @@ def setup_founder(req: FounderSetupRequest):
     )
 
     synergy_bonus = float(partner_team.get("synergy_bonus", 0.0))
-    budget = int(seeded["budget"] * (1 + synergy_bonus * 0.25))
-    burn_rate = int(seeded["burn_rate"] * (1 + synergy_bonus * 0.10))
-    revenue = int(seeded["revenue"] * (1 + synergy_bonus * 0.08))
+    seeded["budget"] = int(seeded["budget"] * (1 + synergy_bonus * 0.25))
+    seeded["burn_rate"] = int(seeded["burn_rate"] * (1 + synergy_bonus * 0.10))
+    seeded["revenue"] = int(seeded["revenue"] * (1 + synergy_bonus * 0.08))
+
+    # Create game state
+    state = create_initial_state(
+        classmate=classmate,
+        celebrity=partner_team.get("celebrity", {}),
+        professor=partner_team.get("professor", {}),
+        country=country,
+        sector=sector,
+        founder_experience=exp_years,
+        founder_background=founder_background,
+        synergy_data=partner_team,
+        seeded_physics=seeded,
+    )
+
+    # Run ML predictor for initial probability
+    try:
+        ml_feats = state.to_ml_features()
+        prob = predictor.predict_success_probability(
+            state.burn_rate, state.revenue, state.founder_experience, state.sector
+        )
+        state.success_probability = prob
+    except Exception:
+        state.success_probability = 0.5
+
+    # Store session
+    game_sessions[state.game_id] = state
 
     return {
+        "game_id": state.game_id,
+        "state": state.summary_dict(),
+        # Legacy fields for backward compat
         "classmate": classmate,
-        "partner": partner_team,
         "partner_team": partner_team,
         "country": country,
         "founder_experience": exp_years,
         "founder_background": founder_background,
         "sector": sector,
-        "budget": budget,
-        "burn_rate": burn_rate,
-        "revenue": revenue,
-        "generated_model_features": {
-            "team_size": seeded["team_size"],
-            "funding_rounds": seeded["funding_rounds"],
-            "market_size_billion": seeded["market_size_billion"],
-            "product_traction_users": seeded["product_traction_users"],
-            "investor_type": seeded["investor_type"],
-        },
     }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# GAME STATE ENDPOINT
+# ═══════════════════════════════════════════════════════════════════
+
+@app.get("/api/game/{game_id}/state")
+def get_game_state(game_id: str):
+    state = _get_game(game_id)
+    return {"game_id": game_id, "state": state.summary_dict()}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# EVENT ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════
+
+@app.post("/api/game/{game_id}/choose_event")
+def choose_event(game_id: str, req: ChooseEventRequest):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+    if state.phase not in ("events", "advise"):
+        raise HTTPException(400, f"Cannot choose events in phase '{state.phase}'")
+
+    old_stats = dict(state.stats)
+    state = apply_choice(state, req.event_id, req.choice_index)
+    game_sessions[game_id] = state
+
+    # Find the reaction text
+    event_data = None
+    from src.data.events import get_event_by_id
+    raw = get_event_by_id(req.event_id)
+    reaction = ""
+    if raw and 0 <= req.choice_index < len(raw.get("choices", [])):
+        reaction = raw["choices"][req.choice_index].get("reaction", "")
+
+    return {
+        "game_id": game_id,
+        "reaction": reaction,
+        "ap_remaining": state.ap_available,
+        "stats": state.stats,
+        "stat_changes": {k: state.stats[k] - old_stats.get(k, 0) for k in state.stats if state.stats[k] != old_stats.get(k, 0)},
+        "cash": state.cash,
+        "burn_rate": state.burn_rate,
+        "revenue": state.revenue,
+        "phase": state.phase,
+        "pending_event": state.pending_event.model_dump() if state.pending_event else None,
+        "events_remaining": len(state.current_events),
+    }
+
+
+@app.post("/api/game/{game_id}/skip_events")
+def skip_events(game_id: str):
+    state = _get_game(game_id)
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+    state = skip_remaining_events(state)
+    game_sessions[game_id] = state
+    return {"game_id": game_id, "phase": state.phase}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# QUARTER END
+# ═══════════════════════════════════════════════════════════════════
+
+@app.post("/api/game/{game_id}/end_quarter")
+def end_quarter_endpoint(game_id: str):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+    if state.phase not in ("quarter_end", "board_review"):
+        raise HTTPException(400, f"Cannot end quarter in phase '{state.phase}'")
+
+    state = end_quarter(state)
+
+    # Update ML prediction
+    try:
+        prob = predictor.predict_success_probability(
+            state.burn_rate, state.revenue, state.founder_experience, state.sector
+        )
+        state.success_probability = prob
+    except Exception:
+        pass
+
+    game_sessions[game_id] = state
+
+    summary = get_quarter_summary(state)
+    return {"game_id": game_id, "summary": summary, "state": state.summary_dict()}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ADVISORY CHAT (placeholder — Phase 4 will add LLM responses)
+# ═══════════════════════════════════════════════════════════════════
+
+@app.post("/api/game/{game_id}/chat")
+def game_chat(game_id: str, req: ChatRequest):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    from src.game.state import ChatMessage
+
+    celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
+    professor_name = state.professor.get("name", "Professor Advisor")
+
+    # Store user message
+    state.chat_messages.append(ChatMessage(
+        role="user", speaker="You", content=req.message, quarter=state.current_quarter
+    ))
+
+    # Get LLM-powered advisor responses
+    try:
+        from src.game.advisor import get_advisor_responses
+        celebrity_response, professor_response = get_advisor_responses(state, req.message)
+    except Exception as e:
+        # Fallback to placeholder if LLM fails
+        celebrity_response = f"That's an interesting point. In my experience, the bold move usually pays off — but only if you have the cash to survive the downside."
+        professor_response = f"From an academic perspective, the data suggests a more measured approach. Consider the risk-adjusted return before committing."
+
+    state.chat_messages.append(ChatMessage(
+        role="celebrity", speaker=celebrity_name, content=celebrity_response, quarter=state.current_quarter
+    ))
+    state.chat_messages.append(ChatMessage(
+        role="professor", speaker=professor_name, content=professor_response, quarter=state.current_quarter
+    ))
+
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "messages": [
+            {"role": "celebrity", "speaker": celebrity_name, "content": celebrity_response},
+            {"role": "professor", "speaker": professor_name, "content": professor_response},
+        ],
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# HIRING
+# ═══════════════════════════════════════════════════════════════════
+
+@app.get("/api/game/{game_id}/candidates")
+def list_candidates(game_id: str, role: Optional[str] = None):
+    state = _get_game(game_id)
+    filled_roles = {s.role for s in state.staff}
+
+    if role:
+        candidates = get_candidates_by_role(role)
+    else:
+        candidates = get_all_candidates()
+
+    # Mark which roles are already filled
+    result = []
+    for c in candidates:
+        result.append({
+            **c,
+            "slot_filled": c["role"] in filled_roles,
+        })
+
+    return {"game_id": game_id, "candidates": result, "filled_roles": list(filled_roles)}
+
+
+@app.post("/api/game/{game_id}/hire")
+def hire_endpoint(game_id: str, req: HireRequest):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    candidate = get_candidate_by_id(req.candidate_id)
+    if candidate is None:
+        raise HTTPException(404, f"Candidate {req.candidate_id} not found")
+
+    # Check slot
+    filled_roles = {s.role for s in state.staff}
+    if candidate["role"] in filled_roles:
+        raise HTTPException(400, f"{candidate['role']} slot already filled. Fire current {candidate['role']} first.")
+
+    state = hire_staff(state, candidate)
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "hired": candidate["name"],
+        "role": candidate["role"],
+        "salary": candidate["salary"],
+        "equity_given": candidate["equity_ask"],
+        "stats": state.stats,
+        "ap_bonus": state.ap_bonus,
+        "staff": [s.model_dump() for s in state.staff],
+    }
+
+
+@app.post("/api/game/{game_id}/fire")
+def fire_endpoint(game_id: str, req: FireRequest):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    state = fire_staff(state, req.staff_id)
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "fired": req.staff_id,
+        "stats": state.stats,
+        "ap_bonus": state.ap_bonus,
+        "staff": [s.model_dump() for s in state.staff],
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# FUNDRAISING
+# ═══════════════════════════════════════════════════════════════════
+
+@app.get("/api/game/{game_id}/funding")
+def get_funding(game_id: str):
+    state = _get_game(game_id)
+    offer = get_funding_offer(state)
+    return {"game_id": game_id, "current_stage": state.funding_stage, "equity_given": state.equity_given, "offer": offer}
+
+
+@app.post("/api/game/{game_id}/raise_funding")
+def raise_funding(game_id: str):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    offer = get_funding_offer(state)
+    if offer is None or not offer.get("available"):
+        raise HTTPException(400, offer.get("reason", "Not eligible for funding") if offer else "Already at max stage")
+
+    state = accept_funding(state)
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "new_stage": state.funding_stage,
+        "cash": state.cash,
+        "equity_given": state.equity_given,
+        "valuation": state.valuation,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# BOARD REVIEW (placeholder — Phase 5 integrates LangGraph)
+# ═══════════════════════════════════════════════════════════════════
+
+@app.post("/api/game/{game_id}/board_review")
+def board_review(game_id: str):
+    state = _get_game(game_id)
+
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    # Placeholder: auto-advance past board review
+    state.last_board_review_quarter = state.current_quarter
+    state.vc_cycle += 1
+
+    # Draw events for the new quarter
+    state = draw_quarter_events(state)
+
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "board_review": {
+            "quarter": state.current_quarter,
+            "vc_cycle": state.vc_cycle,
+            "message": f"Board review completed for Q{state.last_board_review_quarter}. VCs are {'impressed' if state.success_probability > 0.6 else 'cautious' if state.success_probability > 0.4 else 'concerned'}.",
+            "success_probability": state.success_probability,
+        },
+        "state": state.summary_dict(),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# QUARTER SUMMARY
+# ═══════════════════════════════════════════════════════════════════
+
+@app.get("/api/game/{game_id}/quarter_summary")
+def quarter_summary(game_id: str):
+    state = _get_game(game_id)
+    return {"game_id": game_id, "summary": get_quarter_summary(state)}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ML PREDICTION (standalone, kept for backward compat)
+# ═══════════════════════════════════════════════════════════════════
+
+class PredictRequest(BaseModel):
+    burn_rate: float
+    revenue: float
+    founder_experience: int
+    sector: str
+
 
 @app.post("/api/predict")
-def predict_success(req: BoardroomRequest):
+def predict_success(req: PredictRequest):
     prob = predictor.predict_success_probability(req.burn_rate, req.revenue, req.founder_experience, req.sector)
-    runway = predictor.calculate_runway(req.budget, req.burn_rate, req.revenue)
-    return {"success_probability": prob, "runway_months": runway}
-
-@app.post("/api/boardroom_turn")
-def run_boardroom(req: BoardroomRequest):
-    config = {"configurable": {"thread_id": req.thread_id}}
-    
-    if req.action == "start":
-        initial_state = {
-            "messages": [HumanMessage(content=f"[Founder Pitch]: {req.pitch}")],
-            "budget": req.budget,
-            "burn_rate": req.burn_rate,
-            "revenue": req.revenue,
-            "founder_experience": req.founder_experience,
-            "sector": req.sector,
-            "pitch": req.pitch,
-            "partner_name": req.partner_name or "Partner",
-            "partner_style": req.partner_style or "",
-            "synergy_bonus": req.synergy_bonus,
-            "vc_cycle": 0,
-            "partner_satisfaction": 1.0,
-            "disagreement_cycles": 0,
-            "partner_departed": False,
-            "partner_penalty_applied": False,
-        }
-        # Runs until the breakpoint (before partner)
-        boardroom_graph.invoke(initial_state, config)
-        
-    elif req.action == "resume":
-        # Provide the player's counter-argument and resume graph!
-        # First update the state with the human's new message
-        boardroom_graph.update_state(config, {"messages": [HumanMessage(content=f"[Founder Counter-Argument]: {req.pitch}")]})
-        # Then continue invocation
-        boardroom_graph.invoke(None, config)
-        
-    # Return everything in memory
-    current_state = boardroom_graph.get_state(config)
-    messages_out = []
-    for msg in current_state.values.get("messages", []):
-        content = msg.content if hasattr(msg, "content") else str(msg)
-        messages_out.append(content)
-    
-    # Check if partner departed and apply penalties
-    partner_departed = current_state.values.get("partner_departed", False)
-    partner_penalty_applied = current_state.values.get("partner_penalty_applied", False)
-    new_budget = req.budget
-    new_burn_rate = req.burn_rate
-    new_revenue = req.revenue
-    
-    if partner_departed and not partner_penalty_applied:
-        synergy_bonus = req.synergy_bonus
-        # Reverse the synergy bonuses (lose the multiplier benefit)
-        new_budget = int(req.budget / (1 + synergy_bonus * 0.25)) if synergy_bonus > 0 else req.budget
-        new_burn_rate = int(req.burn_rate / (1 + synergy_bonus * 0.10)) if synergy_bonus > 0 else req.burn_rate
-        new_revenue = int(req.revenue / (1 + synergy_bonus * 0.08)) if synergy_bonus > 0 else req.revenue
-        # Add a penalty message
-        messages_out.append(f"\n[GAME STATE]: Partner has left. You lose synergy bonuses. Budget: ${new_budget:,}, Burn: ${new_burn_rate:,}/month, Revenue: ${new_revenue:,}/month")
-        boardroom_graph.update_state(config, {"partner_penalty_applied": True})
-    
-    next_nodes = current_state.next
-    status = "paused" if len(next_nodes) > 0 else "done"
-    
-    return {
-        "status": status,
-        "messages": messages_out,
-        "partner_departed": partner_departed,
-        "partner_penalty_applied": partner_penalty_applied or partner_departed,
-        "updated_budget": new_budget,
-        "updated_burn_rate": new_burn_rate,
-        "updated_revenue": new_revenue,
-    }
+    return {"success_probability": prob}

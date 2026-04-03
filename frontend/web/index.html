@@ -3,594 +3,289 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Esade Entrepreneurs</title>
-  
-  <!-- Tailwind CSS -->
+  <title>Boardroom Sim — Startup Simulation</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'game-dark': '#0f172a',
+            'game-panel': '#1e293b',
+            'game-card': '#334155',
+            'game-accent': '#3b82f6',
+            'game-green': '#22c55e',
+            'game-red': '#ef4444',
+            'game-yellow': '#eab308',
+            'game-purple': '#a855f7',
+          }
+        }
+      }
     }
-    .animate-fade-in { animation: fade-in 0.3s ease-out; }
-  </style>
+  </script>
 </head>
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-game-dark text-white min-h-screen">
 
-<!-- COACHING OVERLAY (Optional) -->
-<div id="coachingOverlay" class="fixed inset-0 bg-black/40 z-[100] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full animate-fade-in max-h-[85vh] flex flex-col">
-    <div class="flex items-center gap-3 p-4 border-b border-slate-100 flex-shrink-0">
-      <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-2xl">🎓</div>
-      <div class="flex-1">
-        <h3 id="coachingTitle" class="font-bold text-slate-800 text-lg">Welcome!</h3>
-        <p id="coachingSubtitle" class="text-xs text-emerald-600">Boardroom Sim • Quarter 1</p>
-      </div>
-      <button onclick="game.dismissCoachingTip()" class="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SETUP SCREEN                                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="setupScreen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-game-panel rounded-2xl shadow-2xl max-w-2xl w-full p-8 border border-slate-700">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        BOARDROOM SIM
+      </h1>
+      <p class="text-slate-400 mt-2">8-Quarter Startup Simulation</p>
     </div>
-    <div id="coachingContent" class="p-5 text-slate-700 text-sm leading-relaxed overflow-y-auto flex-1"></div>
-    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-b-2xl border-t border-slate-100 flex-shrink-0">
-      <label class="flex items-center gap-2 text-xs text-slate-500 cursor-pointer">
-        <input type="checkbox" id="coachingDontShow" class="rounded border-slate-300">
-        <span>Don't show tips again</span>
-      </label>
-      <button onclick="game.dismissCoachingTip()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg transition-colors">
-        Got it!
+
+    <!-- Step 1: Classmate -->
+    <div id="setupStep1" class="space-y-4">
+      <label class="block text-sm font-semibold text-slate-300">Choose Your Founder</label>
+      <select id="classmateSelect" class="w-full bg-game-card border border-slate-600 rounded-lg p-3 text-white focus:border-game-accent focus:outline-none">
+        <option value="">Loading classmates...</option>
+      </select>
+      <div id="classmateIntro" class="text-sm text-slate-400 italic min-h-[40px]"></div>
+
+      <label class="block text-sm font-semibold text-slate-300 mt-4">Country</label>
+      <select id="countrySelect" class="w-full bg-game-card border border-slate-600 rounded-lg p-3 text-white focus:border-game-accent focus:outline-none">
+        <option value="">Loading countries...</option>
+      </select>
+
+      <label class="block text-sm font-semibold text-slate-300 mt-4">Sector</label>
+      <select id="sectorSelect" class="w-full bg-game-card border border-slate-600 rounded-lg p-3 text-white focus:border-game-accent focus:outline-none">
+        <option value="AI">AI</option>
+        <option value="Fintech">Fintech</option>
+        <option value="SaaS">SaaS</option>
+        <option value="Healthtech">Healthtech</option>
+        <option value="E-commerce">E-commerce</option>
+      </select>
+
+      <button onclick="game.goToStep2()" class="w-full mt-4 bg-game-accent hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors">
+        Next → Choose Partners
+      </button>
+    </div>
+
+    <!-- Step 2: Partners -->
+    <div id="setupStep2" class="space-y-4 hidden">
+      <button onclick="game.goToStep1()" class="text-sm text-slate-400 hover:text-white">← Back</button>
+
+      <label class="block text-sm font-semibold text-slate-300">Celebrity Co-Founder</label>
+      <div id="celebrityGrid" class="grid grid-cols-2 gap-3"></div>
+
+      <label class="block text-sm font-semibold text-slate-300 mt-4">Professor Advisor</label>
+      <div id="professorGrid" class="grid grid-cols-2 gap-3"></div>
+
+      <div id="synergyPreview" class="bg-game-card rounded-lg p-4 border border-slate-600 text-sm hidden">
+        <div class="font-bold text-game-accent mb-1">Synergy Preview</div>
+        <div id="synergyDetails"></div>
+      </div>
+
+      <button onclick="game.startGame()" id="startGameBtn" class="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50" disabled>
+        🚀 Launch Your Startup
       </button>
     </div>
   </div>
 </div>
 
-<!-- CELEBRITY PARTNER MODAL -->
-<div id="celebrityPartnerModal" class="fixed inset-0 bg-black/40 z-[100] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full animate-fade-in max-h-[90vh] flex flex-col overflow-hidden">
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-gradient-to-r from-purple-900 to-purple-800 flex-shrink-0">
-      <h3 class="font-bold text-white text-lg">🌟 Select a Celebrity Co-Founder</h3>
-      <button onclick="closePartnerModal('celebrity')" class="text-purple-200 hover:text-white text-xl">✕</button>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- GAME BOARD (3-column layout)                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="gameBoard" class="hidden min-h-screen flex flex-col">
+
+  <!-- HEADER BAR -->
+  <header class="bg-game-panel border-b border-slate-700 px-4 py-2 flex items-center justify-between flex-shrink-0">
+    <div class="flex items-center gap-4">
+      <div class="font-black text-lg bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BOARDROOM SIM</div>
+      <div id="quarterBadge" class="bg-game-accent/20 text-game-accent px-3 py-1 rounded-full text-sm font-bold">Q1/8</div>
+      <div id="phaseBadge" class="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-sm">Events</div>
     </div>
-    <div id="celebrityPartnerGrid" class="p-6 overflow-y-auto flex-1 grid grid-cols-2 gap-4">
-      <!-- Partner cards will be populated here -->
-    </div>
-  </div>
-</div>
-
-<!-- CELEBRITY PROFILE DETAIL MODAL -->
-<div id="celebrityDetailModal" class="fixed inset-0 bg-black/40 z-[101] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full animate-fade-in max-h-[90vh] flex flex-col overflow-hidden">
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-gradient-to-r from-purple-900 to-purple-800 flex-shrink-0">
-      <h3 id="detailName" class="font-bold text-white text-lg">Profile</h3>
-      <button onclick="closeDetailModal('celebrity')" class="text-purple-200 hover:text-white text-xl">✕</button>
-    </div>
-    <div class="p-6 overflow-y-auto flex-1">
-      <div class="flex gap-6 mb-6">
-        <img id="detailAvatar" class="w-32 h-32 rounded-xl shadow-md" src="" alt="">
-        <div class="flex-1">
-          <div class="mb-4">
-            <div class="text-xs text-slate-500 font-semibold uppercase mb-1">Core Ability</div>
-            <h2 id="detailAbility" class="text-2xl font-bold text-slate-800">-</h2>
-          </div>
-          <div class="mb-4">
-            <div class="text-xs text-slate-500 font-semibold uppercase mb-1">Domain</div>
-            <p id="detailDomain" class="text-lg font-semibold text-purple-600">-</p>
-          </div>
-          <p id="detailDescription" class="text-sm text-slate-600">-</p>
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 pt-6">
-        <h4 class="font-bold text-slate-800 mb-4">Key Stats</h4>
-        <div id="detailStats" class="grid grid-cols-4 gap-3 mb-6">
-          <!-- Stats will be populated here -->
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 pt-6">
-        <h4 class="font-bold text-slate-800 mb-4">Strengths</h4>
-        <div id="detailStrengths" class="space-y-2 text-sm">
-          <!-- Strengths will be populated here -->
-        </div>
-      </div>
-
-      <button onclick="selectCelebrityPartner()" id="selectCelebBtn" class="w-full mt-6 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-colors">
-        Select This Partner
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- PROFESSOR PARTNER MODAL -->
-<div id="professorPartnerModal" class="fixed inset-0 bg-black/40 z-[100] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full animate-fade-in max-h-[90vh] flex flex-col overflow-hidden">
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-gradient-to-r from-blue-900 to-blue-800 flex-shrink-0">
-      <h3 class="font-bold text-white text-lg">🎓 Select an Academic Specialist</h3>
-      <button onclick="closePartnerModal('professor')" class="text-blue-200 hover:text-white text-xl">✕</button>
-    </div>
-    <div id="professorPartnerGrid" class="p-6 overflow-y-auto flex-1 grid grid-cols-2 gap-4">
-      <!-- Partner cards will be populated here -->
-    </div>
-  </div>
-</div>
-
-<!-- PROFESSOR PROFILE DETAIL MODAL -->
-<div id="professorDetailModal" class="fixed inset-0 bg-black/40 z-[101] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full animate-fade-in max-h-[90vh] flex flex-col overflow-hidden">
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-gradient-to-r from-blue-900 to-blue-800 flex-shrink-0">
-      <h3 id="detailNameProf" class="font-bold text-white text-lg">Profile</h3>
-      <button onclick="closeDetailModal('professor')" class="text-blue-200 hover:text-white text-xl">✕</button>
-    </div>
-    <div class="p-6 overflow-y-auto flex-1">
-      <div class="flex gap-6 mb-6">
-        <img id="detailAvatarProf" class="w-32 h-32 rounded-xl shadow-md" src="" alt="">
-        <div class="flex-1">
-          <div class="mb-4">
-            <div class="text-xs text-slate-500 font-semibold uppercase mb-1">Core Ability</div>
-            <h2 id="detailAbilityProf" class="text-2xl font-bold text-slate-800">-</h2>
-          </div>
-          <div class="mb-4">
-            <div class="text-xs text-slate-500 font-semibold uppercase mb-1">Domain</div>
-            <p id="detailDomainProf" class="text-lg font-semibold text-blue-600">-</p>
-          </div>
-          <p id="detailDescriptionProf" class="text-sm text-slate-600">-</p>
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 pt-6">
-        <h4 class="font-bold text-slate-800 mb-4">Key Stats</h4>
-        <div id="detailStatsProf" class="grid grid-cols-4 gap-3 mb-6">
-          <!-- Stats will be populated here -->
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 pt-6">
-        <h4 class="font-bold text-slate-800 mb-4">Strengths</h4>
-        <div id="detailStrengthsProf" class="space-y-2 text-sm">
-          <!-- Strengths will be populated here -->
-        </div>
-      </div>
-
-      <button onclick="selectProfessorPartner()" id="selectProfBtn" class="w-full mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
-        Select This Partner
-      </button>
-    </div>
-  </div>
-</div>
-
-
-<div id="helpModal" class="fixed inset-0 bg-black/40 z-[100] hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full animate-fade-in max-h-[85vh] flex flex-col overflow-hidden">
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 flex-shrink-0 bg-gradient-to-r from-slate-900 to-slate-800">
-      <h3 class="font-bold text-white text-lg">📖 Game Instructions</h3>
-      <button onclick="document.getElementById('helpModal').classList.add('hidden'); document.getElementById('helpModal').classList.remove('flex');" class="text-slate-300 hover:text-white text-xl">✕</button>
-    </div>
-    <!-- Content - scrollable -->
-    <div class="p-6 text-slate-700 text-sm leading-relaxed overflow-y-auto flex-1 space-y-4">
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">🚀 Getting Started</h4>
-        <p>This simulation puts you in the role of an AI startup founder. You'll make strategic decisions each quarter to grow your company from startup to success.</p>
-      </div>
-
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">📋 Setup Phase</h4>
-        <ul class="list-disc list-inside space-y-1 text-xs">
-          <li>Select a classmate as your founder</li>
-          <li>Choose your co-founder type (Technical, Business, or Solo)</li>
-          <li>Pick your country and startup sector</li>
-          <li>Enter your (auto-filled) background information</li>
-          <li>Click "Generate Setup" to initialize your company</li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">💰 Key Metrics</h4>
-        <ul class="list-disc list-inside space-y-1 text-xs">
-          <li><strong>Cash:</strong> Money in the bank. You lose cash each quarter based on burn rate.</li>
-          <li><strong>Runway:</strong> Quarters until you run out of cash. Must keep above 2 to stay alive.</li>
-          <li><strong>Valuation:</strong> Your company's worth. Better for fundraising and exit.</li>
-          <li><strong>Milestones:</strong> Major achievements. Complete 3 to win!</li>
-          <li><strong>Burn Rate:</strong> How much cash you spend each quarter.</li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">⚡ Attention Points (AP)</h4>
-        <p>Each quarter you get a limited pool of AP (Attention Points). These represent your focus and decision-making power. You must allocate them wisely across:</p>
-        <ul class="list-disc list-inside space-y-1 text-xs mt-2">
-          <li>Milestone progress (moving toward your goals)</li>
-          <li>Hiring (building your team)</li>
-          <li>Fundraising</li>
-          <li>Strategic pivots and decisions</li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">👥 Team Management</h4>
-        <p>Hiring people increases your AP pool (more hands = more work gets done) but also increases burn rate. Balance growth with financial sustainability.</p>
-      </div>
-
-      <div>
-        <h4 class="font-bold text-slate-800 mb-2">🎯 Winning Strategy</h4>
-        <ul class="list-disc list-inside space-y-1 text-xs">
-          <li>Complete all 3 milestones before money runs out</li>
-          <li>Raise funding strategically to extend runway</li>
-          <li>Hire selectively to boost productivity without burning too much cash</li>
-          <li>Respond to market events and competitor moves</li>
-          <li>Make quarterly decisions in the boardroom</li>
-        </ul>
-      </div>
-
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-        <p class="text-xs text-blue-800"><strong>💡 Pro Tip:</strong> Most founders fail on their first attempt—that's by design! The game teaches through experience and replay. Don't worry about losing; learn from it and try again.</p>
-      </div>
-    </div>
-    <!-- Footer -->
-    <div class="p-4 bg-slate-50 rounded-b-2xl border-t border-slate-100 flex-shrink-0 text-center">
-      <button onclick="document.getElementById('helpModal').classList.add('hidden'); document.getElementById('helpModal').classList.remove('flex');" class="px-6 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg transition-colors">
-        Close
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- COMPACT HEADER -->
-<header class="bg-slate-900 text-white py-2 px-4 shadow-lg">
-  <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <h1 class="text-lg font-bold">Esade Entrepreneurs</h1>
-      <span class="text-slate-500 text-xs hidden sm:inline">Startup Simulation</span>
-    </div>
-    
     <div class="flex items-center gap-6 text-sm">
-      <div class="text-center group relative cursor-help">
-        <div class="text-slate-400 text-[10px] uppercase">Quarter</div>
-        <div id="turnDisplay" class="font-mono font-bold">Q1</div>
-        <div id="chapterLabel" class="text-[9px] text-indigo-400 font-medium">Ch.1</div>
-      </div>
-      <div class="text-center group relative cursor-help">
-        <div class="text-slate-400 text-[10px] uppercase">Cash 💵</div>
-        <div id="headerCash" class="font-mono font-bold text-emerald-400">$0k</div>
-      </div>
-      <div class="text-center group relative cursor-help">
-        <div class="text-slate-400 text-[10px] uppercase">Runway</div>
-        <div id="headerRunway" class="font-mono font-bold text-amber-400">0q</div>
-      </div>
-      <div class="text-center group relative cursor-help">
-        <div class="text-slate-400 text-[10px] uppercase">Valuation</div>
-        <div id="headerVal" class="font-mono font-bold text-sky-400">$0k</div>
-      </div>
-      <div class="text-center group relative cursor-help">
-        <div class="text-slate-400 text-[10px] uppercase">Milestones</div>
-        <div id="headerMilestones" class="font-mono font-bold">0/3</div>
-      </div>
+      <div><span class="text-slate-400">Cash:</span> <span id="headerCash" class="font-bold text-game-green">$300,000</span></div>
+      <div><span class="text-slate-400">Runway:</span> <span id="headerRunway" class="font-bold">12mo</span></div>
+      <div><span class="text-slate-400">Valuation:</span> <span id="headerValuation" class="font-bold text-game-purple">$1M</span></div>
+      <div id="headerMarket" class="flex items-center gap-1"><span class="text-slate-400">Market:</span> <span id="marketBadge" class="font-bold">⚖️ Stable</span></div>
+      <div><span class="text-slate-400">AP:</span> <span id="headerAP" class="font-bold text-game-yellow">6/6</span></div>
     </div>
+  </header>
 
-    <div class="flex items-center gap-3">
-      <button id="settingsBtn" class="px-3 py-1.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm font-medium">⚙️</button>
-      <button id="helpBtn" class="px-3 py-1.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm font-medium">?</button>
-    </div>
-  </div>
-</header>
-
-<!-- MAIN GAME LAYOUT -->
-<div class="max-w-7xl mx-auto p-4 space-y-4">
-
-  <!-- TOP MESSAGE AREA -->
-  <div id="messageArea" class="bg-blue-50 border border-blue-200 rounded-xl p-4 hidden">
-    <div id="messageText" class="text-sm text-blue-800"></div>
+  <!-- NEWS TICKER -->
+  <div id="newsTicker" class="bg-slate-800 text-slate-300 text-xs py-1 px-4 overflow-hidden flex-shrink-0">
+    <div id="tickerText" class="whitespace-nowrap animate-ticker">📰 Welcome to Boardroom Sim! Your startup journey begins now...</div>
   </div>
 
-  <!-- THREE-COLUMN LAYOUT -->
-  <div class="grid grid-cols-12 gap-4" id="mainGameBoard">
-    
-    <!-- LEFT SIDEBAR: ACTIONS & FINANCIAL SUMMARY -->
-    <aside class="col-span-3 space-y-4">
-      
-      <!-- CURRENT SITUATION CARD -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase text-slate-600">📊 Current Status</h3>
+  <!-- MAIN 3-COLUMN GRID -->
+  <div class="flex-1 grid grid-cols-12 gap-3 p-3 overflow-hidden" style="max-height: calc(100vh - 100px);">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="col-span-3 flex flex-col gap-3 overflow-y-auto pr-1">
+      <!-- Market & Financials -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Financials</h3>
         <div class="space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-slate-600">Status:</span>
-            <span id="statusDisplay" class="font-semibold text-slate-800">Setup</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-600">Founder:</span>
-            <span id="founderDisplay" class="font-semibold text-slate-800">-</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-600">Company:</span>
-            <span id="companyDisplay" class="font-semibold text-slate-800">-</span>
-          </div>
-          <div class="border-t border-slate-200 pt-2 mt-2">
-            <div class="text-xs text-slate-500 uppercase mb-1">Burn Rate</div>
-            <div id="burnDisplay" class="text-lg font-bold text-rose-600">$0k/q</div>
-          </div>
+          <div class="flex justify-between"><span class="text-slate-400">Cash</span><span id="finCash" class="font-bold text-game-green">$300,000</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Burn Rate</span><span id="finBurn" class="font-bold text-game-red">$35,000/mo</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Revenue</span><span id="finRevenue" class="font-bold">$8,000/mo</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Runway</span><span id="finRunway" class="font-bold">12 months</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Valuation</span><span id="finValuation" class="font-bold text-game-purple">$1,000,000</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Stage</span><span id="finStage" class="font-bold">Bootstrap</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Equity Given</span><span id="finEquity" class="font-bold">0%</span></div>
         </div>
       </div>
 
-      <!-- QUICK ACTION BUTTONS -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase text-slate-600">🎯 Actions</h3>
-        <div class="space-y-2">
-          <button id="generateSetupBtn" class="w-full px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg transition-colors text-sm">
-            Generate Setup
-          </button>
-          <button id="marketBtn" class="w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-            Run Market Physics
-          </button>
-          <button id="startBoardBtn" class="w-full px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-            Start Board Meeting
-          </button>
-          <button id="refreshDataBtn" class="w-full px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white font-bold rounded-lg transition-colors text-sm">
-            Refresh
-          </button>
-          <button id="resetBtn" class="w-full px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg transition-colors text-sm">
-            Reset
-          </button>
+      <!-- Action Buttons -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700 space-y-2">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Actions</h3>
+        <button onclick="game.openHiringModal()" class="w-full bg-game-card hover:bg-slate-600 text-sm py-2 rounded-lg border border-slate-600">👥 Hire Exec</button>
+        <button onclick="game.openFundingModal()" class="w-full bg-game-card hover:bg-slate-600 text-sm py-2 rounded-lg border border-slate-600">💰 Raise Funding</button>
+        <button onclick="game.skipEvents()" id="skipEventsBtn" class="w-full bg-game-card hover:bg-slate-600 text-sm py-2 rounded-lg border border-slate-600">⏭️ Skip Events</button>
+        <button onclick="game.endQuarter()" id="endQuarterBtn" class="w-full bg-game-accent hover:bg-blue-600 text-sm py-2 rounded-lg font-bold hidden">📊 End Quarter</button>
+        <button onclick="game.boardReview()" id="boardReviewBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-sm py-2 rounded-lg font-bold hidden">🏛️ Board Review</button>
+      </div>
+
+      <!-- Staff Panel -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Staff</h3>
+        <div id="staffList" class="space-y-2 text-sm">
+          <div class="text-slate-500 italic">No executives hired yet</div>
         </div>
       </div>
 
-      <!-- SETUP FORM -->
-      <div id="setupPanel" class="bg-white rounded-xl shadow-sm p-4 border border-slate-200 space-y-3">
-        <h3 class="font-bold text-slate-800 text-sm uppercase text-slate-600">⚙️ Setup</h3>
-        
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Classmate Founder</label>
-          <select id="classmateSelect" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            <option>Loading...</option>
-          </select>
-        </div>
-
-        <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <label class="text-xs font-semibold text-slate-600 block">Founder Intro</label>
-            <span id="founderIntroSource" class="text-[10px] uppercase tracking-wide text-slate-400">Profile</span>
-          </div>
-          <p id="founderIntro" class="text-sm text-slate-700 leading-relaxed">
-            Select a founder to see a short intro based on their public profile.
-          </p>
-          <a id="founderIntroLink" href="#" target="_blank" rel="noreferrer" class="mt-2 inline-flex items-center text-xs font-semibold text-emerald-600 hover:text-emerald-700 hidden">
-            Open profile
-          </a>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Celebrity Co-Founder</label>
-          <button id="celebrityPartnerBtn" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white hover:bg-slate-50 transition-colors text-left flex items-center justify-between">
-            <span id="celebrityPartnerDisplay" class="text-slate-700">Select partner...</span>
-            <span class="text-lg">👤</span>
-          </button>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Academic Specialist</label>
-          <button id="professorPartnerBtn" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white hover:bg-slate-50 transition-colors text-left flex items-center justify-between">
-            <span id="professorPartnerDisplay" class="text-slate-700">Select partner...</span>
-            <span class="text-lg">👤</span>
-          </button>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Country</label>
-          <select id="countrySelect" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            <option>United Kingdom</option>
-            <option>United States</option>
-            <option>Europe</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Sector</label>
-          <select id="sectorSelect" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            <option>AI</option>
-            <option>Fintech</option>
-            <option>Healthtech</option>
-            <option>SaaS</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Founder Background</label>
-          <textarea id="founderBackground" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none" placeholder="(Auto-filled from the profile summary)"></textarea>
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-600 block mb-1">Co-founder Background</label>
-          <textarea id="cofounderBackground" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none" placeholder="(Auto-filled from the profile summary)"></textarea>
+      <!-- Partner Info -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Partners</h3>
+        <div id="partnerInfo" class="text-sm space-y-1">
+          <div class="text-slate-400">Celebrity: <span id="partnerCeleb" class="text-white font-medium">—</span></div>
+          <div class="text-slate-400">Professor: <span id="partnerProf" class="text-white font-medium">—</span></div>
+          <div id="synergyBadges" class="flex flex-wrap gap-1 mt-2"></div>
         </div>
       </div>
-
     </aside>
 
-    <!-- CENTER: MAIN GAME STATE -->
-    <div class="col-span-6 space-y-4">
-      
-      <!-- ATTENTION POINTS TRACKER -->
-      <div id="apTrackerContainer" class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2">
-            <h2 class="font-bold text-slate-800">Attention Points</h2>
-            <button onclick="event.stopPropagation()" class="w-5 h-5 rounded-full bg-slate-300 hover:bg-slate-400 text-slate-700 text-xs font-bold flex items-center justify-center">?</button>
-          </div>
-          <div class="text-xs text-slate-500">💡 Unused AP banks (max 2)</div>
+    <!-- CENTER PANEL -->
+    <main class="col-span-6 flex flex-col gap-3 overflow-y-auto">
+      <!-- Event Cards -->
+      <div id="eventPanel" class="space-y-3">
+        <div id="eventCards" class="space-y-3">
+          <!-- Event cards injected here -->
         </div>
-
-        <!-- Main display -->
-        <div id="apDisplayArea" class="bg-slate-100 rounded-lg p-3 mb-3">
-          <div class="grid grid-cols-3 gap-2 mb-3">
-            <div class="bg-slate-200 rounded-lg p-2 text-center">
-              <div id="apSpentNum" class="text-2xl font-bold text-slate-400">0</div>
-              <div class="text-[10px] text-slate-500 font-medium uppercase">Spent</div>
-            </div>
-            <div class="bg-emerald-500 rounded-lg p-2 text-center shadow-md">
-              <div id="apLeftNum" class="text-2xl font-bold text-white">5</div>
-              <div class="text-[10px] text-indigo-100 font-medium uppercase">Left</div>
-            </div>
-            <div class="bg-slate-100 rounded-lg p-2 text-center border border-dashed border-slate-300">
-              <div id="apBankedNum" class="text-2xl font-bold text-slate-300">0</div>
-              <div class="text-[10px] text-slate-400 font-medium uppercase">Banked</div>
-            </div>
-          </div>
-
-          <div class="h-2 bg-slate-200 rounded-full overflow-hidden flex" id="apProgressBar">
-            <div id="apBarSpent" class="bg-slate-400 h-full transition-all" style="width: 0%"></div>
-            <div id="apBarBase" class="bg-emerald-500 h-full t$ansition-all" style="width: 100%"></div>
-          </div>
-
-          <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-            <span id="apBaseDisplay">Base: 6 AP</span>
-            <span>Est: <span id="estCost" class="font-medium">$0k</span></span>
-            <span>Total: <span id="apTotalDisplay">5</span> AP</span>
-          </div>
-        </div>
-
-        <div id="apWarning" class="text-sm text-red-600 font-medium text-center hidden mb-3">
-          ⚠️ Over budget! Remove AP choices.
-        </div>
-
-        <!-- Team Capacity Section -->
-        <div class="mt-4 pt-4 border-t border-slate-200">
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-bold text-slate-800 text-sm">Team Capacity</span>
-            <div id="staffAPBonusDisplay" class="px-2 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">+0 AP</div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2">
-            <div class="bg-slate-200 rounded-lg p-2 text-center">
-              <div id="staffCount" class="text-2xl font-bold text-slate-700">0</div>
-              <div class="text-[10px] text-slate-500 font-medium uppercase">Staff</div>
-            </div>
-            <div class="bg-indigo-500 rounded-lg p-2 text-center shadow-md">$
-              <div id="staffAPValue" class="text-2xl font-bold text-white">+0</div>
-              <div class="text-[10px] text-indigo-100 font-medium uppercase">AP Bonus</div>
-            </div>
-            <div class="bg-slate-200 rounded-lg p-2 text-center">
-              <div id="staffBurnImpact" class="text-2xl font-bold text-rose-600">$0k</div>
-              <div class="text-[10px] text-slate-500 font-medium uppercase">Burn/Q</div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2 mt-3">
-            <button id="hireBtn" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg transition-colors text-sm">
-              + Post Job
-            </button>
-            <button id="fireBtn" class="px-3 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg transition-colors text-sm">
-              − Layoff Staff
-            </button>
-          </div>
+        <div id="noEventsMsg" class="hidden bg-game-panel rounded-xl p-8 text-center border border-slate-700">
+          <div class="text-3xl mb-2">✅</div>
+          <div class="text-slate-400">All events resolved this quarter.</div>
+          <div class="text-sm text-slate-500 mt-1">End the quarter to advance, or hire/raise funds first.</div>
         </div>
       </div>
 
-      <!-- CURRENT DECISIONS / BOARDROOM -->
-      <div id="boardroomPanel" class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h2 class="font-bold text-slate-800 mb-3">🏛️ Decision Chamber</h2>
-        <div id="decisionContent" class="text-slate-600 text-sm text-center py-8">
-          No active meeting. Click "Start Board Meeting" to begin.
+      <!-- Chat Panel -->
+      <div class="bg-game-panel rounded-xl border border-slate-700 flex flex-col" style="min-height: 250px;">
+        <div class="flex items-center gap-2 px-4 py-2 border-b border-slate-700">
+          <span class="text-sm font-bold text-slate-300">💬 Advisory Chat</span>
+          <span class="text-xs text-slate-500">Ask your celebrity & professor advisors</span>
         </div>
-        
-        <!-- Pitch/Counter-argument textarea -->
-        <label class="hidden" id="pitchLabel" class="text-xs font-semibold text-slate-600 block mb-2">Pitch / Counter-Argument</label>
-        <textarea id="pitchText" rows="4" class="hidden w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none mb-3">We will focus on strategic enterprise partnerships to increase revenue while controlling burn.</textarea>
-        
-        <!-- Metrics info -->
-        <div id="meetingMetrics" class="hidden grid grid-cols-3 gap-2 mb-3">
-          <div class="bg-slate-100 rounded-lg p-2 text-center">
-            <div class="text-xs text-slate-500 mb-1">Success Prob</div>
-            <div id="probVal" class="text-lg font-bold text-slate-800">-</div>
-          </div>
-          <div class="bg-slate-100 rounded-lg p-2 text-center">
-            <div class="text-xs text-slate-500 mb-1">Runway</div>
-            <div id="runwayVal" class="text-lg font-bold text-slate-800">-</div>
-          </div>
-          <div class="bg-slate-100 rounded-lg p-2 text-center">
-            <div class="text-xs text-slate-500 mb-1">Status</div>
-            <div id="statusVal" class="text-lg font-bold text-slate-800">idle</div>
-          </div>
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-3 space-y-2 max-h-64">
+          <div class="text-xs text-slate-500 italic">Chat with your advisors about the current decision...</div>
         </div>
-        
-        <button id="resumeBtn" class="hidden w-full px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-lg transition-colors">
-          Submit Counter-Argument
-        </button>
+        <div class="flex gap-2 p-3 border-t border-slate-700">
+          <input id="chatInput" type="text" placeholder="Ask your advisors..."
+                 class="flex-1 bg-game-card border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-game-accent focus:outline-none"
+                 onkeypress="if(event.key==='Enter')game.sendChat()">
+          <button onclick="game.sendChat()" class="bg-game-accent hover:bg-blue-600 px-4 py-2 rounded-lg text-sm font-bold">Send</button>
+        </div>
       </div>
+    </main>
 
-    </div>
-
-    <!-- RIGHT SIDEBAR: METRICS & STATS -->
-    <aside class="col-span-3 space-y-4">
-      
-      <!-- LIVE METRICS SNAPSHOT -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase text-slat$-600">📈 Metrics</h3>
-        
-        <div class="space-y-3">
-          <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-            <div class="text-xs text-emerald-600 font-semibold mb-1">Budget</div>
-            <div id="budgetVal" class="text-2xl font-bold text-emerald-700">$0k</div>
-          </div>
-
-          <div class="bg-amber-50 rounded-lg p-3 border border-amber-200">
-            <div class="text-xs text-amber-600 font-semibold mb-1">Burn/month</div>
-            <div id="burnVal" class="text-2xl font-bold text-amber-700">$0k</div>
-          </div>
-
-          <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
-            <div class="text-xs text-blue-600 font-semibold mb-1">Revenue/month</div>
-            <div id="revenueVal" class="text-2xl font-bold text-blue-700">$0k</div>
-          </div>
-
-          <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
-            <div class="text-xs text-purple-600 font-semibold mb-1">Founder XP</div>
-            <div id="xpVal" class="text-2xl font-bold text-purple-700">0 years</div>
-          </div>
-        </div>
-
-        <div id="metaLine" class="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-200">
-          No setup generated yet.
+    <!-- RIGHT SIDEBAR -->
+    <aside class="col-span-3 flex flex-col gap-3 overflow-y-auto pl-1">
+      <!-- 8-Stat Bars -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Stats</h3>
+        <div id="statBars" class="space-y-2">
+          <!-- Stat bars injected here -->
         </div>
       </div>
 
-      <!-- MILESTONE TRACKER -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase text-slate-600">🎯 Milestones</h3>
-        <div id="milestonesList" class="space-y-2">
-          <div class="text-sm text-slate-500 text-center py-4">No milestones assigned yet.</div>
+      <!-- Milestone Tracker -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Milestones</h3>
+        <div id="milestoneList" class="space-y-2">
+          <!-- Milestones injected here -->
         </div>
       </div>
 
-      <!-- FUNDING STATUS -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-        <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase text-slate-600">💰 Funding</h3>
-        <div id="fundingStatus" class="space-y-2">
-          <div class="text-sm text-slate-500">
-            <div class="flex justify-between mb-2">
-              <span>Current Runway:</span>
-              <span id="runwayStatus" class="font-semibold text-slate-800">0 quarters</span>
-            </div>
-            <button id="raiseFundingBtn" class="w-full px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg transition-colors text-sm">
-              💵 Raise Funding
-            </button>
-          </div>
+      <!-- Rival Scoreboard -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Rivals</h3>
+        <div id="rivalList" class="space-y-2">
+          <!-- Rivals injected here -->
         </div>
       </div>
 
+      <!-- Success Probability -->
+      <div class="bg-game-panel rounded-xl p-4 border border-slate-700">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ML Prediction</h3>
+        <div class="flex items-center gap-2">
+          <div id="probCircle" class="w-12 h-12 rounded-full border-4 border-game-green flex items-center justify-center text-sm font-bold">50%</div>
+          <div class="text-xs text-slate-400">Success probability based on your current metrics</div>
+        </div>
+      </div>
     </aside>
-
   </div>
-
-  <!-- GAME LOG (Full Width) -->
-  <div class="grid grid-cols-12 gap-4">
-    <div class="col-span-12 bg-white rounded-xl shadow-sm p-4 border border-slate-200">
-      <h2 class="font-bold text-slate-800 mb-3">📋 Game Log</h2>
-      <div id="log" class="bg-slate-50 rounded-lg p-4 h-48 overflow-y-auto font-mono text-xs text-slate-700 space-y-1 border border-slate-200">
-        <div class="text-slate-500">Game initialized. Click "Generate Setup" to begin.</div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
-<!-- Scripts -->
-<script src="./app.js"></script>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODALS                                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
 
+<!-- Quarter Summary Modal -->
+<div id="quarterSummaryModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+  <div class="bg-game-panel rounded-2xl shadow-2xl max-w-lg w-full border border-slate-700 max-h-[85vh] overflow-y-auto">
+    <div class="p-6">
+      <h2 id="summaryTitle" class="text-2xl font-black mb-4">Quarter Summary</h2>
+      <div id="summaryContent" class="space-y-4 text-sm"></div>
+      <button onclick="game.closeSummaryModal()" class="w-full mt-6 bg-game-accent hover:bg-blue-600 font-bold py-3 rounded-lg">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hiring Modal -->
+<div id="hiringModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+  <div class="bg-game-panel rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-700 max-h-[85vh] overflow-y-auto">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-black">Hire Executive</h2>
+        <button onclick="game.closeHiringModal()" class="text-slate-400 hover:text-white text-xl">✕</button>
+      </div>
+      <div id="hiringCandidates" class="space-y-3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Funding Modal -->
+<div id="fundingModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+  <div class="bg-game-panel rounded-2xl shadow-2xl max-w-lg w-full border border-slate-700">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-black">Raise Funding</h2>
+        <button onclick="game.closeFundingModal()" class="text-slate-400 hover:text-white text-xl">✕</button>
+      </div>
+      <div id="fundingContent" class="space-y-4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Game Over Modal -->
+<div id="gameOverModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+  <div class="bg-game-panel rounded-2xl shadow-2xl max-w-lg w-full border border-slate-700">
+    <div class="p-8 text-center">
+      <div id="gameOverEmoji" class="text-6xl mb-4">🎉</div>
+      <h2 id="gameOverTitle" class="text-3xl font-black mb-2">Game Over</h2>
+      <p id="gameOverReason" class="text-slate-400 mb-4"></p>
+      <div id="gameOverStats" class="text-sm space-y-2 mb-6"></div>
+      <button onclick="location.reload()" class="bg-game-accent hover:bg-blue-600 font-bold py-3 px-8 rounded-lg">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>

@@ -13,3 +13,4 @@ python-dotenv
 
 langchain-groq
 langgraph-checkpoint
+wikipedia-api

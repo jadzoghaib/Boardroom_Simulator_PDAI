@@ -1,504 +1,740 @@
-const API_BASE = window.location.origin;
+/**
+ * Boardroom Sim — 8-Quarter Startup Simulation
+ * Frontend Game Engine (Vanilla JS)
+ */
 
-const state = {
-  threadId: crypto.randomUUID(),
-  setup: null,
-  meetingStatus: "idle",
+const API = window.location.origin;
+
+const game = {
+  // ── State ──
+  gameId: null,
+  state: null,
   selectedCelebrity: null,
   selectedProfessor: null,
-  partnersForDetail: {},
-};
+  celebrities: [],
+  professors: [],
 
-let introRequestSeq = 0;
+  // ═══════════════════════════════════════════════════════
+  // SETUP
+  // ═══════════════════════════════════════════════════════
 
-const el = {
-  classmateSelect: document.getElementById("classmateSelect"),
-  countrySelect: document.getElementById("countrySelect"),
-  sectorSelect: document.getElementById("sectorSelect"),
-  founderIntro: document.getElementById("founderIntro"),
-  founderIntroSource: document.getElementById("founderIntroSource"),
-  founderIntroLink: document.getElementById("founderIntroLink"),
-  founderBackground: document.getElementById("founderBackground"),
-  cofounderBackground: document.getElementById("cofounderBackground"),
-  generateSetupBtn: document.getElementById("generateSetupBtn"),
-  marketBtn: document.getElementById("marketBtn"),
-  startBoardBtn: document.getElementById("startBoardBtn"),
-  resumeBtn: document.getElementById("resumeBtn"),
-  pitchText: document.getElementById("pitchText"),
-  refreshDataBtn: document.getElementById("refreshDataBtn"),
-  resetBtn: document.getElementById("resetBtn"),
-  budgetVal: document.getElementById("budgetVal"),
-  burnVal: document.getElementById("burnVal"),
-  revenueVal: document.getElementById("revenueVal"),
-  xpVal: document.getElementById("xpVal"),
-  metaLine: document.getElementById("metaLine"),
-  probVal: document.getElementById("probVal"),
-  runwayVal: document.getElementById("runwayVal"),
-  statusVal: document.getElementById("statusVal"),
-  log: document.getElementById("log"),
-  helpBtn: document.getElementById("helpBtn"),
-  // New partner selector elements
-  celebrityPartnerBtn: document.getElementById("celebrityPartnerBtn"),
-  professorPartnerBtn: document.getElementById("professorPartnerBtn"),
-  celebrityPartnerDisplay: document.getElementById("celebrityPartnerDisplay"),
-  professorPartnerDisplay: document.getElementById("professorPartnerDisplay"),
-  celebrityPartnerModal: document.getElementById("celebrityPartnerModal"),
-  professorPartnerModal: document.getElementById("professorPartnerModal"),
-  celebrityDetailModal: document.getElementById("celebrityDetailModal"),
-  professorDetailModal: document.getElementById("professorDetailModal"),
-  celebrityPartnerGrid: document.getElementById("celebrityPartnerGrid"),
-  professorPartnerGrid: document.getElementById("professorPartnerGrid"),
-};
+  async init() {
+    await Promise.all([
+      this.loadClassmates(),
+      this.loadCountries(),
+      this.loadCelebrities(),
+      this.loadProfessors(),
+    ]);
+  },
 
-function money(v) {
-  return `$${Number(v || 0).toLocaleString()}`;
-}
+  async loadClassmates() {
+    try {
+      const res = await fetch(`${API}/api/setup/classmates`);
+      const data = await res.json();
+      const sel = document.getElementById('classmateSelect');
+      sel.innerHTML = '<option value="">Select a classmate...</option>';
+      (data.classmates || []).forEach(c => {
+        sel.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+      });
+      sel.addEventListener('change', () => this.onClassmateChange(sel.value));
+    } catch (e) { console.error('Failed to load classmates:', e); }
+  },
 
-function setStep(n) {
-  document.querySelectorAll(".step").forEach((s) => {
-    const isActive = Number(s.dataset.step) === n;
-    s.classList.toggle("is-active", isActive);
-  });
-}
+  async loadCountries() {
+    try {
+      const res = await fetch(`${API}/api/setup/countries`);
+      const data = await res.json();
+      const sel = document.getElementById('countrySelect');
+      sel.innerHTML = '<option value="">Select a country...</option>';
+      (data.countries || []).forEach(c => {
+        const name = typeof c === 'string' ? c : c.country;
+        sel.innerHTML += `<option value="${name}">${name}</option>`;
+      });
+    } catch (e) { console.error('Failed to load countries:', e); }
+  },
 
-function pushLogLine(text) {
-  const item = document.createElement("div");
-  item.className = "log-item";
+  async loadCelebrities() {
+    try {
+      const res = await fetch(`${API}/api/setup/celebrity-partners`);
+      const data = await res.json();
+      this.celebrities = data.celebrity_partners || [];
+    } catch (e) { console.error('Failed to load celebrities:', e); }
+  },
 
-  const t = String(text || "");
-  if (t.includes("[Founder")) item.classList.add("founder");
-  if (t.includes("[Tech Visionary VC]") || t.includes("[Finance Returns VC]") || t.includes("[Commercial Growth VC]")) item.classList.add("vc");
-  if (t.includes("[Data Analyst]")) item.classList.add("auditor");
+  async loadProfessors() {
+    try {
+      const res = await fetch(`${API}/api/setup/professor-partners`);
+      const data = await res.json();
+      this.professors = data.professor_partners || [];
+    } catch (e) { console.error('Failed to load professors:', e); }
+  },
 
-  item.textContent = t;
-  el.log.appendChild(item);
-  el.log.scrollTop = el.log.scrollHeight;
-}
+  async onClassmateChange(name) {
+    const intro = document.getElementById('classmateIntro');
+    if (!name) { intro.textContent = ''; return; }
+    intro.textContent = 'Loading profile...';
+    try {
+      const res = await fetch(`${API}/api/setup/classmate-intro?name=${encodeURIComponent(name)}`);
+      const data = await res.json();
+      intro.textContent = data.intro || '';
+    } catch (e) { intro.textContent = 'Could not load profile.'; }
+  },
 
-function resetLog() {
-  el.log.innerHTML = "";
-}
+  goToStep1() {
+    document.getElementById('setupStep1').classList.remove('hidden');
+    document.getElementById('setupStep2').classList.add('hidden');
+  },
 
-function applySetupToUI(setup) {
-  el.budgetVal.textContent = money(setup.budget);
-  el.burnVal.textContent = money(setup.burn_rate);
-  el.revenueVal.textContent = money(setup.revenue);
-  el.xpVal.textContent = `${setup.founder_experience} years`;
-  const celebrityName = setup.partner_team?.celebrity?.name || "N/A";
-  const professorName = setup.partner_team?.professor?.name || "N/A";
-  el.metaLine.textContent = `Founder: ${setup.classmate?.name || "N/A"} | Celeb: ${celebrityName} | Prof: ${professorName} | Country: ${setup.country?.country || "N/A"} (${setup.country?.year || "N/A"})`;
+  goToStep2() {
+    const classmate = document.getElementById('classmateSelect').value;
+    if (!classmate) { alert('Please select a classmate first.'); return; }
 
-  el.marketBtn.disabled = false;
-  el.startBoardBtn.disabled = false;
-  el.resumeBtn.disabled = true;
-  el.statusVal.textContent = "ready";
-  setStep(2);
-}
+    document.getElementById('setupStep1').classList.add('hidden');
+    document.getElementById('setupStep2').classList.remove('hidden');
 
-async function fetchJson(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
+    this.renderPartnerGrid('celebrityGrid', this.celebrities, 'celebrity');
+    this.renderPartnerGrid('professorGrid', this.professors, 'professor');
+  },
 
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`HTTP ${response.status}: ${body}`);
-  }
+  renderPartnerGrid(containerId, partners, type) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    partners.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'partner-card';
+      card.dataset.name = p.name;
+      card.innerHTML = `
+        <div class="partner-card-name">${p.name}</div>
+        <div class="partner-card-domain">${p.domain} • ${p.core_ability}</div>
+        <div class="text-xs text-slate-500 mt-1">Cost: ${p.cost}/10</div>
+      `;
+      card.addEventListener('click', () => this.selectPartner(type, p.name, card, containerId));
+      container.appendChild(card);
+    });
+  },
 
-  return response.json();
-}
+  selectPartner(type, name, card, containerId) {
+    // Deselect all in this grid
+    document.querySelectorAll(`#${containerId} .partner-card`).forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
 
-function fillSelect(selectEl, options, labelKey = "name", valueKey = "name") {
-  selectEl.innerHTML = "";
-  options.forEach((opt) => {
-    const option = document.createElement("option");
-    option.value = opt[valueKey];
-    option.textContent = opt[labelKey];
-    selectEl.appendChild(option);
-  });
-}
+    if (type === 'celebrity') this.selectedCelebrity = name;
+    else this.selectedProfessor = name;
 
-function setFounderIntro(content, source = "Profile", linkedinUrl = "") {
-  el.founderIntro.textContent = content;
-  el.founderIntroSource.textContent = source;
+    // Enable start button if both selected
+    const btn = document.getElementById('startGameBtn');
+    btn.disabled = !(this.selectedCelebrity && this.selectedProfessor);
 
-  if (linkedinUrl) {
-    el.founderIntroLink.href = linkedinUrl;
-    el.founderIntroLink.classList.remove("hidden");
-  } else {
-    el.founderIntroLink.href = "#";
-    el.founderIntroLink.classList.add("hidden");
-  }
-}
+    // Show synergy preview
+    this.updateSynergyPreview();
+  },
 
-async function updateFounderIntro(name) {
-  const currentRequest = ++introRequestSeq;
+  updateSynergyPreview() {
+    const panel = document.getElementById('synergyPreview');
+    const details = document.getElementById('synergyDetails');
+    if (!this.selectedCelebrity || !this.selectedProfessor) {
+      panel.classList.add('hidden');
+      return;
+    }
+    panel.classList.remove('hidden');
+    details.innerHTML = `<span class="text-white">${this.selectedCelebrity} + ${this.selectedProfessor}</span>`;
+  },
 
-  if (!name || name === "Loading...") {
-    setFounderIntro("Select a founder to see a short intro based on their public profile.", "Profile", "");
-    return;
-  }
+  async startGame() {
+    const btn = document.getElementById('startGameBtn');
+    btn.disabled = true;
+    btn.textContent = 'Launching...';
 
-  setFounderIntro("Loading founder intro from the public profile...", "Loading", "");
+    const body = {
+      classmate_name: document.getElementById('classmateSelect').value,
+      country: document.getElementById('countrySelect').value,
+      preferred_sector: document.getElementById('sectorSelect').value,
+      celebrity_partner_name: this.selectedCelebrity,
+      professor_partner_name: this.selectedProfessor,
+    };
 
-  try {
-    const data = await fetchJson(`/api/setup/classmate-intro?name=${encodeURIComponent(name)}`);
-    if (currentRequest !== introRequestSeq) return;
-    setFounderIntro(data.intro || `No intro returned for ${name}.`, data.source || "Profile", data.linkedin_url || "");
-  } catch (error) {
-    if (currentRequest !== introRequestSeq) return;
-    setFounderIntro(`Could not load a profile intro for ${name}.`, "Unavailable", "");
-  }
-}
+    try {
+      const res = await fetch(`${API}/api/setup/founder`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      this.gameId = data.game_id;
+      this.state = data.state;
 
-async function loadSetupData() {
-  const [classmateRes, celebrityRes, professorRes, countryRes] = await Promise.all([
-    fetchJson("/api/setup/classmates"),
-    fetchJson("/api/setup/celebrity-partners"),
-    fetchJson("/api/setup/professor-partners"),
-    fetchJson("/api/setup/countries"),
-  ]);
+      document.getElementById('setupScreen').classList.add('hidden');
+      document.getElementById('gameBoard').classList.remove('hidden');
+      this.render();
+    } catch (e) {
+      alert('Failed to start game: ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '🚀 Launch Your Startup';
+    }
+  },
 
-  fillSelect(el.classmateSelect, classmateRes.classmates || []);
-  
-  // Populate partner grids
-  const celebrities = celebrityRes.celebrity_partners || [];
-  const professors = professorRes.professor_partners || [];
-  
-  populatePartnerCards("celebrity", celebrities);
-  populatePartnerCards("professor", professors);
+  // ═══════════════════════════════════════════════════════
+  // GAME ACTIONS
+  // ═══════════════════════════════════════════════════════
 
-  el.countrySelect.innerHTML = "";
-  (countryRes.countries || []).forEach((country) => {
-    const option = document.createElement("option");
-    option.value = country;
-    option.textContent = country;
-    el.countrySelect.appendChild(option);
-  });
+  async chooseEvent(eventId, choiceIndex) {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/choose_event`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: eventId, choice_index: choiceIndex }),
+      });
+      const data = await res.json();
 
-  if ((countryRes.countries || []).includes("Singapore")) {
-    el.countrySelect.value = "Singapore";
-  }
+      // Show reaction toast
+      if (data.reaction) this.showToast(data.reaction);
 
-  if (el.classmateSelect.value) {
-    await updateFounderIntro(el.classmateSelect.value);
-  }
-}
+      // Update local state
+      await this.refreshState();
+    } catch (e) { console.error('Choose event failed:', e); }
+  },
 
-async function generateSetup() {
-  if (!state.selectedCelebrity || !state.selectedProfessor) {
-    alert("Please select both a Celebrity Co-Founder and an Academic Specialist.");
-    return;
-  }
+  async skipEvents() {
+    try {
+      await fetch(`${API}/api/game/${this.gameId}/skip_events`, { method: 'POST' });
+      await this.refreshState();
+    } catch (e) { console.error('Skip events failed:', e); }
+  },
 
-  const payload = {
-    classmate_name: el.classmateSelect.value,
-    celebrity_partner_name: state.selectedCelebrity,
-    professor_partner_name: state.selectedProfessor,
-    country: el.countrySelect.value,
-    preferred_sector: el.sectorSelect.value,
-    founder_background: el.founderBackground.value,
-    cofounder_background: el.cofounderBackground.value,
-  };
+  async endQuarter() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/end_quarter`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      this.state = data.state;
 
-  const setup = await fetchJson("/api/setup/founder", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+      if (data.state.game_over) {
+        this.showGameOver();
+      } else {
+        this.showQuarterSummary(data.summary);
+      }
+      this.render();
+    } catch (e) { console.error('End quarter failed:', e); }
+  },
 
-  state.setup = setup;
-  state.threadId = crypto.randomUUID();
-  state.meetingStatus = "idle";
-  resetLog();
-  pushLogLine(`[Founder Setup] ${setup.classmate?.name} launched with ${setup.partner_team?.name || "partner team"}.`);
-  if ((setup.partner_team?.unlocked_synergies || []).length > 0) {
-    pushLogLine(`[Synergy] Unlocked: ${setup.partner_team.unlocked_synergies.join(", ")}`);
-  }
-  applySetupToUI(setup);
-}
+  async boardReview() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/board_review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      this.state = data.state;
 
-async function runMarketPhysics() {
-  if (!state.setup) return;
-  const payload = {
-    thread_id: state.threadId,
-    budget: state.setup.budget,
-    burn_rate: state.setup.burn_rate,
-    revenue: state.setup.revenue,
-    founder_experience: state.setup.founder_experience,
-    sector: state.setup.sector,
-    pitch: "",
-    action: "start",
-  };
+      // Show board review message
+      if (data.board_review) {
+        this.showToast(`🏛️ ${data.board_review.message}`);
+      }
+      this.render();
+    } catch (e) { console.error('Board review failed:', e); }
+  },
 
-  const data = await fetchJson("/api/predict", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  async sendChat() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
 
-  el.probVal.textContent = `${(Number(data.success_probability || 0) * 100).toFixed(1)}%`;
-  el.runwayVal.textContent = `${data.runway_months || 0} months`;
-  setStep(2);
-}
+    // Add user message to UI immediately
+    this.addChatBubble('user', 'You', message);
 
-async function startBoardMeeting() {
-  if (!state.setup) return;
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+      const data = await res.json();
+      (data.messages || []).forEach(msg => {
+        this.addChatBubble(msg.role, msg.speaker, msg.content);
+      });
+    } catch (e) {
+      this.addChatBubble('system', 'System', 'Failed to get advisor response.');
+    }
+  },
 
-  const payload = {
-    thread_id: state.threadId,
-    budget: state.setup.budget,
-    burn_rate: state.setup.burn_rate,
-    revenue: state.setup.revenue,
-    founder_experience: state.setup.founder_experience,
-    sector: state.setup.sector,
-    pitch: el.pitchText.value,
-    action: "start",
-    partner_name: state.setup.partner_team?.name || "Partner Team",
-    partner_style: state.setup.partner_team?.style || "",
-    synergy_bonus: state.setup.partner_team?.synergy_bonus || 0.0,
-  };
+  async refreshState() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/state`);
+      const data = await res.json();
+      this.state = data.state;
+      this.render();
 
-  const data = await fetchJson("/api/boardroom_turn", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+      if (data.state.game_over) this.showGameOver();
+    } catch (e) { console.error('Refresh state failed:', e); }
+  },
 
-  resetLog();
-  (data.messages || []).forEach(pushLogLine);
-  state.meetingStatus = data.status || "paused";
-  if (typeof data.updated_budget === "number") state.setup.budget = data.updated_budget;
-  if (typeof data.updated_burn_rate === "number") state.setup.burn_rate = data.updated_burn_rate;
-  if (typeof data.updated_revenue === "number") state.setup.revenue = data.updated_revenue;
-  applySetupToUI(state.setup);
-  el.statusVal.textContent = state.meetingStatus;
-  el.resumeBtn.disabled = state.meetingStatus !== "paused";
-  setStep(3);
-}
+  // ═══════════════════════════════════════════════════════
+  // HIRING
+  // ═══════════════════════════════════════════════════════
 
-async function resumeBoardMeeting() {
-  if (!state.setup || state.meetingStatus !== "paused") return;
+  async openHiringModal() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/candidates`);
+      const data = await res.json();
+      this.renderHiringCandidates(data.candidates || [], data.filled_roles || []);
+      document.getElementById('hiringModal').classList.remove('hidden');
+      document.getElementById('hiringModal').classList.add('flex');
+    } catch (e) { console.error('Load candidates failed:', e); }
+  },
 
-  const payload = {
-    thread_id: state.threadId,
-    budget: state.setup.budget,
-    burn_rate: state.setup.burn_rate,
-    revenue: state.setup.revenue,
-    founder_experience: state.setup.founder_experience,
-    sector: state.setup.sector,
-    pitch: el.pitchText.value,
-    action: "resume",
-    partner_name: state.setup.partner_team?.name || "Partner Team",
-    partner_style: state.setup.partner_team?.style || "",
-    synergy_bonus: state.setup.partner_team?.synergy_bonus || 0.0,
-  };
+  closeHiringModal() {
+    document.getElementById('hiringModal').classList.add('hidden');
+    document.getElementById('hiringModal').classList.remove('flex');
+  },
 
-  const data = await fetchJson("/api/boardroom_turn", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  renderHiringCandidates(candidates, filledRoles) {
+    const container = document.getElementById('hiringCandidates');
+    const roles = ['CTO', 'CMO', 'CFO', 'COO'];
 
-  resetLog();
-  (data.messages || []).forEach(pushLogLine);
-  state.meetingStatus = data.status || "done";
-  if (typeof data.updated_budget === "number") state.setup.budget = data.updated_budget;
-  if (typeof data.updated_burn_rate === "number") state.setup.burn_rate = data.updated_burn_rate;
-  if (typeof data.updated_revenue === "number") state.setup.revenue = data.updated_revenue;
-  applySetupToUI(state.setup);
-  el.statusVal.textContent = state.meetingStatus;
-  el.resumeBtn.disabled = state.meetingStatus !== "paused";
-}
+    container.innerHTML = roles.map(role => {
+      const roleCandidates = candidates.filter(c => c.role === role);
+      const filled = filledRoles.includes(role);
 
-function hardReset() {
-  state.setup = null;
-  state.threadId = crypto.randomUUID();
-  state.meetingStatus = "idle";
-  state.selectedCelebrity = null;
-  state.selectedProfessor = null;
+      return `
+        <div class="mb-4">
+          <h3 class="text-sm font-bold text-slate-300 mb-2">${role} ${filled ? '<span class="text-game-green">(Filled)</span>' : ''}</h3>
+          <div class="grid grid-cols-3 gap-2">
+            ${roleCandidates.map(c => `
+              <div class="hiring-card">
+                <div class="font-bold text-sm">${c.name}</div>
+                <div class="text-xs text-slate-400">${c.title}</div>
+                <div class="text-xs text-slate-500 mt-1">${c.bio}</div>
+                <div class="flex justify-between text-xs mt-2">
+                  <span class="text-game-red">$${c.salary.toLocaleString()}/mo</span>
+                  <span class="text-game-yellow">+${c.ap_bonus} AP</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-1">Equity: ${c.equity_ask}%</div>
+                <button onclick="game.hireCandidate('${c.id}')" class="w-full mt-2 bg-game-accent hover:bg-blue-600 text-xs py-1.5 rounded font-bold ${c.slot_filled ? 'opacity-30 cursor-not-allowed' : ''}" ${c.slot_filled ? 'disabled' : ''}>
+                  Hire
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
 
-  el.budgetVal.textContent = "$0";
-  el.burnVal.textContent = "$0";
-  el.revenueVal.textContent = "$0";
-  el.xpVal.textContent = "0 years";
-  el.metaLine.textContent = "No setup generated yet.";
-  el.probVal.textContent = "-";
-  el.runwayVal.textContent = "-";
-  el.statusVal.textContent = "idle";
+  async hireCandidate(candidateId) {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/hire`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidate_id: candidateId }),
+      });
+      const data = await res.json();
+      if (data.hired) this.showToast(`Hired ${data.hired} as ${data.role}!`);
+      this.closeHiringModal();
+      await this.refreshState();
+    } catch (e) { console.error('Hire failed:', e); }
+  },
 
-  el.marketBtn.disabled = true;
-  el.startBoardBtn.disabled = true;
-  el.resumeBtn.disabled = true;
+  async fireStaff(staffId) {
+    if (!confirm('Are you sure you want to fire this executive?')) return;
+    try {
+      await fetch(`${API}/api/game/${this.gameId}/fire`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ staff_id: staffId }),
+      });
+      await this.refreshState();
+    } catch (e) { console.error('Fire failed:', e); }
+  },
 
-  el.celebrityPartnerDisplay.textContent = "Select partner...";
-  el.professorPartnerDisplay.textContent = "Select partner...";
+  // ═══════════════════════════════════════════════════════
+  // FUNDING
+  // ═══════════════════════════════════════════════════════
 
-  resetLog();
-  setStep(1);
-}
+  async openFundingModal() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/funding`);
+      const data = await res.json();
+      this.renderFundingOffer(data);
+      document.getElementById('fundingModal').classList.remove('hidden');
+      document.getElementById('fundingModal').classList.add('flex');
+    } catch (e) { console.error('Load funding failed:', e); }
+  },
 
-async function init() {
-  hardReset();
-  await loadSetupData();
-}
+  closeFundingModal() {
+    document.getElementById('fundingModal').classList.add('hidden');
+    document.getElementById('fundingModal').classList.remove('flex');
+  },
 
-// ===== PARTNER CARD FUNCTIONS =====
+  renderFundingOffer(data) {
+    const container = document.getElementById('fundingContent');
+    const offer = data.offer;
 
-function getTopStats(stats, limit = 3) {
-  const entries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
-  return entries.slice(0, limit).map(([key, val]) => ({ key, val }));
-}
+    if (!offer) {
+      container.innerHTML = '<p class="text-slate-400">You are already at the maximum funding stage.</p>';
+      return;
+    }
 
-function populatePartnerCards(type, partners) {
-  const gridEl = type === "celebrity" ? el.celebrityPartnerGrid : el.professorPartnerGrid;
-  gridEl.innerHTML = "";
+    if (!offer.available) {
+      container.innerHTML = `
+        <div class="text-center">
+          <div class="text-3xl mb-2">🔒</div>
+          <div class="text-slate-400">Next: <strong>${offer.label}</strong></div>
+          <div class="text-sm text-game-red mt-2">${offer.reason}</div>
+        </div>
+      `;
+      return;
+    }
 
-  partners.forEach((partner) => {
-    const card = document.createElement("div");
-    card.className = "partner-card";
-    card.innerHTML = `
-      <div class="flex flex-col items-center gap-3 text-center">
-        <img src="${partner.avatar_url}" alt="${partner.name}" class="partner-avatar w-24 h-24 rounded-lg object-cover shadow-md">
-        <div class="flex-1 min-w-0 w-full">
-          <h3 class="font-bold text-slate-900 text-base leading-tight mb-1">${partner.name}</h3>
-          <p class="text-xs text-slate-600 font-semibold mb-1">${partner.core_ability}</p>
-          <p class="text-xs text-slate-500">${partner.domain}</p>
+    container.innerHTML = `
+      <div class="text-center space-y-3">
+        <div class="text-3xl">💰</div>
+        <div class="text-xl font-bold">${offer.label}</div>
+        <div class="text-game-green text-2xl font-black">$${offer.amount.toLocaleString()}</div>
+        <div class="text-sm text-slate-400">For <span class="text-game-red font-bold">${offer.equity}% equity</span></div>
+        <div class="text-xs text-slate-500">Post-money valuation: $${offer.post_money_valuation.toLocaleString()}</div>
+        <button onclick="game.acceptFunding()" class="w-full bg-game-green hover:bg-green-600 text-white font-bold py-3 rounded-lg mt-4">Accept Funding</button>
+      </div>
+    `;
+  },
+
+  async acceptFunding() {
+    try {
+      const res = await fetch(`${API}/api/game/${this.gameId}/raise_funding`, { method: 'POST' });
+      const data = await res.json();
+      this.showToast(`💰 Raised funding! New stage: ${data.new_stage}`);
+      this.closeFundingModal();
+      await this.refreshState();
+    } catch (e) { console.error('Raise funding failed:', e); }
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // RENDERING
+  // ═══════════════════════════════════════════════════════
+
+  render() {
+    if (!this.state) return;
+    const s = this.state;
+
+    // Header
+    document.getElementById('quarterBadge').textContent = `Q${s.current_quarter}/8`;
+    document.getElementById('phaseBadge').textContent = s.phase.charAt(0).toUpperCase() + s.phase.slice(1).replace('_', ' ');
+    document.getElementById('headerCash').textContent = this.fmtMoney(s.cash);
+    document.getElementById('headerRunway').textContent = s.runway_months >= 99 ? '∞' : `${s.runway_months}mo`;
+    document.getElementById('headerValuation').textContent = this.fmtMoney(s.valuation);
+    document.getElementById('headerAP').textContent = `${s.ap_available}/${s.ap_base + s.ap_bonus}`;
+
+    // Market badge
+    const marketBadge = document.getElementById('marketBadge');
+    marketBadge.textContent = s.market_condition.replace(/_/g, ' ');
+
+    // Financials
+    document.getElementById('finCash').textContent = this.fmtMoney(s.cash);
+    document.getElementById('finBurn').textContent = this.fmtMoney(s.burn_rate) + '/mo';
+    document.getElementById('finRevenue').textContent = this.fmtMoney(s.revenue) + '/mo';
+    document.getElementById('finRunway').textContent = s.runway_months >= 99 ? 'Profitable ∞' : `${s.runway_months} months`;
+    document.getElementById('finValuation').textContent = this.fmtMoney(s.valuation);
+    document.getElementById('finStage').textContent = s.funding_stage.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    document.getElementById('finEquity').textContent = `${s.equity_given.toFixed(1)}%`;
+
+    // Color coding
+    document.getElementById('finCash').className = `font-bold ${s.cash > 100000 ? 'text-game-green' : s.cash > 50000 ? 'text-game-yellow' : 'text-game-red'}`;
+    document.getElementById('headerRunway').className = `font-bold ${s.runway_months >= 12 ? 'text-game-green' : s.runway_months >= 6 ? 'text-game-yellow' : 'text-game-red'}`;
+
+    // Phase buttons
+    const isEvents = s.phase === 'events' || s.phase === 'advise';
+    const isQuarterEnd = s.phase === 'quarter_end';
+    const isBoardReview = s.phase === 'board_review';
+
+    document.getElementById('skipEventsBtn').classList.toggle('hidden', !isEvents || !s.current_events?.length);
+    document.getElementById('endQuarterBtn').classList.toggle('hidden', !isQuarterEnd);
+    document.getElementById('boardReviewBtn').classList.toggle('hidden', !isBoardReview);
+
+    // Events
+    this.renderEvents(s);
+
+    // Stats
+    this.renderStats(s.stats);
+
+    // Milestones
+    this.renderMilestones(s.milestones);
+
+    // Rivals
+    this.renderRivals(s.rivals);
+
+    // Staff
+    this.renderStaff(s.staff);
+
+    // Partners
+    document.getElementById('partnerCeleb').textContent = s.celebrity?.name || '—';
+    document.getElementById('partnerProf').textContent = s.professor?.name || '—';
+    const synergyBadges = document.getElementById('synergyBadges');
+    synergyBadges.innerHTML = (s.synergy_names || []).map(n =>
+      `<span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">${n}</span>`
+    ).join('');
+
+    // Probability
+    const prob = Math.round((s.success_probability || 0.5) * 100);
+    const probCircle = document.getElementById('probCircle');
+    probCircle.textContent = `${prob}%`;
+    probCircle.className = `w-12 h-12 rounded-full border-4 flex items-center justify-center text-sm font-bold ${
+      prob >= 60 ? 'border-game-green text-game-green' : prob >= 40 ? 'border-game-yellow text-game-yellow' : 'border-game-red text-game-red'
+    }`;
+  },
+
+  renderEvents(s) {
+    const container = document.getElementById('eventCards');
+    const noMsg = document.getElementById('noEventsMsg');
+    const events = s.current_events || [];
+
+    if (events.length === 0 || s.phase === 'quarter_end' || s.phase === 'board_review') {
+      container.innerHTML = '';
+      noMsg.classList.remove('hidden');
+      return;
+    }
+
+    noMsg.classList.add('hidden');
+
+    // Only show the pending event (first in list)
+    const ev = s.pending_event || events[0];
+    if (!ev) { container.innerHTML = ''; return; }
+
+    container.innerHTML = `
+      <div class="event-card animate-fade-in">
+        <div class="event-card-header">
+          <div class="event-card-dept">${ev.department}${ev.is_shock ? ' • SHOCK' : ''}</div>
+          <div class="event-card-title">${ev.title}</div>
+          <div class="event-card-desc">${ev.description}</div>
+          <div class="text-xs text-slate-500 mt-2">Events remaining: ${events.length}</div>
+        </div>
+        <div class="event-card-choices">
+          ${(ev.choices || []).map((c, i) => `
+            <button class="choice-btn" onclick="game.chooseEvent('${ev.id}', ${i})" ${s.ap_available < c.ap_cost ? 'disabled' : ''}>
+              <span>${c.text}</span>
+              <span class="ap-cost">${c.ap_cost} AP</span>
+            </button>
+          `).join('')}
+          <button class="choice-btn" onclick="game.askAdvisors('${ev.title}')" style="border-color: #7c3aed;">
+            <span>💬 Ask Advisors</span>
+            <span class="ap-cost" style="color: #a855f7;">FREE</span>
+          </button>
         </div>
       </div>
     `;
-    
-    card.addEventListener("click", () => {
-      showPartnerDetail(type, partner);
-    });
-    
-    gridEl.appendChild(card);
-  });
-}
+  },
 
-function showPartnerModal(type) {
-  if (type === "celebrity") {
-    el.celebrityPartnerModal.classList.remove("hidden");
-    el.celebrityPartnerModal.classList.add("flex");
-  } else {
-    el.professorPartnerModal.classList.remove("hidden");
-    el.professorPartnerModal.classList.add("flex");
-  }
-}
+  renderStats(stats) {
+    const container = document.getElementById('statBars');
+    const maxStat = 30;
 
-function closePartnerModal(type) {
-  if (type === "celebrity") {
-    el.celebrityPartnerModal.classList.add("hidden");
-    el.celebrityPartnerModal.classList.remove("flex");
-  } else {
-    el.professorPartnerModal.classList.add("hidden");
-    el.professorPartnerModal.classList.remove("flex");
-  }
-}
+    container.innerHTML = Object.entries(stats || {}).map(([key, val]) => {
+      const pct = Math.min(100, (val / maxStat) * 100);
+      return `
+        <div class="stat-bar-container">
+          <div class="stat-bar-label">${key}</div>
+          <div class="stat-bar-track">
+            <div class="stat-bar-fill ${key}" style="width: ${pct}%"></div>
+          </div>
+          <div class="stat-bar-value">${val}</div>
+        </div>
+      `;
+    }).join('');
+  },
 
-function closeDetailModal(type) {
-  if (type === "celebrity") {
-    el.celebrityDetailModal.classList.add("hidden");
-    el.celebrityDetailModal.classList.remove("flex");
-  } else {
-    el.professorDetailModal.classList.add("hidden");
-    el.professorDetailModal.classList.remove("flex");
-  }
-}
+  renderMilestones(milestones) {
+    const container = document.getElementById('milestoneList');
+    if (!milestones || milestones.length === 0) {
+      container.innerHTML = '<div class="text-xs text-slate-500">No milestones</div>';
+      return;
+    }
 
-function showPartnerDetail(type, partner) {
-  state.partnersForDetail = { ...state.partnersForDetail, [type]: partner };
+    container.innerHTML = milestones.map(m => `
+      <div class="milestone-item ${m.completed ? 'completed' : ''}">
+        <div class="milestone-icon ${m.completed ? 'completed' : 'pending'}">${m.completed ? '✓' : m.tier[0].toUpperCase()}</div>
+        <div>
+          <div class="text-xs font-bold ${m.completed ? 'text-game-green' : 'text-slate-300'}">${m.name}</div>
+          <div class="text-xs text-slate-500">${m.description}</div>
+          ${m.completed ? `<div class="text-xs text-game-green mt-1">Completed Q${m.completed_quarter}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  },
 
-  const detailModal = type === "celebrity" ? el.celebrityDetailModal : el.professorDetailModal;
-  const nameEl = type === "celebrity" ? document.getElementById("detailName") : document.getElementById("detailNameProf");
-  const avatarEl = type === "celebrity" ? document.getElementById("detailAvatar") : document.getElementById("detailAvatarProf");
-  const abilityEl = type === "celebrity" ? document.getElementById("detailAbility") : document.getElementById("detailAbilityProf");
-  const domainEl = type === "celebrity" ? document.getElementById("detailDomain") : document.getElementById("detailDomainProf");
-  const descEl = type === "celebrity" ? document.getElementById("detailDescription") : document.getElementById("detailDescriptionProf");
-  const statsEl = type === "celebrity" ? document.getElementById("detailStats") : document.getElementById("detailStatsProf");
-  const strengthsEl = type === "celebrity" ? document.getElementById("detailStrengths") : document.getElementById("detailStrengthsProf");
+  renderRivals(rivals) {
+    const container = document.getElementById('rivalList');
+    if (!rivals || rivals.length === 0) {
+      container.innerHTML = '<div class="text-xs text-slate-500">No rivals</div>';
+      return;
+    }
 
-  nameEl.textContent = partner.name;
-  avatarEl.src = partner.avatar_url;
-  abilityEl.textContent = partner.core_ability;
-  domainEl.textContent = partner.domain;
-  descEl.textContent = partner.description;
+    container.innerHTML = rivals.map(r => `
+      <div class="rival-item">
+        <div>
+          <div class="font-bold text-xs">${r.name}</div>
+          <div class="text-xs text-slate-500">${r.ceo}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold">${r.score}pts</span>
+          <span class="rival-momentum ${r.momentum}">${r.momentum}</span>
+        </div>
+      </div>
+    `).join('');
+  },
 
-  // Populate stats
-  statsEl.innerHTML = "";
-  const topStats = getTopStats(partner.stats, 4);
-  topStats.forEach(({ key, val }) => {
-    const statBox = document.createElement("div");
-    statBox.className = "stat-box";
-    statBox.innerHTML = `
-      <div class="stat-box-value">${val}</div>
-      <div class="stat-box-label">${key}</div>
+  renderStaff(staff) {
+    const container = document.getElementById('staffList');
+    if (!staff || staff.length === 0) {
+      container.innerHTML = '<div class="text-slate-500 italic text-xs">No executives hired yet</div>';
+      return;
+    }
+
+    container.innerHTML = staff.map(s => `
+      <div class="flex items-center justify-between bg-game-card rounded-lg p-2">
+        <div>
+          <div class="font-bold text-xs">${s.name}</div>
+          <div class="text-xs text-slate-500">${s.role} • $${s.salary.toLocaleString()}/mo</div>
+        </div>
+        <button onclick="game.fireStaff('${s.id}')" class="text-game-red text-xs hover:text-red-400">Fire</button>
+      </div>
+    `).join('');
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // CHAT
+  // ═══════════════════════════════════════════════════════
+
+  askAdvisors(eventTitle) {
+    const input = document.getElementById('chatInput');
+    input.value = `What should I do about "${eventTitle}"?`;
+    input.focus();
+  },
+
+  addChatBubble(role, speaker, content) {
+    const container = document.getElementById('chatMessages');
+    // Remove placeholder text
+    const placeholder = container.querySelector('.italic');
+    if (placeholder) placeholder.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${role} animate-fade-in`;
+    bubble.innerHTML = `<div class="speaker">${speaker}</div><div>${content}</div>`;
+    container.appendChild(bubble);
+    container.scrollTop = container.scrollHeight;
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // MODALS
+  // ═══════════════════════════════════════════════════════
+
+  showQuarterSummary(summary) {
+    const modal = document.getElementById('quarterSummaryModal');
+    document.getElementById('summaryTitle').textContent = `Quarter ${summary.quarter} Summary`;
+
+    const content = document.getElementById('summaryContent');
+    content.innerHTML = `
+      <div class="text-lg font-bold">${summary.headline}</div>
+      <div class="flex items-center gap-2 text-sm">
+        <span>${summary.market_emoji}</span>
+        <span>Market: <strong>${summary.market_condition}</strong></span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="bg-game-card rounded-lg p-3">
+          <div class="text-slate-400">Cash</div>
+          <div class="font-bold ${summary.cash > 0 ? 'text-game-green' : 'text-game-red'}">${this.fmtMoney(summary.cash)}</div>
+        </div>
+        <div class="bg-game-card rounded-lg p-3">
+          <div class="text-slate-400">Valuation</div>
+          <div class="font-bold text-game-purple">${this.fmtMoney(summary.valuation)}</div>
+        </div>
+        <div class="bg-game-card rounded-lg p-3">
+          <div class="text-slate-400">Revenue</div>
+          <div class="font-bold">${this.fmtMoney(summary.revenue)}/mo</div>
+        </div>
+        <div class="bg-game-card rounded-lg p-3">
+          <div class="text-slate-400">Runway</div>
+          <div class="font-bold">${summary.runway_months >= 99 ? '∞' : summary.runway_months + ' months'}</div>
+        </div>
+      </div>
+      <div class="text-sm">
+        <div class="font-bold text-slate-300 mb-1">Milestones: ${summary.milestones_completed}/${summary.milestones_total}</div>
+      </div>
+      ${summary.shock ? `
+        <div class="bg-game-red/10 border border-game-red/30 rounded-lg p-3 text-sm">
+          <div class="font-bold text-game-red">⚡ ${summary.shock.name}</div>
+          <div class="text-slate-400">${summary.shock.description}</div>
+        </div>
+      ` : ''}
+      <div class="space-y-1">
+        <div class="text-xs font-bold text-slate-400 uppercase">Rival Activity</div>
+        ${(summary.rival_news || []).map(r => `
+          <div class="text-xs text-slate-400">
+            <span class="font-bold text-slate-300">${r.name}</span> (${r.score}pts, ${r.momentum}) — ${r.news}
+          </div>
+        `).join('')}
+      </div>
     `;
-    statsEl.appendChild(statBox);
-  });
 
-  // Populate strengths (top 3 stats with descriptions)
-  strengthsEl.innerHTML = "";
-  topStats.slice(0, 3).forEach(({ key, val }) => {
-    const strengthItem = document.createElement("div");
-    strengthItem.className = "strength-item";
-    const statName = key.charAt(0).toUpperCase() + key.slice(1);
-    strengthItem.textContent = `${statName}: ${val}/10 - ${getStrengthDescription(key)}`;
-    strengthsEl.appendChild(strengthItem);
-  });
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  },
 
-  // Close the partner modal and show detail
-  closePartnerModal(type);
-  detailModal.classList.remove("hidden");
-  detailModal.classList.add("flex");
-}
+  closeSummaryModal() {
+    const modal = document.getElementById('quarterSummaryModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  },
 
-function getStrengthDescription(stat) {
-  const descriptions = {
-    growth: "Strong ability to scale and grow user base",
-    brand: "Excellent at building brand value and reputation",
-    product: "Mastery in product development and UX",
-    tech: "Deep technical expertise and innovation",
-    ops: "Exceptional operational execution and efficiency",
-    finance: "Strong financial acumen and capital management",
-    innovation: "Generates breakthrough ideas and solutions",
-    execution: "Delivers results consistently and reliably",
-  };
-  return descriptions[stat] || "Specialized expertise";
-}
+  showGameOver() {
+    const s = this.state;
+    const modal = document.getElementById('gameOverModal');
+    const reason = s.game_over_reason || 'unknown';
 
-function selectCelebrityPartner() {
-  const partner = state.partnersForDetail.celebrity;
-  if (partner) {
-    state.selectedCelebrity = partner.name;
-    el.celebrityPartnerDisplay.textContent = partner.name;
-    closeDetailModal("celebrity");
-  }
-}
+    const reasonMap = {
+      'bankruptcy': { emoji: '💀', title: 'Bankrupt!', desc: 'You ran out of cash. The startup is dead.' },
+      'all_milestones_completed': { emoji: '🏆', title: 'Victory!', desc: 'You completed all milestones! Incredible.' },
+      'time_up_survived': { emoji: '⏰', title: 'Time\'s Up', desc: 'You survived 8 quarters but didn\'t complete all milestones.' },
+      'time_up_bankrupt': { emoji: '💀', title: 'Time\'s Up & Broke', desc: 'Game over. Ran out of time and money.' },
+    };
+    const r = reasonMap[reason] || { emoji: '🎮', title: 'Game Over', desc: reason };
 
-function selectProfessorPartner() {
-  const partner = state.partnersForDetail.professor;
-  if (partner) {
-    state.selectedProfessor = partner.name;
-    el.professorPartnerDisplay.textContent = partner.name;
-    closeDetailModal("professor");
-  }
-}
+    document.getElementById('gameOverEmoji').textContent = r.emoji;
+    document.getElementById('gameOverTitle').textContent = r.title;
+    document.getElementById('gameOverReason').textContent = r.desc;
+    document.getElementById('gameOverStats').innerHTML = `
+      <div>Final Cash: <strong>${this.fmtMoney(s.cash)}</strong></div>
+      <div>Final Valuation: <strong>${this.fmtMoney(s.valuation)}</strong></div>
+      <div>Milestones: <strong>${s.milestones_completed}/3</strong></div>
+      <div>Quarters Played: <strong>${s.current_quarter}</strong></div>
+      <div>Success Probability: <strong>${Math.round(s.success_probability * 100)}%</strong></div>
+    `;
 
-async function init() {
-  hardReset();
-  await loadSetupData();
-}
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  },
 
-el.generateSetupBtn.addEventListener("click", () => generateSetup().catch((e) => alert(e.message)));
-el.marketBtn.addEventListener("click", () => runMarketPhysics().catch((e) => alert(e.message)));
-el.startBoardBtn.addEventListener("click", () => startBoardMeeting().catch((e) => alert(e.message)));
-el.resumeBtn.addEventListener("click", () => resumeBoardMeeting().catch((e) => alert(e.message)));
-el.refreshDataBtn.addEventListener("click", () => loadSetupData().catch((e) => alert(e.message)));
-el.resetBtn.addEventListener("click", hardReset);
-el.classmateSelect.addEventListener("change", () => updateFounderIntro(el.classmateSelect.value));
-el.celebrityPartnerBtn.addEventListener("click", () => showPartnerModal("celebrity"));
-el.professorPartnerBtn.addEventListener("click", () => showPartnerModal("professor"));
-el.helpBtn.addEventListener("click", () => {
-  document.getElementById("helpModal").classList.remove("hidden");
-  document.getElementById("helpModal").classList.add("flex");
-});
+  // ═══════════════════════════════════════════════════════
+  // UTILITIES
+  // ═══════════════════════════════════════════════════════
 
-init().catch((e) => alert(e.message));
+  fmtMoney(amount) {
+    if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+    if (amount >= 1000) return `$${Math.round(amount).toLocaleString()}`;
+    return `$${Math.round(amount)}`;
+  },
+
+  showToast(message) {
+    const existing = document.querySelector('.reaction-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'reaction-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  },
+};
+
+// ── Boot ──
+document.addEventListener('DOMContentLoaded', () => game.init());

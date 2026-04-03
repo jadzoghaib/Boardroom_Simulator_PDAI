@@ -13,7 +13,7 @@ from src.agents.prompts import (
     get_vc_name, 
     PARTNER_PROMPT
 )
-from src.agents.tools import check_survival_probability, query_startup_playbook
+from src.agents.tools import check_survival_probability, query_startup_playbook, query_celebrity_background
 
 load_dotenv()
 
@@ -29,6 +29,8 @@ class BoardroomState(TypedDict):
     partner_name: str  # name of the co-founder partner
     partner_style: str  # e.g., 'technical', 'commercial', 'operator'
     synergy_bonus: float  # original synergy bonus from partner
+    celebrity_name: str  # selected celebrity cofounder name
+    professor_name: str  # selected professor partner name
     vc_cycle: int  # which VC persona (0, 1, or 2)
     partner_satisfaction: float  # 0-1, starts at 1.0
     disagreement_cycles: int  # count of consecutive cycles with disagreement
@@ -73,6 +75,7 @@ def partner_node(state: BoardroomState):
     partner_style = state.get("partner_style", "")
     partner_departed = state.get("partner_departed", False)
     disagreement_cycles = state.get("disagreement_cycles", 0)
+    celebrity_name = state.get("celebrity_name", "")
     
     # If partner already left, output departure message
     if partner_departed:
@@ -81,7 +84,7 @@ def partner_node(state: BoardroomState):
     
     # Partner gives advice using tools and history
     llm = _get_llm()
-    agent = llm.bind_tools([query_startup_playbook])
+    agent = llm.bind_tools([query_startup_playbook, query_celebrity_background])
     
     # Fill in partner prompt with their details
     partner_expertise = _get_partner_expertise(partner_style)
@@ -93,12 +96,32 @@ def partner_node(state: BoardroomState):
     sys_msg = SystemMessage(content=partner_prompt + f" The startup is in {state['sector']}.")
     
     history = state.get("messages", [])
-    response = agent.invoke([sys_msg] + history)
+    context_messages = []
+    if celebrity_name:
+        celebrity_context = query_celebrity_background.invoke(
+            {
+                "celebrity_name": celebrity_name,
+                "query": "leadership style, strategic strengths, and decision-making patterns",
+            }
+        )
+        context_messages.append(AIMessage(content=f"Celebrity context: {celebrity_context}"))
+    response = agent.invoke([sys_msg] + history + context_messages)
     
     # Resolve tool calls
     if response.tool_calls:
-        tool_res = query_startup_playbook.invoke(response.tool_calls[0]["args"])
-        final_history = [sys_msg] + history + [AIMessage(content=f"Playbook says: {tool_res}")]
+        tool_messages = []
+        for tool_call in response.tool_calls:
+            tool_name = tool_call.get("name", "")
+            args = tool_call.get("args", {})
+
+            if tool_name == "query_startup_playbook":
+                tool_res = query_startup_playbook.invoke(args)
+                tool_messages.append(AIMessage(content=f"Playbook says: {tool_res}"))
+            elif tool_name == "query_celebrity_background":
+                tool_res = query_celebrity_background.invoke(args)
+                tool_messages.append(AIMessage(content=f"Celebrity context: {tool_res}"))
+
+        final_history = [sys_msg] + history + context_messages + tool_messages
         final = llm.invoke(final_history)
         partner_response = final.content
     else:

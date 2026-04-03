@@ -27,8 +27,8 @@ class MarketPredictor:
         founder_background: str = "first_time",
     ) -> float:
         if not self.model:
-            return 0.5 
-            
+            return 0.5
+
         features = pd.DataFrame([{
             'funding_rounds': 1,
             'founder_experience_years': founder_experience,
@@ -41,9 +41,50 @@ class MarketPredictor:
             'sector': sector,
             'founder_background': founder_background or 'first_time'
         }])
-        
+
         prob = self.model.predict_proba(features)[0][1]
         return round(float(prob), 2)
+
+    def predict_with_full_features(self, ml_features: dict) -> float:
+        """
+        Predict using all 10 ML features from GameState.
+        Accepts a dict with keys: funding_rounds, founder_experience_years,
+        team_size, market_size_billion, product_traction_users,
+        burn_rate_million, revenue_million, investor_type, sector, founder_background.
+        """
+        if not self.model:
+            return 0.5
+
+        # Map founder_background int to string if needed
+        bg = ml_features.get("founder_background", 0)
+        if isinstance(bg, int):
+            bg_map = {0: "first_time", 1: "business", 2: "technical"}
+            bg = bg_map.get(bg, "first_time")
+
+        inv = ml_features.get("investor_type", 0)
+        if isinstance(inv, int):
+            inv_map = {0: "none", 1: "institutional"}
+            inv = inv_map.get(inv, "none")
+
+        features = pd.DataFrame([{
+            'funding_rounds': ml_features.get("funding_rounds", 1),
+            'founder_experience_years': ml_features.get("founder_experience_years", 3),
+            'team_size': ml_features.get("team_size", 5),
+            'market_size_billion': ml_features.get("market_size_billion", 10.0),
+            'product_traction_users': ml_features.get("product_traction_users", 1000),
+            'burn_rate_million': ml_features.get("burn_rate_million", 0.035),
+            'revenue_million': ml_features.get("revenue_million", 0.008),
+            'investor_type': inv,
+            'sector': ml_features.get("sector", "AI"),
+            'founder_background': bg,
+        }])
+
+        try:
+            prob = self.model.predict_proba(features)[0][1]
+            return round(float(prob), 2)
+        except Exception as e:
+            logger.warning(f"Full-feature prediction failed: {e}")
+            return 0.5
 
     def calculate_runway(self, budget: float, burn_rate: float, revenue: float) -> int:
         """Calculates survival months before bankruptcy."""

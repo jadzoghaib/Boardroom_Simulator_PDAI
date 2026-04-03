@@ -4,6 +4,7 @@ import csv
 
 
 DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "classmates.csv"
+FACULTY_PDF_DIR = Path(__file__).resolve().parents[2] / "data" / "ESADE Faculty"
 
 
 STAT_KEYS = ["growth", "brand", "product", "tech", "ops", "finance", "innovation", "execution"]
@@ -157,6 +158,34 @@ PROFESSOR_PARTNERS: List[Dict[str, Any]] = [
 ]
 
 
+FACULTY_FILE_MATCHES: Dict[str, Dict[str, str]] = {
+    "Oriol Rius": {
+        "linkedin_pdf": "Oriol Rius Linkedin.pdf",
+        "profile_pdf": "Oriol_Rius_Canals_Profile.pdf",
+    },
+    "Esteve Almirall": {
+        "linkedin_pdf": "Esteve Almirall Linkedin.pdf",
+        "profile_pdf": "Esteve_Almirall_Profile.pdf",
+    },
+    "Jose A. Rodriguez-Serrano": {
+        "linkedin_pdf": "Jose A. Rodriguez-Serrano Linkedin.pdf",
+        "profile_pdf": "Jose_Rodriguez_Serrano_Profile.pdf",
+    },
+    "Ruben Coca": {
+        "linkedin_pdf": "Rubén Coca Linkedin.pdf",
+        "profile_pdf": "Ruben_Coca_Profile.pdf",
+    },
+    "Jordi Nin": {
+        "linkedin_pdf": "Jordi Nin Linkedin.pdf",
+        "profile_pdf": "Jordi_Nin_Profile.pdf",
+    },
+    "Maja Tampe": {
+        "linkedin_pdf": "Maja Tampe Linkedin.pdf",
+        "profile_pdf": "Maja_Tampe_Profile.pdf",
+    },
+}
+
+
 SYNERGY_RULES: List[Dict[str, Any]] = [
     {
         "name": "Full Stack",
@@ -268,7 +297,23 @@ def get_celebrity_partners() -> List[Dict[str, Any]]:
 
 
 def get_professor_partners() -> List[Dict[str, Any]]:
-    return PROFESSOR_PARTNERS
+    partners: List[Dict[str, Any]] = []
+    for professor in PROFESSOR_PARTNERS:
+        files = FACULTY_FILE_MATCHES.get(professor["name"], {})
+        linkedin_pdf = files.get("linkedin_pdf")
+        profile_pdf = files.get("profile_pdf")
+        partners.append(
+            {
+                **professor,
+                "source_files": {
+                    "linkedin_pdf": linkedin_pdf,
+                    "profile_pdf": profile_pdf,
+                    "linkedin_path": str(FACULTY_PDF_DIR / linkedin_pdf) if linkedin_pdf else None,
+                    "profile_path": str(FACULTY_PDF_DIR / profile_pdf) if profile_pdf else None,
+                },
+            }
+        )
+    return partners
 
 
 def _find_by_name(options: List[Dict[str, Any]], name: str) -> Optional[Dict[str, Any]]:
