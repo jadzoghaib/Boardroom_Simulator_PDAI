@@ -10,7 +10,7 @@ joblib
 numpy
 chromadb
 python-dotenv
-
 langchain-groq
 langgraph-checkpoint
 wikipedia-api
+pdfplumber

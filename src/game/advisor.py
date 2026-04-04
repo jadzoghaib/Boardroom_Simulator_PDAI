@@ -173,3 +173,334 @@ def get_advisor_responses(
         professor_response = f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment. Consider the risk-adjusted options carefully."
 
     return celebrity_response, professor_response
+
+
+def get_celebrity_response(state, user_message: str) -> str:
+    """
+    Get a response from the Celebrity advisor only.
+    Used by the /chat/celebrity endpoint.
+    """
+    llm = _get_llm()
+    cond = MARKET_CONDITIONS.get(state.market_condition, {})
+    market_label = cond.get("label", "Stable")
+    event_context = _build_event_context(state)
+
+    celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
+    celebrity_rag = ""
+    try:
+        celebrity_rag = search_celebrity_background(
+            query=f"{event_context} {user_message}",
+            celebrity_name=celebrity_name,
+            n_results=2,
+        )
+    except Exception as e:
+        logger.warning(f"Celebrity RAG failed: {e}")
+
+    celebrity_system = CELEBRITY_ADVISOR_PROMPT.format(
+        celebrity_name=celebrity_name,
+        celebrity_domain=state.celebrity.get("domain", "General"),
+        celebrity_core_ability=state.celebrity.get("core_ability", ""),
+        celebrity_description=state.celebrity.get("description", ""),
+        celebrity_rag_context=celebrity_rag or "No additional background available.",
+        quarter=state.current_quarter,
+        sector=state.sector,
+        cash=state.cash,
+        burn_rate=state.burn_rate,
+        revenue=state.revenue,
+        runway_months=state.runway_months,
+        market_condition=market_label,
+        event_context=event_context,
+    )
+
+    history = _build_chat_history(state)
+    try:
+        messages = [
+            SystemMessage(content=celebrity_system),
+            *history,
+            HumanMessage(content=user_message),
+        ]
+        result = llm.invoke(messages)
+        return getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"Celebrity LLM call failed: {e}")
+        return f"[{celebrity_name}]: Sorry, I'm having trouble connecting right now. Go with your gut on this one."
+
+
+def get_professor_response(state, user_message: str) -> str:
+    """
+    Get a response from the Professor advisor only.
+    Used by the /chat/professor endpoint.
+    """
+    llm = _get_llm()
+    cond = MARKET_CONDITIONS.get(state.market_condition, {})
+    market_label = cond.get("label", "Stable")
+    event_context = _build_event_context(state)
+
+    professor_name = state.professor.get("name", "Professor Advisor")
+    professor_rag = ""
+    try:
+        professor_rag = search_professor_background(
+            query=f"{event_context} {user_message}",
+            professor_name=professor_name,
+            n_results=2,
+        )
+    except Exception as e:
+        logger.warning(f"Professor RAG failed: {e}")
+
+    professor_system = PROFESSOR_ADVISOR_PROMPT.format(
+        professor_name=professor_name,
+        professor_domain=state.professor.get("domain", "General"),
+        professor_core_ability=state.professor.get("core_ability", ""),
+        professor_description=state.professor.get("description", ""),
+        professor_rag_context=professor_rag or "No additional background available.",
+        quarter=state.current_quarter,
+        sector=state.sector,
+        cash=state.cash,
+        burn_rate=state.burn_rate,
+        revenue=state.revenue,
+        runway_months=state.runway_months,
+        market_condition=market_label,
+        event_context=event_context,
+    )
+
+    history = _build_chat_history(state)
+    try:
+        messages = [
+            SystemMessage(content=professor_system),
+            *history,
+            HumanMessage(content=user_message),
+        ]
+        result = llm.invoke(messages)
+        return getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"Professor LLM call failed: {e}")
+        return f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment. Consider the risk-adjusted options carefully."
+
+
+# ═══════════════════════════════════════════════════════════════════
+# END-OF-GAME DEBRIEF
+# ═══════════════════════════════════════════════════════════════════
+
+def get_game_debrief(state) -> str:
+    """Generate a detailed post-game debrief using the full game history."""
+    llm = _get_llm()
+
+    from src.agents.prompts import DEBRIEF_PROMPT
+
+    # Build full game history
+    quarter_history = ""
+    for i, q in enumerate(state.quarter_log or [], 1):
+        if isinstance(q, dict):
+            quarter_history += (
+                f"\nQ{i}: Cash ${q.get('cash_end', 0):,.0f} | "
+                f"Revenue ${q.get('revenue', 0):,.0f}/mo | "
+                f"Burn ${q.get('burn_rate', 0):,.0f}/mo | "
+                f"Market: {q.get('market_condition', '?')}\n"
+            )
+        else:
+            quarter_history += (
+                f"\nQ{i}: Cash ${getattr(q, 'cash_end', 0):,.0f} | "
+                f"Revenue ${getattr(q, 'revenue', 0):,.0f}/mo | "
+                f"Burn ${getattr(q, 'burn_rate', 0):,.0f}/mo | "
+                f"Market: {getattr(q, 'market_condition', '?')}\n"
+            )
+
+    resolved = state.resolved_event_ids or []
+    event_summary = f"{len(resolved)} events resolved across all quarters."
+
+    user_content = f"""
+Founder: {state.classmate.get('name', 'Unknown')}
+Sector: {state.sector}
+Celebrity Advisor: {state.celebrity.get('name', '?')}
+Professor Advisor: {state.professor.get('name', '?')}
+
+FINAL FINANCIALS:
+- Cash: ${state.cash:,.0f}
+- Burn Rate: ${state.burn_rate:,.0f}/mo
+- Revenue: ${state.revenue:,.0f}/mo
+- Runway: {state.runway_months:.1f} months
+- Valuation: ${state.valuation:,.0f}
+- Funding Stage: {state.funding_stage}
+- Equity Given: {state.equity_given:.1f}%
+
+GAME OUTCOME:
+- Quarters Completed: {state.current_quarter}/8
+- Game Over Reason: {state.game_over_reason or 'Completed all 8 quarters'}
+- Milestones Completed: {state.milestones_completed}/3
+- Success Probability (ML): {state.success_probability:.0%}
+
+FINAL STATS:
+{chr(10).join(f'- {k.title()}: {v}/100' for k, v in state.stats.items())}
+
+STAFF HIRED:
+{chr(10).join(f'- {s.name} ({s.role})' for s in state.staff) or '- No executives hired'}
+
+QUARTER-BY-QUARTER:
+{quarter_history or 'No quarter log available.'}
+
+EVENTS: {event_summary}
+
+RIVALS AT END:
+{chr(10).join(f'- {r.name} : {r.score} pts ({r.momentum})' for r in state.rivals)}
+"""
+
+    try:
+        result = llm.invoke([
+            SystemMessage(content=DEBRIEF_PROMPT),
+            HumanMessage(content=user_content)
+        ])
+        return getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"Debrief LLM call failed: {e}")
+        return "Unable to generate debrief at this time."
+
+
+# ═══════════════════════════════════════════════════════════════════
+# BOARDROOM VC CHAT
+# ═══════════════════════════════════════════════════════════════════
+
+def get_vc_opening(state) -> str:
+    """Generate the VC's opening statement for the board review."""
+    llm = _get_llm()
+    from src.agents.prompts import VC_BOARDROOM_PROMPT
+
+    rivals_summary = "\n".join(
+        f"- {r.name}: {r.score} pts ({r.momentum})"
+        for r in state.rivals[:3]
+    )
+    stats_summary = ", ".join(f"{k}: {v}" for k, v in state.stats.items())
+
+    system = VC_BOARDROOM_PROMPT.format(
+        quarter=state.current_quarter,
+        sector=state.sector,
+        cash=state.cash,
+        burn_rate=state.burn_rate,
+        revenue=state.revenue,
+        runway_months=state.runway_months,
+        valuation=state.valuation,
+        funding_stage=state.funding_stage,
+        milestones_completed=state.milestones_completed,
+        success_probability=state.success_probability,
+        rivals_summary=rivals_summary or "No rivals tracked.",
+        stats_summary=stats_summary or "No stats yet.",
+    )
+
+    opening_prompt = (
+        f"This is the start of the board review for Q{state.current_quarter}. "
+        "Give your opening assessment of this startup in 3-4 sentences. "
+        "Be direct about what concerns you and what you want to discuss. Do not give a verdict yet."
+    )
+
+    try:
+        result = llm.invoke([
+            SystemMessage(content=system),
+            HumanMessage(content=opening_prompt)
+        ])
+        return getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"VC opening failed: {e}")
+        return "Let's cut to the chase. Your burn rate concerns me. Walk me through your plan to reach profitability."
+
+
+def get_vc_response(state, user_message: str):
+    """
+    Get VC and partner response to founder's message during board review.
+    Returns (vc_response, partner_response, verdict_or_none)
+    """
+    import re as _re
+    llm = _get_llm()
+    from src.agents.prompts import VC_BOARDROOM_PROMPT, PARTNER_BOARDROOM_PROMPT
+
+    rivals_summary = "\n".join(
+        f"- {r.name}: {r.score} pts ({r.momentum})"
+        for r in state.rivals[:3]
+    )
+    stats_summary = ", ".join(f"{k}: {v}" for k, v in state.stats.items())
+
+    vc_system = VC_BOARDROOM_PROMPT.format(
+        quarter=state.current_quarter,
+        sector=state.sector,
+        cash=state.cash,
+        burn_rate=state.burn_rate,
+        revenue=state.revenue,
+        runway_months=state.runway_months,
+        valuation=state.valuation,
+        funding_stage=state.funding_stage,
+        milestones_completed=state.milestones_completed,
+        success_probability=state.success_probability,
+        rivals_summary=rivals_summary or "No rivals tracked.",
+        stats_summary=stats_summary or "No stats yet.",
+    )
+
+    partner_system = PARTNER_BOARDROOM_PROMPT.format(
+        partner_name=state.professor.get("name", "Professor"),
+        quarter=state.current_quarter,
+        sector=state.sector,
+        cash=state.cash,
+        revenue=state.revenue,
+        milestones_completed=state.milestones_completed,
+        stats_summary=stats_summary or "No stats yet.",
+    )
+
+    # Build history from board_chat_messages
+    history = []
+    for msg in state.board_chat_messages[-8:]:
+        if msg.role == "user":
+            history.append(HumanMessage(content=f"[Founder]: {msg.content}"))
+        elif msg.role == "vc":
+            history.append(HumanMessage(content=f"[VC]: {msg.content}"))
+        elif msg.role == "partner":
+            partner_name = state.professor.get("name", "Professor")
+            history.append(HumanMessage(content=f"[{partner_name}]: {msg.content}"))
+
+    # Determine if this should be the final exchange (after 3+ founder messages)
+    founder_msgs = sum(1 for m in state.board_chat_messages if m.role == "user")
+    is_final = founder_msgs >= 3
+
+    final_instruction = (
+        "\nThis is the final exchange. Give your verdict now. "
+        "End your response with [VERDICT: IMPRESSED], [VERDICT: NEUTRAL], or [VERDICT: CONCERNED] on its own line."
+        if is_final else ""
+    )
+
+    # VC response
+    vc_response = ""
+    try:
+        vc_msgs = [
+            SystemMessage(content=vc_system + final_instruction),
+            *history,
+            HumanMessage(content=user_message),
+        ]
+        result = llm.invoke(vc_msgs)
+        vc_response = getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"VC response failed: {e}")
+        vc_response = "Interesting point. But I need to see better numbers before I'm convinced."
+
+    # Extract verdict if present
+    verdict = None
+    verdict_match = _re.search(r'\[VERDICT:\s*(IMPRESSED|NEUTRAL|CONCERNED)\]', vc_response)
+    if verdict_match:
+        verdict = verdict_match.group(1)
+        vc_response = vc_response[:verdict_match.start()].strip()
+
+    # Partner response
+    partner_response = ""
+    partner_name = state.professor.get("name", "Professor")
+    try:
+        partner_context = (
+            f"The VC just said: '{vc_response[:200]}'. "
+            f"The founder said: '{user_message[:200]}'. Add your perspective."
+        )
+        prof_msgs = [
+            SystemMessage(content=partner_system),
+            *history,
+            HumanMessage(content=partner_context),
+        ]
+        result = llm.invoke(prof_msgs)
+        partner_response = getattr(result, "content", "").strip()
+    except Exception as e:
+        logger.error(f"Partner board response failed: {e}")
+        partner_response = "I agree with the VC's assessment. The data speaks for itself."
+
+    return vc_response, partner_response, verdict

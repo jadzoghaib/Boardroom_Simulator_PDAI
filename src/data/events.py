@@ -520,32 +520,364 @@ SHOCK_EVENTS: List[Dict[str, Any]] = [
 
 
 # ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL UNIVERSAL EVENTS (late game focus)
+# ═══════════════════════════════════════════════════════════════════
+
+UNIVERSAL_EVENTS_LATE: List[Dict[str, Any]] = [
+    _ev("UNI-021", "Podcast Fame",
+        "A major startup podcast wants you as a guest. It reaches 500K listeners.",
+        "brand", None, "early",
+        [
+            _ch("Accept and prepare a compelling story", 2, {"brand": 3, "growth": 2, "traction_users": 2000}, "Episode drops. Your social following triples overnight."),
+            _ch("Do a quick interview with minimal prep", 1, {"brand": 1, "growth": 1}, "Decent coverage. Some new inbound signups."),
+            _ch("Decline — too busy building", 0, {}, "The opportunity passes. Back to work."),
+        ]),
+
+    _ev("UNI-022", "Remote Work Policy",
+        "Half your team is demanding a remote-first policy. The other half wants in-office culture.",
+        "ops", None, "early",
+        [
+            _ch("Go fully remote-first — global talent", 1, {"ops": 1, "growth": 1, "burn_rate": -3000}, "You can now hire anywhere. Team is happier."),
+            _ch("Hybrid policy — best of both worlds", 1, {"ops": 1, "execution": 1}, "Most people are satisfied. Some grumbling."),
+            _ch("Mandatory office — culture first", 2, {"execution": 2, "brand": 1, "burn_rate": 2000}, "Strong culture. But 2 people resign."),
+        ]),
+
+    _ev("UNI-023", "Board Observer Seat",
+        "An investor wants an observer seat on your board. No voting rights, but they'll see everything.",
+        "finance", None, "early",
+        [
+            _ch("Grant observer seat — more support", 1, {"finance": 2, "brand": 1}, "They introduce you to 3 strategic partners."),
+            _ch("Negotiate limited information rights instead", 1, {"finance": 1, "ops": 1}, "A middle ground. They accept grudgingly."),
+            _ch("Decline — keep governance lean", 0, {"execution": 1}, "Your board stays simple. You keep full control."),
+        ]),
+
+    _ev("UNI-024", "Y Combinator Demo Day",
+        "You've been accepted to YC. Demo Day is next month. It could change everything.",
+        "brand", None, "early",
+        [
+            _ch("All-in — pitch to 1000 investors", 2, {"brand": 3, "finance": 3, "cash": 100000, "valuation_mult": 1.3}, "You raise $500K in 48 hours. Game changer."),
+            _ch("Demo Day only — no media blitz", 1, {"brand": 2, "finance": 1, "cash": 30000}, "Good connections. A couple of interested angels."),
+            _ch("Skip — YC terms are too dilutive", 0, {"execution": 1}, "You keep more equity. Slower path, but yours."),
+        ]),
+
+    _ev("UNI-025", "Security Audit Required",
+        "Your enterprise client says they need a SOC 2 audit before signing. It takes months.",
+        "ops", None, "late",
+        [
+            _ch("Start SOC 2 audit immediately", 2, {"ops": 3, "brand": 2, "cash": -18000}, "Certified! Enterprise deals now flow freely."),
+            _ch("Use a faster compliance tool", 1, {"ops": 1, "cash": -5000}, "Partial compliance. Client accepts it provisionally."),
+            _ch("Negotiate a waiver from the client", 1, {"ops": 1}, "They grant 90 days. You're buying time."),
+        ]),
+
+    _ev("UNI-026", "Product Hunt Launch",
+        "Your team wants to do a big Product Hunt launch. Top 5 could mean 10K signups.",
+        "growth", None, "early",
+        [
+            _ch("Full launch campaign — weeks of prep", 2, {"growth": 4, "brand": 2, "traction_users": 8000, "cash": -3000}, "#1 Product of the Day! Inbound explodes."),
+            _ch("Soft launch — see what happens", 1, {"growth": 2, "brand": 1, "traction_users": 2000}, "#12 for the day. Good exposure."),
+            _ch("Skip — not the right time", 0, {"execution": 1}, "You wait for a stronger product before going public."),
+        ]),
+
+    _ev("UNI-027", "Key Advisor Departing",
+        "Your most connected advisor is moving to a competitor. They want to bow out gracefully.",
+        "brand", None, "late",
+        [
+            _ch("Negotiate a transition period", 1, {"brand": 1, "finance": 1}, "30-day handover. They intro you to their network."),
+            _ch("Let them go — no hard feelings", 0, {"brand": 1, "execution": 1}, "Clean exit. You stay on good terms."),
+            _ch("Contest the move legally", 2, {"cash": -10000, "brand": -2}, "Legal action backfires. Reputation takes a hit."),
+        ]),
+
+    _ev("UNI-028", "Sustainability Initiative",
+        "A large investor is pushing for a sustainability report. It's becoming a table-stakes ask.",
+        "brand", None, "late",
+        [
+            _ch("Full ESG report + carbon offset program", 2, {"brand": 3, "ops": 1, "cash": -8000}, "ESG score: excellent. Premium investors take notice."),
+            _ch("Lightweight sustainability pledge", 1, {"brand": 2}, "Symbolic but effective for now."),
+            _ch("Ignore — we have bigger problems", 0, {"brand": -1}, "The investor loses interest. Not a crisis yet."),
+        ]),
+
+    _ev("UNI-029", "CFO Resigns",
+        "Your CFO just handed in their notice. Board meeting in 2 weeks. The books are a mess.",
+        "finance", None, "late",
+        [
+            _ch("Promote internal controller as interim CFO", 1, {"finance": 1, "ops": 1}, "Smooth transition. Costs nothing extra."),
+            _ch("Hire a fractional CFO immediately", 1, {"finance": 2, "cash": -6000}, "Expensive but experienced. Board is reassured."),
+            _ch("Handle finances yourself temporarily", 0, {"finance": -1, "execution": -2}, "You're now the founder-CFO. Something will slip."),
+        ]),
+
+    _ev("UNI-030", "IP Portfolio Review",
+        "Your lawyer recommends filing 3 patents that could protect your core technology.",
+        "tech", None, "late",
+        [
+            _ch("File all 3 patents", 2, {"tech": 2, "innovation": 2, "cash": -15000, "valuation_mult": 1.1}, "Patents filed. Moat deepens. Acquirers take notice."),
+            _ch("File the most critical one", 1, {"tech": 1, "innovation": 1, "cash": -5000}, "Core IP protected. Others can wait."),
+            _ch("Skip — patents are expensive and slow", 0, {"cash": 5000}, "You save money. Competitors may copy you later."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL AI EVENTS
+# ═══════════════════════════════════════════════════════════════════
+
+AI_EVENTS_EXTRA: List[Dict[str, Any]] = [
+    _ev("AI-005", "Model Hallucination Incident",
+        "Your AI assistant gave a customer dangerous advice. It's now on TechCrunch.",
+        "brand", "AI", "late",
+        [
+            _ch("Immediate model rollback + public apology", 2, {"brand": 2, "tech": 1, "cash": -5000}, "Crisis contained. Your transparency is praised."),
+            _ch("Quiet fix — patch the model silently", 1, {"tech": 1}, "Fix deployed. The article stays up but no new coverage."),
+            _ch("Dispute the story — PR fight", 1, {"brand": -3, "cash": -8000}, "The PR battle makes it worse. Streisand effect."),
+        ]),
+
+    _ev("AI-006", "Foundation Model Partnership",
+        "Anthropic wants to use your product as a showcase for their API. Massive visibility.",
+        "brand", "AI", "late",
+        [
+            _ch("Co-marketing deal + case study", 2, {"brand": 4, "growth": 3, "innovation": 2}, "Featured on Anthropic's website. Signups triple."),
+            _ch("Technical partnership only", 1, {"tech": 2, "innovation": 1}, "Solid tech collab. No public announcement."),
+            _ch("Decline — stay vendor-neutral", 0, {"execution": 1, "innovation": 1}, "You avoid lock-in. Good long-term positioning."),
+        ]),
+
+    _ev("AI-007", "AI Safety Researcher Joins",
+        "A Stanford AI safety researcher wants to join your team part-time. They have concerns.",
+        "tech", "AI", "early",
+        [
+            _ch("Hire them full-time — safety is our priority", 2, {"tech": 2, "brand": 2, "innovation": 1, "burn_rate": 5000}, "Safety-first reputation becomes a selling point."),
+            _ch("Part-time advisor role", 1, {"tech": 1, "brand": 1}, "Good optics. Limited integration."),
+            _ch("Decline — too many cooks", 0, {"execution": 1}, "You stay lean. Safety concerns go unaddressed."),
+        ]),
+
+    _ev("AI-008", "Benchmarking Report",
+        "An independent researcher publishes a benchmark where your model ranks #3. Your team is devastated.",
+        "product", "AI", "late",
+        [
+            _ch("Major model improvement sprint", 2, {"tech": 3, "product": 2, "innovation": 2, "execution": -1}, "Next benchmark: you're #1. The narrative flips."),
+            _ch("Highlight your unique strengths", 1, {"brand": 2, "product": 1}, "You reframe the narrative. Customers who matter stay."),
+            _ch("Ignore it — benchmarks don't matter", 0, {"execution": 1, "brand": -1}, "Sales team struggles to answer client questions."),
+        ]),
+
+    _ev("AI-009", "Inference Cost Optimization",
+        "Your cloud bills are eating 40% of revenue. There's a way to cut them in half with effort.",
+        "tech", "AI", "early",
+        [
+            _ch("Full optimization project — 6-week sprint", 2, {"tech": 3, "finance": 2, "burn_rate": -8000}, "Cloud costs cut 55%. Margin improvement is massive."),
+            _ch("Incremental optimizations", 1, {"tech": 1, "finance": 1, "burn_rate": -3000}, "10% savings. Better than nothing."),
+            _ch("Raise prices instead", 1, {"finance": 1, "revenue": 5000, "growth": -1}, "Margins improve but some customers churn."),
+        ]),
+
+    _ev("AI-010", "Data Licensing Deal",
+        "A hedge fund wants to license your proprietary training dataset for $200K/year.",
+        "finance", "AI", "late",
+        [
+            _ch("License it — pure profit", 1, {"finance": 2, "revenue": 16000}, "Non-dilutive revenue stream. Board loves it."),
+            _ch("Negotiate exclusive terms with premium price", 2, {"finance": 3, "revenue": 25000, "brand": -1}, "Exclusive deal at $300K. Your data stays proprietary."),
+            _ch("Decline — data is our moat", 0, {"tech": 1, "innovation": 1}, "Data stays yours. Competitors can't replicate it."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL FINTECH EVENTS
+# ═══════════════════════════════════════════════════════════════════
+
+FINTECH_EVENTS_EXTRA: List[Dict[str, Any]] = [
+    _ev("FIN-005", "Central Bank Digital Currency",
+        "Your country's central bank announces a CBDC trial. Your payment rails could be obsolete.",
+        "tech", "Fintech", "late",
+        [
+            _ch("Pivot to CBDC integration partner", 2, {"tech": 2, "innovation": 3, "ops": 1}, "First-mover in CBDC ecosystem. Huge opportunity."),
+            _ch("Wait and watch — too early to tell", 0, {"execution": 1}, "You monitor. No action yet."),
+            _ch("Double down on private payment rails", 1, {"tech": 1, "execution": 2}, "Bet on private sector. CBDC may not take off."),
+        ]),
+
+    _ev("FIN-006", "Buy Now Pay Later Feature",
+        "Your analytics show BNPL could increase average transaction value by 30%.",
+        "product", "Fintech", "early",
+        [
+            _ch("Build native BNPL — own the full stack", 2, {"product": 3, "tech": 2, "revenue": 8000, "burn_rate": 3000}, "BNPL live. Transaction values jump 35%."),
+            _ch("Partner with Affirm or Klarna", 1, {"product": 2, "revenue": 4000}, "Fast to market. You take a revenue cut."),
+            _ch("Not now — regulatory complexity", 0, {"ops": 1}, "Safer. But competitors may move first."),
+        ]),
+
+    _ev("FIN-007", "Stablecoin Treasury Management",
+        "Your CFO suggests holding 10% of treasury in USDC for yield. Risk vs. return debate.",
+        "finance", "Fintech", "late",
+        [
+            _ch("Allocate 10% to USDC — 5% APY", 1, {"finance": 2, "cash": 8000}, "Yield earned. Board is divided but accepts it."),
+            _ch("Keep everything in fiat — safety first", 0, {"finance": 1}, "Conservative. No surprises."),
+            _ch("Go bigger — 25% in crypto", 2, {"finance": -1, "cash": -10000}, "Crypto dumps 20%. Lesson learned."),
+        ]),
+
+    _ev("FIN-008", "IPO Readiness Assessment",
+        "Your investment bankers say you could be IPO-ready in 18 months. The prep is expensive.",
+        "finance", "Fintech", "late",
+        [
+            _ch("Start IPO preparation now", 2, {"finance": 3, "ops": 2, "cash": -25000, "valuation_mult": 1.2}, "You're on the IPO track. Valuation premium kicks in."),
+            _ch("Dual-track: IPO + M&A process", 1, {"finance": 2, "ops": 1}, "Optionality maximized. Resource intensive."),
+            _ch("Too early — focus on fundamentals", 0, {"execution": 2, "finance": 1}, "Smart. Most startups that rush IPOs regret it."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL SAAS EVENTS
+# ═══════════════════════════════════════════════════════════════════
+
+SAAS_EVENTS_EXTRA: List[Dict[str, Any]] = [
+    _ev("SAAS-005", "Annual Recurring Revenue Milestone",
+        "You've hit $1M ARR. The board wants a party. The team wants headcount.",
+        "finance", "SaaS", "late",
+        [
+            _ch("Celebrate + hire 5 sales reps", 2, {"growth": 3, "burn_rate": 15000, "revenue": 12000}, "Sales team drives next ARR milestone fast."),
+            _ch("Reinvest in product + engineering", 2, {"product": 2, "tech": 2, "execution": 1}, "Product gets better. Churn drops. NRR climbs."),
+            _ch("Stay lean — bank the milestone", 0, {"finance": 2, "execution": 1}, "Conservative. Runway extends. VCs applaud."),
+        ]),
+
+    _ev("SAAS-006", "Customer Success Program",
+        "Your churn is tied to poor onboarding. A CS program could fix it.",
+        "ops", "SaaS", "early",
+        [
+            _ch("Build a dedicated CS team", 2, {"ops": 3, "revenue": 6000, "burn_rate": 4000}, "NPS jumps from 32 to 58. Logo churn drops."),
+            _ch("Create self-serve success resources", 1, {"product": 2, "ops": 1}, "Good documentation reduces support tickets 40%."),
+            _ch("Let customers figure it out", 0, {"finance": 1, "ops": -1}, "Churn stays high. You're losing revenue silently."),
+        ]),
+
+    _ev("SAAS-007", "Competitive Feature Parity Race",
+        "Salesforce just bought a startup that does what you do. Game on.",
+        "product", "SaaS", "late",
+        [
+            _ch("Focus on niche — own a vertical", 2, {"product": 2, "brand": 2, "growth": 2}, "You dominate the vertical Salesforce ignores."),
+            _ch("Match their feature set — sprint mode", 2, {"tech": 2, "product": 1, "execution": -2}, "Feature parity reached. But tech debt is brutal."),
+            _ch("Partner with Salesforce — if you can't beat them", 1, {"revenue": 10000, "growth": 1, "execution": 1}, "Marketplace listing drives new pipeline."),
+        ]),
+
+    _ev("SAAS-008", "White-Label Request",
+        "An agency wants to resell your software under their brand. 200 clients, $50K upfront.",
+        "growth", "SaaS", "late",
+        [
+            _ch("Accept — white-label partner program", 2, {"revenue": 15000, "growth": 2, "brand": -1}, "Revenue channel opened. Brand gets diluted slightly."),
+            _ch("Co-branded deal instead", 1, {"revenue": 8000, "brand": 1, "growth": 1}, "Both brands visible. Agency accepts. Good deal."),
+            _ch("Decline — brand is everything", 0, {"brand": 2}, "You protect the brand. Slower growth."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL HEALTHTECH EVENTS
+# ═══════════════════════════════════════════════════════════════════
+
+HEALTHTECH_EVENTS_EXTRA: List[Dict[str, Any]] = [
+    _ev("HT-005", "Telemedicine Integration",
+        "A major telemedicine platform wants to embed your diagnostic tool in their app.",
+        "growth", "Healthtech", "late",
+        [
+            _ch("Full integration + API partnership", 2, {"growth": 3, "tech": 2, "revenue": 12000, "traction_users": 5000}, "Millions of patients now see your tool. Massive distribution."),
+            _ch("Pilot with 10K users first", 1, {"growth": 1, "tech": 1, "revenue": 3000}, "Steady. Data is promising."),
+            _ch("Decline — need more clinical validation", 0, {"innovation": 1, "ops": 1}, "Responsible choice. Clinical evidence strengthens."),
+        ]),
+
+    _ev("HT-006", "Insurance Reimbursement Win",
+        "A major insurer agrees to reimburse patients for your digital health tool.",
+        "finance", "Healthtech", "late",
+        [
+            _ch("Negotiate direct B2B with insurers", 2, {"finance": 3, "revenue": 20000, "ops": 2}, "Direct insurer contracts. Revenue triples."),
+            _ch("Patient-paid model stays primary", 0, {"finance": 1, "growth": -1}, "Simpler. But massive market left on table."),
+            _ch("Partner with a pharmacy chain for distribution", 1, {"growth": 2, "revenue": 8000}, "Distribution deal. Pharmacies push the product."),
+        ]),
+
+    _ev("HT-007", "Wearable Data Integration",
+        "Apple and Fitbit want to integrate your app with their health platforms.",
+        "tech", "Healthtech", "early",
+        [
+            _ch("Full integration with both platforms", 2, {"tech": 3, "growth": 3, "traction_users": 10000}, "10M potential users in reach. Distribution explodes."),
+            _ch("Apple only — premium segment focus", 1, {"tech": 2, "brand": 1, "traction_users": 5000}, "Premium positioning. iOS-first strategy pays off."),
+            _ch("Build our own wearable integration", 2, {"tech": 2, "innovation": 2, "cash": -15000}, "Independent stack. No platform risk."),
+        ]),
+
+    _ev("HT-008", "Genomics Partnership",
+        "A genomics company wants to co-develop a personalized medicine feature.",
+        "innovation", "Healthtech", "late",
+        [
+            _ch("Joint product development", 2, {"innovation": 4, "tech": 2, "cash": -10000, "valuation_mult": 1.15}, "Personalized medicine feature gets serious press."),
+            _ch("Data sharing agreement only", 1, {"innovation": 2, "tech": 1}, "Incremental. Interesting research collaboration."),
+            _ch("Decline — too early for genomics", 0, {"execution": 1}, "Focus maintained. Genomics can wait."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL E-COMMERCE EVENTS
+# ═══════════════════════════════════════════════════════════════════
+
+ECOMMERCE_EVENTS_EXTRA: List[Dict[str, Any]] = [
+    _ev("EC-005", "Black Friday Crunch",
+        "Black Friday is 3 weeks away. Your servers handled 500 concurrent users. You'll need 50,000.",
+        "tech", "E-commerce", "late",
+        [
+            _ch("Full infrastructure scale-up now", 2, {"tech": 3, "ops": 2, "cash": -12000}, "Flawless Black Friday. Best revenue day ever."),
+            _ch("Use auto-scaling cloud setup", 1, {"tech": 1, "ops": 1, "cash": -4000}, "Some slowdowns but no crashes. Revenue pours in."),
+            _ch("Hope for the best", 0, {"tech": -2, "brand": -2}, "Site crashes for 4 hours. $50K in lost sales."),
+        ]),
+
+    _ev("EC-006", "Own-Brand Product Launch",
+        "Your margin analysis shows private label products could boost margin by 40%.",
+        "product", "E-commerce", "late",
+        [
+            _ch("Launch 3 private label products", 2, {"product": 2, "finance": 2, "revenue": 10000, "cash": -20000}, "Own-brand products crush. 60% gross margin."),
+            _ch("Test with 1 product first", 1, {"product": 1, "finance": 1, "cash": -8000}, "Pilot works. Proof of concept ready."),
+            _ch("Stick to marketplace model — lower risk", 0, {"ops": 1, "execution": 1}, "Safe. You avoid inventory risk."),
+        ]),
+
+    _ev("EC-007", "Customer Loyalty Program",
+        "Your repeat purchase rate is 15%. Industry average is 40%. Something is wrong.",
+        "growth", "E-commerce", "early",
+        [
+            _ch("Full loyalty program — points, tiers, perks", 2, {"growth": 3, "brand": 2, "revenue": 8000, "burn_rate": 2000}, "Repeat rate jumps to 35% in 6 weeks."),
+            _ch("Simple referral program", 1, {"growth": 2, "brand": 1, "traction_users": 1000}, "Referrals drive 15% of new signups."),
+            _ch("Fix product quality instead", 2, {"product": 2, "ops": 1, "execution": 1}, "Root cause addressed. Retention improves organically."),
+        ]),
+
+    _ev("EC-008", "Same-Day Delivery War",
+        "Amazon just launched same-day delivery in your market. Customers are asking why you can't.",
+        "ops", "E-commerce", "late",
+        [
+            _ch("Partner with a last-mile logistics startup", 2, {"ops": 3, "brand": 2, "revenue": 6000, "burn_rate": 3000}, "Same-day live. Conversion rate lifts 12%."),
+            _ch("2-hour delivery in key cities only", 1, {"ops": 1, "brand": 1}, "Partial solution. Urban customers are happy."),
+            _ch("Compete on curation, not speed", 1, {"brand": 2, "product": 1}, "You position as premium, not fast. Different market."),
+        ]),
+]
+
+# ═══════════════════════════════════════════════════════════════════
 # MASTER EVENT LIST + HELPERS
 # ═══════════════════════════════════════════════════════════════════
 
 ALL_EVENTS: List[Dict[str, Any]] = (
     UNIVERSAL_EVENTS
+    + UNIVERSAL_EVENTS_LATE
     + AI_EVENTS
+    + AI_EVENTS_EXTRA
     + FINTECH_EVENTS
+    + FINTECH_EVENTS_EXTRA
     + SAAS_EVENTS
+    + SAAS_EVENTS_EXTRA
     + HEALTHTECH_EVENTS
+    + HEALTHTECH_EVENTS_EXTRA
     + ECOMMERCE_EVENTS
+    + ECOMMERCE_EVENTS_EXTRA
     + SHOCK_EVENTS
 )
 
 SECTOR_EVENT_MAP: Dict[str, List[Dict[str, Any]]] = {
-    "AI": AI_EVENTS,
-    "Fintech": FINTECH_EVENTS,
-    "SaaS": SAAS_EVENTS,
-    "Healthtech": HEALTHTECH_EVENTS,
-    "E-commerce": ECOMMERCE_EVENTS,
+    "AI": AI_EVENTS + AI_EVENTS_EXTRA,
+    "Fintech": FINTECH_EVENTS + FINTECH_EVENTS_EXTRA,
+    "SaaS": SAAS_EVENTS + SAAS_EVENTS_EXTRA,
+    "Healthtech": HEALTHTECH_EVENTS + HEALTHTECH_EVENTS_EXTRA,
+    "E-commerce": ECOMMERCE_EVENTS + ECOMMERCE_EVENTS_EXTRA,
 }
+
+ALL_UNIVERSAL_EVENTS = UNIVERSAL_EVENTS + UNIVERSAL_EVENTS_LATE
 
 
 def get_events_for_sector(sector: str) -> List[Dict[str, Any]]:
     """Return universal + sector-specific events (excluding shocks)."""
     sector_events = SECTOR_EVENT_MAP.get(sector, [])
-    return UNIVERSAL_EVENTS + sector_events
+    return ALL_UNIVERSAL_EVENTS + sector_events
 
 
 def get_shock_events() -> List[Dict[str, Any]]:

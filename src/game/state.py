@@ -181,6 +181,10 @@ class GameState(BaseModel):
     chat_messages: List[ChatMessage] = Field(default_factory=list)
     chat_context_event: Optional[str] = None
 
+    # ── Board review chat ──
+    board_chat_messages: List[ChatMessage] = Field(default_factory=list)
+    board_chat_outcome: Optional[Dict] = None  # stores final verdict outcome
+
     # ── Partner tracking ──
     disagreement_cycles: int = 0
     partner_departed: bool = False

@@ -602,9 +602,11 @@ def get_quarter_summary(state: GameState) -> Dict[str, Any]:
         })
 
     last_log = state.quarter_log[-1] if state.quarter_log else None
+    # Use the quarter from the last log (the one just completed) or current - 1
+    completed_quarter = last_log.quarter if last_log else max(1, state.current_quarter - 1)
 
     return {
-        "quarter": state.current_quarter,
+        "quarter": completed_quarter,
         "headline": headline,
         "market_condition": cond.get("label", "Stable"),
         "market_emoji": cond.get("emoji", "⚖️"),

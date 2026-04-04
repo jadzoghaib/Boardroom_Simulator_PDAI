@@ -60,6 +60,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 import os
 import re
+import asyncio
 
 load_dotenv()
 
@@ -402,7 +403,7 @@ def list_classmates():
 
 
 @app.get("/api/setup/classmate-intro")
-def classmate_intro(name: str):
+async def classmate_intro(name: str):
     classmate = get_classmate_by_name(name)
     if not classmate:
         return {
@@ -411,22 +412,11 @@ def classmate_intro(name: str):
             "source": "missing",
         }
     linkedin_url = classmate.get("linkedin_url", "")
-    page_snapshot = _fetch_html_page(linkedin_url) if linkedin_url else {}
-    page_text = " ".join([
-        _clean_text(page_snapshot.get("title", "")),
-        _clean_text(page_snapshot.get("description", "")),
-        _clean_text(page_snapshot.get("text", "")),
-    ])
-    if not page_snapshot or _looks_like_blocked_page(page_text) or len(page_text) < 120:
-        intro = _build_roster_intro(classmate)
-        source = "roster fallback"
-    else:
-        try:
-            intro = _build_llm_intro(classmate, page_snapshot)
-            source = "LLM profile summary"
-        except Exception:
-            intro = _build_roster_intro(classmate)
-            source = "roster fallback"
+    # LinkedIn always blocks automated requests, so skip the network fetch
+    # and use roster metadata directly. This avoids blocking the thread pool
+    # with a 12-second timeout that always ends in a login-wall redirect.
+    intro = _build_roster_intro(classmate)
+    source = "roster"
     return {"name": classmate["name"], "linkedin_url": linkedin_url, "intro": intro, "source": source}
 
 
@@ -450,7 +440,7 @@ def list_professor_partners():
 # ═══════════════════════════════════════════════════════════════════
 
 @app.post("/api/setup/founder")
-def setup_founder(req: FounderSetupRequest):
+async def setup_founder(req: FounderSetupRequest):
     classmate = get_classmate_by_name(req.classmate_name) or {
         "name": req.classmate_name, "linkedin_url": "", "notes": "",
         "country": "", "years_experience": "", "background": "", "sector_tags": "",
@@ -606,8 +596,8 @@ def end_quarter_endpoint(game_id: str):
 
     if state.game_over:
         raise HTTPException(400, "Game is over")
-    if state.phase not in ("quarter_end", "board_review"):
-        raise HTTPException(400, f"Cannot end quarter in phase '{state.phase}'")
+    if state.phase != "quarter_end":
+        raise HTTPException(400, f"Cannot end quarter in phase '{state.phase}'. Finish events first.")
 
     state = end_quarter(state)
 
@@ -627,19 +617,55 @@ def end_quarter_endpoint(game_id: str):
 
 
 # ═══════════════════════════════════════════════════════════════════
-# ADVISORY CHAT (placeholder — Phase 4 will add LLM responses)
+# ADVISORY CHAT — async endpoints (one per advisor)
 # ═══════════════════════════════════════════════════════════════════
 
-@app.post("/api/game/{game_id}/chat")
-def game_chat(game_id: str, req: ChatRequest):
+@app.post("/api/game/{game_id}/chat/celebrity")
+async def game_chat_celebrity(game_id: str, req: ChatRequest):
+    """Chat with the celebrity advisor only. Non-blocking."""
     state = _get_game(game_id)
-
     if state.game_over:
         raise HTTPException(400, "Game is over")
 
     from src.game.state import ChatMessage
+    from src.game.advisor import get_celebrity_response
 
     celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
+
+    # Store user message
+    state.chat_messages.append(ChatMessage(
+        role="user", speaker="You", content=req.message, quarter=state.current_quarter
+    ))
+
+    # Run blocking LLM call in thread pool so FastAPI stays responsive
+    try:
+        celeb_response = await asyncio.to_thread(get_celebrity_response, state, req.message)
+    except Exception:
+        celeb_response = "Bold move always pays off — trust your instincts, but watch the cash runway."
+
+    state.chat_messages.append(ChatMessage(
+        role="celebrity", speaker=celebrity_name, content=celeb_response, quarter=state.current_quarter
+    ))
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "role": "celebrity",
+        "speaker": celebrity_name,
+        "content": celeb_response,
+    }
+
+
+@app.post("/api/game/{game_id}/chat/professor")
+async def game_chat_professor(game_id: str, req: ChatRequest):
+    """Chat with the professor advisor only. Non-blocking."""
+    state = _get_game(game_id)
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    from src.game.state import ChatMessage
+    from src.game.advisor import get_professor_response
+
     professor_name = state.professor.get("name", "Professor Advisor")
 
     # Store user message
@@ -647,14 +673,49 @@ def game_chat(game_id: str, req: ChatRequest):
         role="user", speaker="You", content=req.message, quarter=state.current_quarter
     ))
 
-    # Get LLM-powered advisor responses
+    # Run blocking LLM call in thread pool so FastAPI stays responsive
     try:
-        from src.game.advisor import get_advisor_responses
-        celebrity_response, professor_response = get_advisor_responses(state, req.message)
-    except Exception as e:
-        # Fallback to placeholder if LLM fails
-        celebrity_response = f"That's an interesting point. In my experience, the bold move usually pays off — but only if you have the cash to survive the downside."
-        professor_response = f"From an academic perspective, the data suggests a more measured approach. Consider the risk-adjusted return before committing."
+        prof_response = await asyncio.to_thread(get_professor_response, state, req.message)
+    except Exception:
+        prof_response = "The data suggests a measured approach. Consider risk-adjusted returns before committing resources."
+
+    state.chat_messages.append(ChatMessage(
+        role="professor", speaker=professor_name, content=prof_response, quarter=state.current_quarter
+    ))
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "role": "professor",
+        "speaker": professor_name,
+        "content": prof_response,
+    }
+
+
+@app.post("/api/game/{game_id}/chat")
+async def game_chat(game_id: str, req: ChatRequest):
+    """Chat with both advisors simultaneously (kept for backward compat). Non-blocking."""
+    state = _get_game(game_id)
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    from src.game.state import ChatMessage
+    from src.game.advisor import get_advisor_responses
+
+    celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
+    professor_name = state.professor.get("name", "Professor Advisor")
+
+    state.chat_messages.append(ChatMessage(
+        role="user", speaker="You", content=req.message, quarter=state.current_quarter
+    ))
+
+    try:
+        celebrity_response, professor_response = await asyncio.to_thread(
+            get_advisor_responses, state, req.message
+        )
+    except Exception:
+        celebrity_response = "Bold move always pays off — trust your instincts, but watch the cash runway."
+        professor_response = "The data suggests a measured approach. Consider risk-adjusted returns before committing."
 
     state.chat_messages.append(ChatMessage(
         role="celebrity", speaker=celebrity_name, content=celebrity_response, quarter=state.current_quarter
@@ -662,7 +723,6 @@ def game_chat(game_id: str, req: ChatRequest):
     state.chat_messages.append(ChatMessage(
         role="professor", speaker=professor_name, content=professor_response, quarter=state.current_quarter
     ))
-
     game_sessions[game_id] = state
 
     return {
@@ -784,35 +844,115 @@ def raise_funding(game_id: str):
 
 
 # ═══════════════════════════════════════════════════════════════════
-# BOARD REVIEW (placeholder — Phase 5 integrates LangGraph)
+# BOARD REVIEW — live VC chat (Feature 3)
 # ═══════════════════════════════════════════════════════════════════
 
 @app.post("/api/game/{game_id}/board_review")
-def board_review(game_id: str):
+async def board_review(game_id: str):
+    """Start the board review — generates VC opening statement."""
     state = _get_game(game_id)
-
     if state.game_over:
         raise HTTPException(400, "Game is over")
 
-    # Placeholder: auto-advance past board review
-    state.last_board_review_quarter = state.current_quarter
-    state.vc_cycle += 1
+    from src.game.advisor import get_vc_opening
+    from src.game.state import ChatMessage
 
-    # Draw events for the new quarter
-    state = draw_quarter_events(state)
+    # Clear previous board chat
+    state.board_chat_messages = []
+    state.board_chat_outcome = None
+
+    vc_name = "Board VC"
+    opening = await asyncio.to_thread(get_vc_opening, state)
+
+    state.board_chat_messages.append(ChatMessage(
+        role="vc", speaker=vc_name, content=opening, quarter=state.current_quarter
+    ))
 
     game_sessions[game_id] = state
 
     return {
         "game_id": game_id,
-        "board_review": {
-            "quarter": state.current_quarter,
-            "vc_cycle": state.vc_cycle,
-            "message": f"Board review completed for Q{state.last_board_review_quarter}. VCs are {'impressed' if state.success_probability > 0.6 else 'cautious' if state.success_probability > 0.4 else 'concerned'}.",
-            "success_probability": state.success_probability,
-        },
+        "vc_message": opening,
+        "vc_name": vc_name,
+        "partner_name": state.professor.get("name", "Professor"),
+        "quarter": state.current_quarter,
         "state": state.summary_dict(),
     }
+
+
+@app.post("/api/game/{game_id}/board_chat")
+async def board_chat(game_id: str, req: ChatRequest):
+    """Send a message to the board and get VC + partner response. Verdict may be issued."""
+    state = _get_game(game_id)
+    if state.game_over:
+        raise HTTPException(400, "Game is over")
+
+    from src.game.advisor import get_vc_response
+    from src.game.state import ChatMessage
+
+    vc_name = "Board VC"
+    partner_name = state.professor.get("name", "Professor")
+
+    # Store founder message
+    state.board_chat_messages.append(ChatMessage(
+        role="user", speaker="You", content=req.message, quarter=state.current_quarter
+    ))
+
+    # Get responses
+    vc_resp, partner_resp, verdict = await asyncio.to_thread(get_vc_response, state, req.message)
+
+    state.board_chat_messages.append(ChatMessage(
+        role="vc", speaker=vc_name, content=vc_resp, quarter=state.current_quarter
+    ))
+    state.board_chat_messages.append(ChatMessage(
+        role="partner", speaker=partner_name, content=partner_resp, quarter=state.current_quarter
+    ))
+
+    # Apply verdict effects
+    outcome = None
+    if verdict:
+        if verdict == "IMPRESSED":
+            state.valuation = int(state.valuation * 1.20)
+            state.cash = int(state.cash * 1.05)
+            outcome = {"verdict": "IMPRESSED", "effect": "Valuation +20%. Board is impressed with your vision."}
+        elif verdict == "CONCERNED":
+            state.valuation = int(state.valuation * 0.90)
+            outcome = {"verdict": "CONCERNED", "effect": "Valuation -10%. Board has concerns about your trajectory."}
+        else:
+            outcome = {"verdict": "NEUTRAL", "effect": "Board acknowledged your progress. Keep executing."}
+
+        state.board_chat_outcome = outcome
+        state.last_board_review_quarter = state.current_quarter
+        state.vc_cycle += 1
+
+        # Draw events for next quarter
+        state = draw_quarter_events(state)
+
+    game_sessions[game_id] = state
+
+    return {
+        "game_id": game_id,
+        "vc_response": vc_resp,
+        "vc_name": vc_name,
+        "partner_response": partner_resp,
+        "partner_name": partner_name,
+        "verdict": verdict,
+        "outcome": outcome,
+        "state": state.summary_dict(),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# END-OF-GAME DEBRIEF (Feature 1)
+# ═══════════════════════════════════════════════════════════════════
+
+@app.post("/api/game/{game_id}/debrief")
+async def game_debrief(game_id: str):
+    """Generate a detailed post-game debrief via LLM."""
+    state = _get_game(game_id)
+    from src.game.advisor import get_game_debrief
+    debrief_text = await asyncio.to_thread(get_game_debrief, state)
+    return {"game_id": game_id, "debrief": debrief_text}
 
 
 # ═══════════════════════════════════════════════════════════════════
