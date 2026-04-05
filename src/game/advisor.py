@@ -450,6 +450,16 @@ def get_vc_response(state, user_message: str):
         stats_summary=stats_summary or "No stats yet.",
     )
 
+    bg_map = {0: "first-time founder", 1: "business background", 2: "technical background"}
+    founder_bg_type = bg_map.get(state.founder_background, state.founder_background) if isinstance(state.founder_background, int) else state.founder_background
+    founder_background = (
+        f"- Name: {state.classmate.get('name', 'Unknown')}\n"
+        f"- Background: {founder_bg_type}\n"
+        f"- Years of experience: {state.founder_experience}\n"
+        f"- Country: {state.classmate.get('country', 'Unknown')}\n"
+        f"- Sector interests: {state.classmate.get('sector_tags', 'Not specified')}"
+    )
+
     partner_system = PARTNER_BOARDROOM_PROMPT.format(
         partner_name=state.professor.get("name", "Professor"),
         quarter=state.current_quarter,
@@ -463,6 +473,7 @@ def get_vc_response(state, user_message: str):
         milestones_completed=state.milestones_completed,
         success_probability=state.success_probability,
         stats_summary=stats_summary or "No stats yet.",
+        founder_background=founder_background,
     )
 
     # Build history from board_chat_messages

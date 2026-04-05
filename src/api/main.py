@@ -79,6 +79,13 @@ WEB_DIR = Path(__file__).resolve().parents[2] / "frontend" / "web"
 if WEB_DIR.exists():
     app.mount("/ui", StaticFiles(directory=str(WEB_DIR), html=True), name="ui")
 
+CELEBRITY_AVATARS_DIR = Path(__file__).resolve().parents[2] / "data" / "Celebrity Avatars"
+PROFESSOR_AVATARS_DIR = Path(__file__).resolve().parents[2] / "data" / "Professor Avatars"
+if CELEBRITY_AVATARS_DIR.exists():
+    app.mount("/avatars/celebrities", StaticFiles(directory=str(CELEBRITY_AVATARS_DIR)), name="celebrity-avatars")
+if PROFESSOR_AVATARS_DIR.exists():
+    app.mount("/avatars/professors", StaticFiles(directory=str(PROFESSOR_AVATARS_DIR)), name="professor-avatars")
+
 
 # ═══════════════════════════════════════════════════════════════════
 # IN-MEMORY GAME SESSION STORE

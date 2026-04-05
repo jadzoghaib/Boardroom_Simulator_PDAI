@@ -5,6 +5,23 @@
 
 const API = window.location.origin;
 
+const ADVISOR_AVATARS = {
+  'Taylor Swift':              '/ui/avatars/celebrities/taylor_swift.png',
+  'Elon Musk':                 '/ui/avatars/celebrities/elon_musk.png',
+  'Steve Jobs':                '/ui/avatars/celebrities/steve_jobs.png',
+  'MrBeast':                   '/ui/avatars/celebrities/mrbeast.png',
+  'Warren Buffett':            '/ui/avatars/celebrities/warren_buffett.png',
+  'Jeff Bezos':                '/ui/avatars/celebrities/jeff_bezos.png',
+  'Albert Einstein':           '/ui/avatars/celebrities/albert_einstein.png',
+  'Lionel Messi':              '/ui/avatars/celebrities/lionel_messi.png',
+  'Oriol Rius':                '/ui/avatars/professors/oriol_rius.png',
+  'Esteve Almirall':           '/ui/avatars/professors/esteve_almirall.png',
+  'Jose A. Rodriguez-Serrano': '/ui/avatars/professors/jose_rodriguez_serrano.png',
+  'Ruben Coca':                '/ui/avatars/professors/ruben_coca.png',
+  'Jordi Nin':                 '/ui/avatars/professors/jordi_nin.png',
+  'Maja Tampe':                '/ui/avatars/professors/maja_tampe.png',
+};
+
 const game = {
   // ── State ──
   gameId: null,
@@ -103,7 +120,9 @@ const game = {
       const card = document.createElement('div');
       card.className = 'partner-card';
       card.dataset.name = p.name;
+      const avatarSrc = ADVISOR_AVATARS[p.name] || '';
       card.innerHTML = `
+        ${avatarSrc ? `<img src="${avatarSrc}" alt="${p.name}" class="partner-card-avatar" onerror="this.style.display='none'">` : ''}
         <div class="partner-card-name">${p.name}</div>
         <div class="partner-card-domain">${p.domain} • ${p.core_ability}</div>
         <div class="text-xs text-slate-400 mt-1">Cost: ${p.cost}/10</div>
@@ -731,9 +750,21 @@ const game = {
     document.getElementById('endQuarterBtn').classList.toggle('hidden', !isQuarterEnd);
     document.getElementById('boardReviewBtn').classList.toggle('hidden', !isBoardReview);
 
-    // Advisor names in chat headers
-    if (s.celebrity?.name) document.getElementById('celebAdvisorName').textContent = s.celebrity.name;
-    if (s.professor?.name) document.getElementById('profAdvisorName').textContent = s.professor.name;
+    // Advisor names and avatars in chat headers
+    if (s.celebrity?.name) {
+      document.getElementById('celebAdvisorName').textContent = s.celebrity.name;
+      const src = ADVISOR_AVATARS[s.celebrity.name];
+      document.getElementById('celebAdvisorIcon').innerHTML = src
+        ? `<img src="${src}" alt="${s.celebrity.name}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #e9d5ff;" onerror="this.outerHTML='⭐'">`
+        : '⭐';
+    }
+    if (s.professor?.name) {
+      document.getElementById('profAdvisorName').textContent = s.professor.name;
+      const src = ADVISOR_AVATARS[s.professor.name];
+      document.getElementById('profAdvisorIcon').innerHTML = src
+        ? `<img src="${src}" alt="${s.professor.name}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #99f6e4;" onerror="this.outerHTML='🎓'">`
+        : '🎓';
+    }
 
     // Events
     this.renderEvents(s);

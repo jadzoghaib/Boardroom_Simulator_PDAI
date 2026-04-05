@@ -275,6 +275,18 @@ body {
   border-color: #2563eb;
   background: #eff6ff;
 }
+.partner-card-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 6px;
+  display: block;
+  border: 2px solid #e2e8f0;
+}
+.partner-card.selected .partner-card-avatar {
+  border-color: #2563eb;
+}
 .partner-card-name {
   font-weight: 700;
   font-size: 0.85rem;
