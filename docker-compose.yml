@@ -1,0 +1,25 @@
+# ── Boardroom Simulator — docker-compose.yml ──────────────────────
+# BRANCH: aws-deployment
+# Use this for LOCAL testing before pushing to AWS.
+# Run: docker-compose up --build
+# Then open: http://localhost:8002/ui/index.html
+
+version: "3.9"
+
+services:
+  boardroom:
+    build: .
+    container_name: boardroom-simulator
+    ports:
+      - "8002:8002"
+    environment:
+      # AWS credentials for SageMaker invocation
+      # These are passed from your local ~/.aws/credentials
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - SAGEMAKER_ENDPOINT=${SAGEMAKER_ENDPOINT:-boardroom-mistral-endpoint}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      # Mount local data folder so ChromaDB persists between restarts
+      - ./data:/app/data
+    restart: unless-stopped

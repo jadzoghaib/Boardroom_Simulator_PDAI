@@ -1,16 +1,28 @@
+# ── Web framework ──────────────────────────────────────────────────
 fastapi
-uvicorn
+uvicorn[standard]
+
+# ── Data & ML ──────────────────────────────────────────────────────
 pandas
 scikit-learn
+joblib
+numpy
+
+# ── LangChain (core only — Groq removed) ──────────────────────────
 langchain
 langgraph
 langchain-core
-pydantic
-joblib
-numpy
-chromadb
-python-dotenv
-langchain-groq
 langgraph-checkpoint
+
+# ── AWS (replaces Groq) ────────────────────────────────────────────
+boto3
+sagemaker
+
+# ── Vector DB & RAG ────────────────────────────────────────────────
+chromadb
+
+# ── Utilities ──────────────────────────────────────────────────────
+pydantic
+python-dotenv
 wikipedia-api
 pdfplumber

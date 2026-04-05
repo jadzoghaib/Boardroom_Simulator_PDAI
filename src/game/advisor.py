@@ -2,33 +2,104 @@
 Advisory chat system for the 8-quarter startup simulation.
 
 Provides LLM-powered responses from Celebrity + Professor advisors.
-Uses direct Groq calls (not LangGraph) for speed in multi-turn chat.
-Pulls RAG context from ChromaDB for both celebrity and professor.
+
+BRANCH: aws-deployment
+CHANGE: Replaced Groq API / langchain_groq with AWS SageMaker endpoint
+        (Mistral-7B-Instruct-v0.2 via HuggingFace DLC).
+        Removed all GROQ_API_KEY references.
+        Uses boto3 sagemaker-runtime for endpoint invocation.
 """
 
 from __future__ import annotations
 
 import os
+import json
 import logging
-from typing import Any, Dict, List, Tuple
+import boto3
+from typing import Tuple, List
 
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_groq import ChatGroq
-
-from src.agents.prompts import CELEBRITY_ADVISOR_PROMPT, PROFESSOR_ADVISOR_PROMPT
+from src.agents.prompts import (
+    CELEBRITY_ADVISOR_PROMPT,
+    PROFESSOR_ADVISOR_PROMPT,
+    DEBRIEF_PROMPT,
+    VC_BOARDROOM_PROMPT,
+    PARTNER_BOARDROOM_PROMPT,
+)
 from src.data.vector_db import search_celebrity_background, search_professor_background
 from src.data.market import MARKET_CONDITIONS
 
 logger = logging.getLogger(__name__)
 
+# ── SageMaker config (set via environment variables / Docker env) ──────────────
+SAGEMAKER_ENDPOINT = os.getenv("SAGEMAKER_ENDPOINT", "boardroom-mistral-endpoint")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 
-def _get_llm() -> ChatGroq:
-    """Get a Groq LLM instance for advisory chat."""
-    api_key = os.getenv("GROQ_API_KEY", "").strip()
-    if not api_key:
-        raise RuntimeError("GROQ_API_KEY is not set.")
-    return ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7, api_key=api_key)
+# ── boto3 SageMaker runtime client ─────────────────────────────────────────────
+_runtime_client = None
 
+
+def _get_sagemaker_client():
+    """Lazy-initialize the SageMaker runtime client."""
+    global _runtime_client
+    if _runtime_client is None:
+        _runtime_client = boto3.client(
+            "sagemaker-runtime",
+            region_name=AWS_REGION,
+        )
+    return _runtime_client
+
+
+def _call_sagemaker(system_prompt: str, user_message: str, temperature: float = 0.7, max_new_tokens: int = 512) -> str:
+    """
+    Invoke the SageMaker Mistral-7B-Instruct endpoint.
+
+    Mistral uses the [INST] instruction format:
+        <s>[INST] {system}\\n\\nUser: {message} [/INST]
+
+    Args:
+        system_prompt: The advisor persona + context prompt.
+        user_message:  The founder's question.
+        temperature:   Sampling temperature (0.0 = deterministic, 1.0 = creative).
+        max_new_tokens: Maximum tokens to generate.
+
+    Returns:
+        Generated text string from the model.
+    """
+    # Format prompt in Mistral instruction format
+    prompt = (
+        f"<s>[INST] {system_prompt}\n\n"
+        f"The founder asks: {user_message} [/INST]"
+    )
+
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_new_tokens": max_new_tokens,
+            "temperature": temperature,
+            "do_sample": True,
+            "return_full_text": False,  # Only return generated part, not the prompt
+            "stop": ["</s>", "[INST]"],
+        },
+    }
+
+    client = _get_sagemaker_client()
+    response = client.invoke_endpoint(
+        EndpointName=SAGEMAKER_ENDPOINT,
+        ContentType="application/json",
+        Body=json.dumps(payload),
+    )
+
+    result = json.loads(response["Body"].read().decode("utf-8"))
+
+    # HuggingFace TGI returns a list: [{"generated_text": "..."}]
+    if isinstance(result, list) and len(result) > 0:
+        return result[0].get("generated_text", "").strip()
+    elif isinstance(result, dict):
+        return result.get("generated_text", "").strip()
+    return ""
+
+
+# ── Helper functions ───────────────────────────────────────────────────────────
 
 def _build_event_context(state) -> str:
     """Build a text description of the current pending event for advisor context."""
@@ -50,22 +121,21 @@ def _build_event_context(state) -> str:
         return "No specific event is pending. The founder is asking for general strategic advice."
 
 
-def _build_chat_history(state, max_messages: int = 6) -> List:
-    """Build recent chat history as LangChain messages for context."""
+def _build_chat_history_text(state, max_messages: int = 6) -> str:
+    """Build recent chat history as plain text for inclusion in the prompt."""
     recent = state.chat_messages[-max_messages:] if state.chat_messages else []
-    messages = []
+    lines = []
     for msg in recent:
         if msg.role == "user":
-            messages.append(HumanMessage(content=f"[Founder]: {msg.content}"))
+            lines.append(f"Founder: {msg.content}")
         else:
-            messages.append(HumanMessage(content=f"[{msg.speaker}]: {msg.content}"))
-    return messages
+            lines.append(f"{msg.speaker}: {msg.content}")
+    return "\n".join(lines)
 
 
-def get_advisor_responses(
-    state,
-    user_message: str,
-) -> Tuple[str, str]:
+# ── Main advisor functions ─────────────────────────────────────────────────────
+
+def get_advisor_responses(state, user_message: str) -> Tuple[str, str]:
     """
     Get responses from both Celebrity and Professor advisors.
 
@@ -76,14 +146,10 @@ def get_advisor_responses(
     Returns:
         Tuple of (celebrity_response, professor_response)
     """
-    llm = _get_llm()
-
-    # Get market condition label
     cond = MARKET_CONDITIONS.get(state.market_condition, {})
     market_label = cond.get("label", "Stable")
-
-    # Build event context
     event_context = _build_event_context(state)
+    history_text = _build_chat_history_text(state)
 
     # ── Celebrity advisor ──
     celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
@@ -112,6 +178,8 @@ def get_advisor_responses(
         market_condition=market_label,
         event_context=event_context,
     )
+    if history_text:
+        celebrity_system += f"\n\nRecent conversation:\n{history_text}"
 
     # ── Professor advisor ──
     professor_name = state.professor.get("name", "Professor Advisor")
@@ -140,50 +208,33 @@ def get_advisor_responses(
         market_condition=market_label,
         event_context=event_context,
     )
+    if history_text:
+        professor_system += f"\n\nRecent conversation:\n{history_text}"
 
-    # Build chat history for context
-    history = _build_chat_history(state)
-
-    # ── Call LLM for celebrity ──
+    # ── Call SageMaker for both ──
     celebrity_response = ""
     try:
-        celeb_messages = [
-            SystemMessage(content=celebrity_system),
-            *history,
-            HumanMessage(content=user_message),
-        ]
-        celeb_result = llm.invoke(celeb_messages)
-        celebrity_response = getattr(celeb_result, "content", "").strip()
+        celebrity_response = _call_sagemaker(celebrity_system, user_message)
     except Exception as e:
-        logger.error(f"Celebrity LLM call failed: {e}")
-        celebrity_response = f"[{celebrity_name}]: *adjusts microphone* Sorry, I'm having trouble connecting right now. Go with your gut on this one."
+        logger.error(f"Celebrity SageMaker call failed: {e}")
+        celebrity_response = f"[{celebrity_name}]: Sorry, I'm having trouble connecting right now. Go with your gut on this one."
 
-    # ── Call LLM for professor ──
     professor_response = ""
     try:
-        prof_messages = [
-            SystemMessage(content=professor_system),
-            *history,
-            HumanMessage(content=user_message),
-        ]
-        prof_result = llm.invoke(prof_messages)
-        professor_response = getattr(prof_result, "content", "").strip()
+        professor_response = _call_sagemaker(professor_system, user_message)
     except Exception as e:
-        logger.error(f"Professor LLM call failed: {e}")
-        professor_response = f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment. Consider the risk-adjusted options carefully."
+        logger.error(f"Professor SageMaker call failed: {e}")
+        professor_response = f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment."
 
     return celebrity_response, professor_response
 
 
 def get_celebrity_response(state, user_message: str) -> str:
-    """
-    Get a response from the Celebrity advisor only.
-    Used by the /chat/celebrity endpoint.
-    """
-    llm = _get_llm()
+    """Get a response from the Celebrity advisor only."""
     cond = MARKET_CONDITIONS.get(state.market_condition, {})
     market_label = cond.get("label", "Stable")
     event_context = _build_event_context(state)
+    history_text = _build_chat_history_text(state)
 
     celebrity_name = state.celebrity.get("name", "Celebrity Advisor")
     celebrity_rag = ""
@@ -211,30 +262,22 @@ def get_celebrity_response(state, user_message: str) -> str:
         market_condition=market_label,
         event_context=event_context,
     )
+    if history_text:
+        celebrity_system += f"\n\nRecent conversation:\n{history_text}"
 
-    history = _build_chat_history(state)
     try:
-        messages = [
-            SystemMessage(content=celebrity_system),
-            *history,
-            HumanMessage(content=user_message),
-        ]
-        result = llm.invoke(messages)
-        return getattr(result, "content", "").strip()
+        return _call_sagemaker(celebrity_system, user_message)
     except Exception as e:
-        logger.error(f"Celebrity LLM call failed: {e}")
+        logger.error(f"Celebrity SageMaker call failed: {e}")
         return f"[{celebrity_name}]: Sorry, I'm having trouble connecting right now. Go with your gut on this one."
 
 
 def get_professor_response(state, user_message: str) -> str:
-    """
-    Get a response from the Professor advisor only.
-    Used by the /chat/professor endpoint.
-    """
-    llm = _get_llm()
+    """Get a response from the Professor advisor only."""
     cond = MARKET_CONDITIONS.get(state.market_condition, {})
     market_label = cond.get("label", "Stable")
     event_context = _build_event_context(state)
+    history_text = _build_chat_history_text(state)
 
     professor_name = state.professor.get("name", "Professor Advisor")
     professor_rag = ""
@@ -262,19 +305,14 @@ def get_professor_response(state, user_message: str) -> str:
         market_condition=market_label,
         event_context=event_context,
     )
+    if history_text:
+        professor_system += f"\n\nRecent conversation:\n{history_text}"
 
-    history = _build_chat_history(state)
     try:
-        messages = [
-            SystemMessage(content=professor_system),
-            *history,
-            HumanMessage(content=user_message),
-        ]
-        result = llm.invoke(messages)
-        return getattr(result, "content", "").strip()
+        return _call_sagemaker(professor_system, user_message)
     except Exception as e:
-        logger.error(f"Professor LLM call failed: {e}")
-        return f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment. Consider the risk-adjusted options carefully."
+        logger.error(f"Professor SageMaker call failed: {e}")
+        return f"[Prof. {professor_name}]: I apologize, but I'm unable to provide analysis at the moment."
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -283,11 +321,6 @@ def get_professor_response(state, user_message: str) -> str:
 
 def get_game_debrief(state) -> str:
     """Generate a detailed post-game debrief using the full game history."""
-    llm = _get_llm()
-
-    from src.agents.prompts import DEBRIEF_PROMPT
-
-    # Build full game history
     quarter_history = ""
     for i, q in enumerate(state.quarter_log or [], 1):
         if isinstance(q, dict):
@@ -345,13 +378,9 @@ RIVALS AT END:
 """
 
     try:
-        result = llm.invoke([
-            SystemMessage(content=DEBRIEF_PROMPT),
-            HumanMessage(content=user_content)
-        ])
-        return getattr(result, "content", "").strip()
+        return _call_sagemaker(DEBRIEF_PROMPT, user_content, max_new_tokens=800)
     except Exception as e:
-        logger.error(f"Debrief LLM call failed: {e}")
+        logger.error(f"Debrief SageMaker call failed: {e}")
         return "Unable to generate debrief at this time."
 
 
@@ -361,9 +390,6 @@ RIVALS AT END:
 
 def get_vc_opening(state) -> str:
     """Generate the VC's opening statement for the board review."""
-    llm = _get_llm()
-    from src.agents.prompts import VC_BOARDROOM_PROMPT
-
     rivals_summary = "\n".join(
         f"- {r.name}: {r.score} pts ({r.momentum})"
         for r in state.rivals[:3]
@@ -392,13 +418,9 @@ def get_vc_opening(state) -> str:
     )
 
     try:
-        result = llm.invoke([
-            SystemMessage(content=system),
-            HumanMessage(content=opening_prompt)
-        ])
-        return getattr(result, "content", "").strip()
+        return _call_sagemaker(system, opening_prompt)
     except Exception as e:
-        logger.error(f"VC opening failed: {e}")
+        logger.error(f"VC opening SageMaker call failed: {e}")
         return "Let's cut to the chase. Your burn rate concerns me. Walk me through your plan to reach profitability."
 
 
@@ -408,8 +430,6 @@ def get_vc_response(state, user_message: str):
     Returns (vc_response, partner_response, verdict_or_none)
     """
     import re as _re
-    llm = _get_llm()
-    from src.agents.prompts import VC_BOARDROOM_PROMPT, PARTNER_BOARDROOM_PROMPT
 
     rivals_summary = "\n".join(
         f"- {r.name}: {r.score} pts ({r.momentum})"
@@ -442,18 +462,18 @@ def get_vc_response(state, user_message: str):
         stats_summary=stats_summary or "No stats yet.",
     )
 
-    # Build history from board_chat_messages
-    history = []
+    # Build history text
+    history_lines = []
     for msg in state.board_chat_messages[-8:]:
         if msg.role == "user":
-            history.append(HumanMessage(content=f"[Founder]: {msg.content}"))
+            history_lines.append(f"Founder: {msg.content}")
         elif msg.role == "vc":
-            history.append(HumanMessage(content=f"[VC]: {msg.content}"))
+            history_lines.append(f"VC: {msg.content}")
         elif msg.role == "partner":
-            partner_name = state.professor.get("name", "Professor")
-            history.append(HumanMessage(content=f"[{partner_name}]: {msg.content}"))
+            history_lines.append(f"{state.professor.get('name', 'Professor')}: {msg.content}")
+    history_text = "\n".join(history_lines)
 
-    # Determine if this should be the final exchange (after 3+ founder messages)
+    # Determine if final exchange
     founder_msgs = sum(1 for m in state.board_chat_messages if m.role == "user")
     is_final = founder_msgs >= 3
 
@@ -463,18 +483,16 @@ def get_vc_response(state, user_message: str):
         if is_final else ""
     )
 
+    vc_full_system = vc_system + final_instruction
+    if history_text:
+        vc_full_system += f"\n\nConversation so far:\n{history_text}"
+
     # VC response
     vc_response = ""
     try:
-        vc_msgs = [
-            SystemMessage(content=vc_system + final_instruction),
-            *history,
-            HumanMessage(content=user_message),
-        ]
-        result = llm.invoke(vc_msgs)
-        vc_response = getattr(result, "content", "").strip()
+        vc_response = _call_sagemaker(vc_full_system, user_message)
     except Exception as e:
-        logger.error(f"VC response failed: {e}")
+        logger.error(f"VC SageMaker call failed: {e}")
         vc_response = "Interesting point. But I need to see better numbers before I'm convinced."
 
     # Extract verdict if present
@@ -485,22 +503,19 @@ def get_vc_response(state, user_message: str):
         vc_response = vc_response[:verdict_match.start()].strip()
 
     # Partner response
-    partner_response = ""
     partner_name = state.professor.get("name", "Professor")
+    partner_context = (
+        f"The VC just said: '{vc_response[:200]}'. "
+        f"The founder said: '{user_message[:200]}'. Add your perspective."
+    )
+    if history_text:
+        partner_system += f"\n\nConversation so far:\n{history_text}"
+
+    partner_response = ""
     try:
-        partner_context = (
-            f"The VC just said: '{vc_response[:200]}'. "
-            f"The founder said: '{user_message[:200]}'. Add your perspective."
-        )
-        prof_msgs = [
-            SystemMessage(content=partner_system),
-            *history,
-            HumanMessage(content=partner_context),
-        ]
-        result = llm.invoke(prof_msgs)
-        partner_response = getattr(result, "content", "").strip()
+        partner_response = _call_sagemaker(partner_system, partner_context)
     except Exception as e:
-        logger.error(f"Partner board response failed: {e}")
+        logger.error(f"Partner SageMaker call failed: {e}")
         partner_response = "I agree with the VC's assessment. The data speaks for itself."
 
     return vc_response, partner_response, verdict
