@@ -86,7 +86,7 @@ def create_initial_state(
         funding_stage="bootstrap",
         equity_given=0.0,
         stats=stats,
-        ap_base=6,
+        ap_base=5,
         ap_bonus=0,
         ap_spent=0,
         ml_features=ml_features,

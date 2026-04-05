@@ -151,7 +151,7 @@ class GameState(BaseModel):
     stats: Dict[str, int] = Field(default_factory=_default_stats)
 
     # ── AP system ──
-    ap_base: int = 6
+    ap_base: int = 5
     ap_bonus: int = 0
     ap_spent: int = 0
 
@@ -232,17 +232,20 @@ class GameState(BaseModel):
 
     def to_ml_features(self) -> Dict[str, Any]:
         """Return feature dict compatible with the ML predictor."""
+        bg_map = {0: "first_time", 1: "business", 2: "technical"}
+        bg = bg_map.get(self.founder_background, "first_time") if isinstance(self.founder_background, int) else self.founder_background
         return {
-            "funding_rounds": self.ml_features.get("funding_rounds", 1),
-            "founder_experience_years": self.founder_experience,
-            "team_size": self.ml_features.get("team_size", 4),
-            "market_size_billion": self.ml_features.get("market_size_billion", 10.0),
-            "product_traction_users": self.ml_features.get("product_traction_users", 1000),
-            "burn_rate_million": round(self.burn_rate / 1_000_000, 4),
-            "revenue_million": round(self.revenue / 1_000_000, 4),
-            "investor_type": self.ml_features.get("investor_type", 0),
-            "sector": self.sector,
-            "founder_background": self.founder_background,
+            "quarter":              self.current_quarter,
+            "runway_months":        min(self.runway_months, 36.0),
+            "funding_stage":        self.funding_stage,
+            "revenue_monthly_k":    round(self.revenue / 1_000, 2),
+            "burn_rate_monthly_k":  round(self.burn_rate / 1_000, 2),
+            "founder_experience":   self.founder_experience,
+            "founder_background":   bg,
+            "sector":               self.sector,
+            "milestones_completed": self.milestones_completed,
+            "staff_count":          len(self.staff),
+            "equity_given":         round(self.equity_given, 1),
         }
 
     def summary_dict(self) -> Dict[str, Any]:

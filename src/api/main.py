@@ -502,10 +502,7 @@ async def setup_founder(req: FounderSetupRequest):
 
     # Run ML predictor for initial probability
     try:
-        ml_feats = state.to_ml_features()
-        prob = predictor.predict_success_probability(
-            state.burn_rate, state.revenue, state.founder_experience, state.sector
-        )
+        prob = predictor.predict_with_full_features(state.to_ml_features())
         state.success_probability = prob
     except Exception:
         state.success_probability = 0.5
@@ -533,6 +530,11 @@ async def setup_founder(req: FounderSetupRequest):
 @app.get("/api/game/{game_id}/state")
 def get_game_state(game_id: str):
     state = _get_game(game_id)
+    try:
+        state.success_probability = predictor.predict_with_full_features(state.to_ml_features())
+        game_sessions[game_id] = state
+    except Exception:
+        pass
     return {"game_id": game_id, "state": state.summary_dict()}
 
 
@@ -603,12 +605,22 @@ def end_quarter_endpoint(game_id: str):
 
     # Update ML prediction
     try:
-        prob = predictor.predict_success_probability(
-            state.burn_rate, state.revenue, state.founder_experience, state.sector
-        )
+        prob = predictor.predict_with_full_features(state.to_ml_features())
         state.success_probability = prob
     except Exception:
         pass
+
+    # ML-based game over: investors pull out if success probability stays critically low.
+    # Only checked from Q3 onwards — Q1/Q2 are the bootstrapping phase.
+    completed_quarter = state.current_quarter - 1
+    if (
+        not state.game_over
+        and completed_quarter >= 3
+        and state.success_probability < 0.30
+    ):
+        state.game_over = True
+        state.game_over_reason = "investor_confidence_lost"
+        state.phase = "game_over"
 
     game_sessions[game_id] = state
 

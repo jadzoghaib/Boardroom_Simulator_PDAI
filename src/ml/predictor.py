@@ -1,94 +1,68 @@
 import joblib
 import pandas as pd
-import os
 import logging
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+MODEL_PATH = Path(__file__).parent / "models" / "startup_best_model.pkl"
+
+
 class MarketPredictor:
-    def __init__(self, model_path: str = "src/ml/models/startup_best_model.pkl"):
-        self.model_path = model_path
-        self.model = None
+    def __init__(self):
+        self._pipeline = None
+        self._features = None
         self._load_model()
 
     def _load_model(self):
-        if os.path.exists(self.model_path):
-            self.model = joblib.load(self.model_path)
-            logger.info("Model loaded successfully.")
-        else:
-            logger.warning(f"Model not found at {self.model_path}. Train the model first.")
-
-    def predict_success_probability(
-        self,
-        burn_rate: float,
-        revenue: float,
-        founder_experience: int,
-        sector: str,
-        founder_background: str = "first_time",
-    ) -> float:
-        if not self.model:
-            return 0.5
-
-        features = pd.DataFrame([{
-            'funding_rounds': 1,
-            'founder_experience_years': founder_experience,
-            'team_size': 5,
-            'market_size_billion': 10.0,
-            'product_traction_users': 1000,
-            'burn_rate_million': burn_rate / 1000000.0,
-            'revenue_million': revenue / 1000000.0,
-            'investor_type': 'none',
-            'sector': sector,
-            'founder_background': founder_background or 'first_time'
-        }])
-
-        prob = self.model.predict_proba(features)[0][1]
-        return round(float(prob), 2)
+        if not MODEL_PATH.exists():
+            print(f"[ML] No model found at {MODEL_PATH}. Run: uv run python -m src.ml.train_game_model")
+            return
+        try:
+            artifact = joblib.load(MODEL_PATH)
+            if isinstance(artifact, dict) and "pipeline" in artifact:
+                self._pipeline = artifact["pipeline"]
+                self._features = artifact["features"]
+                print(f"[ML] Model loaded OK. Features: {self._features}")
+            else:
+                print("[ML] Old model format — retraining required. Run: uv run python -m src.ml.train_game_model")
+        except Exception as e:
+            print(f"[ML] Failed to load model: {e}")
 
     def predict_with_full_features(self, ml_features: dict) -> float:
         """
-        Predict using all 10 ML features from GameState.
-        Accepts a dict with keys: funding_rounds, founder_experience_years,
-        team_size, market_size_billion, product_traction_users,
-        burn_rate_million, revenue_million, investor_type, sector, founder_background.
+        Predict success probability from a GameState feature dict.
+        Returns 0.5 if model is not loaded.
         """
-        if not self.model:
+        if self._pipeline is None:
             return 0.5
 
-        # Map founder_background int to string if needed
-        bg = ml_features.get("founder_background", 0)
-        if isinstance(bg, int):
-            bg_map = {0: "first_time", 1: "business", 2: "technical"}
-            bg = bg_map.get(bg, "first_time")
-
-        inv = ml_features.get("investor_type", 0)
-        if isinstance(inv, int):
-            inv_map = {0: "none", 1: "institutional"}
-            inv = inv_map.get(inv, "none")
-
-        features = pd.DataFrame([{
-            'funding_rounds': ml_features.get("funding_rounds", 1),
-            'founder_experience_years': ml_features.get("founder_experience_years", 3),
-            'team_size': ml_features.get("team_size", 5),
-            'market_size_billion': ml_features.get("market_size_billion", 10.0),
-            'product_traction_users': ml_features.get("product_traction_users", 1000),
-            'burn_rate_million': ml_features.get("burn_rate_million", 0.035),
-            'revenue_million': ml_features.get("revenue_million", 0.008),
-            'investor_type': inv,
-            'sector': ml_features.get("sector", "AI"),
-            'founder_background': bg,
-        }])
+        row = {
+            "quarter":             ml_features.get("quarter", 1),
+            "runway_months":       min(float(ml_features.get("runway_months", 6.0)), 36.0),
+            "funding_stage":       ml_features.get("funding_stage", "bootstrap"),
+            "revenue_monthly_k":   ml_features.get("revenue_monthly_k", 8.0),
+            "burn_rate_monthly_k": ml_features.get("burn_rate_monthly_k", 35.0),
+            "founder_experience":  ml_features.get("founder_experience", 3),
+            "founder_background":  ml_features.get("founder_background", "first_time"),
+            "sector":              ml_features.get("sector", "AI"),
+            "milestones_completed": ml_features.get("milestones_completed", 0),
+            "staff_count":         ml_features.get("staff_count", 0),
+            "equity_given":        ml_features.get("equity_given", 0.0),
+        }
 
         try:
-            prob = self.model.predict_proba(features)[0][1]
+            raw = self._pipeline.predict_proba(pd.DataFrame([row]))[0][1]
+            # Compress to [0.12, 0.92] — prevents false certainty in either direction
+            prob = 0.12 + (0.92 - 0.12) * raw
             return round(float(prob), 2)
         except Exception as e:
-            logger.warning(f"Full-feature prediction failed: {e}")
+            logger.warning(f"Prediction failed: {e}")
             return 0.5
 
     def calculate_runway(self, budget: float, burn_rate: float, revenue: float) -> int:
-        """Calculates survival months before bankruptcy."""
+        """Months of cash remaining before bankruptcy."""
         net_burn = burn_rate - revenue
         if net_burn <= 0:
-            return 999 # Infinite runway / Profitable
+            return 999  # profitable
         return int(budget / net_burn)

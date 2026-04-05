@@ -952,6 +952,7 @@ const game = {
 
     const reasonMap = {
       'bankruptcy': { emoji: '💀', title: 'Bankrupt!', desc: 'You ran out of cash. The startup is dead.' },
+      'investor_confidence_lost': { emoji: '📉', title: 'Investors Pulled Out', desc: 'Your ML success score dropped below 30%. Investors lost confidence and withdrew their support.' },
       'all_milestones_completed': { emoji: '🏆', title: 'Victory!', desc: 'You completed all milestones! Incredible.' },
       'time_up_survived': { emoji: '⏰', title: "Time's Up", desc: 'You survived 8 quarters but did not complete all milestones.' },
       'time_up_bankrupt': { emoji: '💀', title: "Time's Up & Broke", desc: 'Game over. Ran out of time and money.' },

@@ -30,6 +30,16 @@ def _get_llm() -> ChatGroq:
     return ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7, api_key=api_key)
 
 
+def _founder_info(state) -> tuple[str, str, str]:
+    """Return (founder_name, founder_background_label, founder_experience_str)."""
+    name = state.classmate.get("name", "the founder")
+    first_name = name.split()[0] if name else "the founder"
+    bg_map = {0: "first-time entrepreneur", 1: "business background", 2: "technical background"}
+    bg = bg_map.get(state.founder_background, "first-time entrepreneur") if isinstance(state.founder_background, int) else str(state.founder_background)
+    exp = f"{state.founder_experience} years"
+    return first_name, bg, exp
+
+
 def _build_event_context(state) -> str:
     """Build a text description of the current pending event for advisor context."""
     if state.pending_event:
@@ -125,12 +135,16 @@ def get_advisor_responses(
     except Exception as e:
         logger.warning(f"Professor RAG failed: {e}")
 
+    founder_name, founder_bg, founder_exp = _founder_info(state)
     professor_system = PROFESSOR_ADVISOR_PROMPT.format(
         professor_name=professor_name,
         professor_domain=state.professor.get("domain", "General"),
         professor_core_ability=state.professor.get("core_ability", ""),
         professor_description=state.professor.get("description", ""),
         professor_rag_context=professor_rag or "No additional background available.",
+        founder_name=founder_name,
+        founder_background=founder_bg,
+        founder_experience=founder_exp,
         quarter=state.current_quarter,
         sector=state.sector,
         cash=state.cash,
@@ -247,12 +261,16 @@ def get_professor_response(state, user_message: str) -> str:
     except Exception as e:
         logger.warning(f"Professor RAG failed: {e}")
 
+    founder_name, founder_bg, founder_exp = _founder_info(state)
     professor_system = PROFESSOR_ADVISOR_PROMPT.format(
         professor_name=professor_name,
         professor_domain=state.professor.get("domain", "General"),
         professor_core_ability=state.professor.get("core_ability", ""),
         professor_description=state.professor.get("description", ""),
         professor_rag_context=professor_rag or "No additional background available.",
+        founder_name=founder_name,
+        founder_background=founder_bg,
+        founder_experience=founder_exp,
         quarter=state.current_quarter,
         sector=state.sector,
         cash=state.cash,
@@ -437,8 +455,13 @@ def get_vc_response(state, user_message: str):
         quarter=state.current_quarter,
         sector=state.sector,
         cash=state.cash,
+        burn_rate=state.burn_rate,
         revenue=state.revenue,
+        runway_months=state.runway_months,
+        valuation=state.valuation,
+        funding_stage=state.funding_stage,
         milestones_completed=state.milestones_completed,
+        success_probability=state.success_probability,
         stats_summary=stats_summary or "No stats yet.",
     )
 
@@ -489,8 +512,10 @@ def get_vc_response(state, user_message: str):
     partner_name = state.professor.get("name", "Professor")
     try:
         partner_context = (
-            f"The VC just said: '{vc_response[:200]}'. "
-            f"The founder said: '{user_message[:200]}'. Add your perspective."
+            f"The founder said: '{user_message[:300]}'. "
+            f"The VC responded: '{vc_response[:300]}'. "
+            "Give your independent assessment. You may agree or disagree with the VC. "
+            "End with a direct question to the founder."
         )
         prof_msgs = [
             SystemMessage(content=partner_system),
