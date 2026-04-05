@@ -11,53 +11,72 @@
       theme: {
         extend: {
           colors: {
-            'game-bg':     '#f1f5f9',
-            'game-panel':  '#ffffff',
-            'game-card':   '#f8fafc',
-            'game-border': '#e2e8f0',
-            'game-accent': '#2563eb',
-            'game-green':  '#16a34a',
-            'game-red':    '#dc2626',
-            'game-yellow': '#ca8a04',
-            'game-purple': '#7c3aed',
-            'game-teal':   '#0d9488',
-            'game-text':   '#0f172a',
-            'game-muted':  '#64748b',
+            'game-bg':     '#F6F6EF',
+            'game-panel':  '#FFFFFF',
+            'game-card':   '#FAFAF7',
+            'game-border': '#E8E3D8',
+            'game-accent': '#FF6600',
+            'game-green':  '#1A7A3F',
+            'game-red':    '#CC2B1C',
+            'game-yellow': '#8B6914',
+            'game-purple': '#CC5200',
+            'game-teal':   '#1A7A3F',
+            'game-text':   '#1A1A1A',
+            'game-muted':  '#828282',
+          },
+          fontFamily: {
+            'sans': ['DM Sans', 'system-ui', 'sans-serif'],
+            'display': ['Sora', 'sans-serif'],
+            'mono': ['JetBrains Mono', 'monospace'],
+          },
+          borderRadius: {
+            'DEFAULT': '0px',
+            'sm':  '0px',
+            'md':  '0px',
+            'lg':  '2px',
+            'xl':  '2px',
+            '2xl': '2px',
+            'full': '9999px',
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-game-bg text-game-text min-h-screen">
+<body class="bg-game-bg text-game-text min-h-screen" style="font-family:'DM Sans',sans-serif;">
 
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- SETUP SCREEN                                           -->
 <!-- ═══════════════════════════════════════════════════════ -->
-<div id="setupScreen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 border border-slate-200">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-        ESADE Entrepreneurs
-      </h1>
-      <p class="text-slate-500 mt-2">8-Quarter Startup Simulation</p>
+<div id="setupScreen" class="min-h-screen flex items-center justify-center p-4" style="background:#F6F6EF;">
+  <div class="max-w-2xl w-full" style="background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; padding:40px 48px; box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+    <div class="mb-8" style="border-bottom:1px solid #E8E3D8; padding-bottom:24px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+        <div style="width:36px; height:36px; background:#FF6600; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="white"/></svg>
+        </div>
+        <h1 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; color:#1A1A1A; letter-spacing:-0.02em;">
+          ESADE Entrepreneurs
+        </h1>
+      </div>
+      <p style="color:#828282; font-size:0.82rem; letter-spacing:0.04em; text-transform:uppercase; font-weight:600; margin-left:48px;">8-Quarter Startup Simulation</p>
     </div>
 
     <!-- Step 1: Classmate -->
     <div id="setupStep1" class="space-y-4">
-      <label class="block text-sm font-semibold text-slate-700">Choose Your Founder</label>
-      <select id="classmateSelect" class="w-full bg-white border border-slate-300 rounded-lg p-3 text-slate-800 focus:border-game-accent focus:outline-none focus:ring-2 focus:ring-blue-100">
+      <label class="block text-xs font-bold text-game-muted uppercase tracking-wider mb-1">Choose Your Founder</label>
+      <select id="classmateSelect" class="w-full bg-white border border-game-border p-3 text-game-text focus:border-game-accent focus:outline-none" style="border-radius:0; font-family:'DM Sans',sans-serif;">
         <option value="">Loading classmates...</option>
       </select>
-      <div id="classmateIntro" class="text-sm text-slate-500 italic min-h-[40px]"></div>
+      <div id="classmateIntro" class="text-xs text-game-muted italic min-h-[36px] mt-1 px-1"></div>
 
-      <label class="block text-sm font-semibold text-slate-700 mt-4">Country</label>
-      <select id="countrySelect" class="w-full bg-white border border-slate-300 rounded-lg p-3 text-slate-800 focus:border-game-accent focus:outline-none focus:ring-2 focus:ring-blue-100">
+      <label class="block text-xs font-bold text-game-muted uppercase tracking-wider mb-1 mt-4">Country</label>
+      <select id="countrySelect" class="w-full bg-white border border-game-border p-3 text-game-text focus:border-game-accent focus:outline-none" style="border-radius:0; font-family:'DM Sans',sans-serif;">
         <option value="">Select a country...</option>
       </select>
 
-      <label class="block text-sm font-semibold text-slate-700 mt-4">Sector</label>
-      <select id="sectorSelect" class="w-full bg-white border border-slate-300 rounded-lg p-3 text-slate-800 focus:border-game-accent focus:outline-none focus:ring-2 focus:ring-blue-100">
+      <label class="block text-xs font-bold text-game-muted uppercase tracking-wider mb-1 mt-4">Sector</label>
+      <select id="sectorSelect" class="w-full bg-white border border-game-border p-3 text-game-text focus:border-game-accent focus:outline-none" style="border-radius:0; font-family:'DM Sans',sans-serif;">
         <option value="AI">AI</option>
         <option value="Fintech">Fintech</option>
         <option value="SaaS">SaaS</option>
@@ -65,27 +84,27 @@
         <option value="E-commerce">E-commerce</option>
       </select>
 
-      <button onclick="game.goToStep2()" class="w-full mt-4 bg-game-accent hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors shadow-sm">
+      <button onclick="game.goToStep2()" class="w-full mt-5 text-white font-bold py-3 transition-all" style="background:#FF6600; border-radius:0; font-family:'DM Sans',sans-serif; font-size:0.9rem; letter-spacing:0.01em; border:none; cursor:pointer;" onmouseover="this.style.background='#CC5200'" onmouseout="this.style.background='#FF6600'">
         Next → Choose Partners
       </button>
     </div>
 
     <!-- Step 2: Partners -->
     <div id="setupStep2" class="space-y-4 hidden">
-      <button onclick="game.goToStep1()" class="text-sm text-slate-500 hover:text-slate-800">← Back</button>
+      <button onclick="game.goToStep1()" class="text-xs font-semibold text-game-muted hover:text-game-accent transition-colors">← Back</button>
 
-      <label class="block text-sm font-semibold text-slate-700">Celebrity Co-Founder</label>
-      <div id="celebrityGrid" class="grid grid-cols-2 gap-3"></div>
+      <label class="block text-xs font-bold text-game-muted uppercase tracking-wider mb-1">Celebrity Co-Founder</label>
+      <div id="celebrityGrid" class="grid grid-cols-2 gap-2"></div>
 
-      <label class="block text-sm font-semibold text-slate-700 mt-4">Professor Advisor</label>
-      <div id="professorGrid" class="grid grid-cols-2 gap-3"></div>
+      <label class="block text-xs font-bold text-game-muted uppercase tracking-wider mb-1 mt-4">Professor Advisor</label>
+      <div id="professorGrid" class="grid grid-cols-2 gap-2"></div>
 
-      <div id="synergyPreview" class="bg-blue-50 rounded-lg p-4 border border-blue-200 text-sm hidden">
-        <div class="font-bold text-game-accent mb-1">Synergy Preview</div>
-        <div id="synergyDetails"></div>
+      <div id="synergyPreview" class="p-4 text-sm hidden" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+        <div class="font-bold text-xs uppercase tracking-wider mb-1" style="color:#CC5200;">Synergy Preview</div>
+        <div id="synergyDetails" style="color:#8B4000; font-size:0.8rem;"></div>
       </div>
 
-      <button onclick="game.startGame()" id="startGameBtn" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50 shadow-md" disabled>
+      <button onclick="game.startGame()" id="startGameBtn" class="w-full mt-5 text-white font-bold py-3 disabled:opacity-40 transition-all" style="background:#FF6600; border-radius:0; font-family:'DM Sans',sans-serif; font-size:0.9rem; border:none; cursor:pointer;" onmouseover="this.style.background='#CC5200'" onmouseout="this.style.background='#FF6600'" disabled>
         🚀 Launch Your Startup
       </button>
     </div>
@@ -98,31 +117,48 @@
 <div id="gameBoard" class="hidden h-screen flex flex-col">
 
   <!-- HEADER BAR -->
-  <header class="bg-white border-b border-slate-200 px-4 py-2 flex items-center justify-between flex-shrink-0 shadow-sm">
-    <div class="flex items-center gap-4">
-      <div class="font-black text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ESADE Entrepreneurs</div>
-      <div id="quarterBadge" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">Q1/8</div>
-      <div id="phaseBadge" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">Events</div>
-      <button onclick="game.openHowToPlay()" class="flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-semibold border border-slate-200 transition-colors">
-        <span>❓</span> How to Play
+  <header style="background:#FF6600; border-bottom:none; padding:0; flex-shrink:0; display:flex; align-items:stretch; box-shadow:0 2px 8px rgba(255,102,0,0.18);">
+    <!-- Orange left brand strip -->
+    <div style="display:flex; align-items:center; gap:12px; padding:8px 16px; background:#CC5200; flex-shrink:0;">
+      <div style="font-family:'Sora',sans-serif; font-size:0.9rem; font-weight:800; color:#fff; letter-spacing:-0.01em; white-space:nowrap;">ESADE Entrepreneurs</div>
+    </div>
+    <!-- Quarter/phase badges -->
+    <div style="display:flex; align-items:center; gap:8px; padding:0 12px; background:#FF6600;">
+      <div id="quarterBadge" style="background:rgba(0,0,0,0.2); color:#fff; padding:3px 10px; font-size:0.72rem; font-weight:700; font-family:'JetBrains Mono',monospace;">Q1/8</div>
+      <div id="phaseBadge" style="background:rgba(255,255,255,0.18); color:#fff; padding:3px 10px; font-size:0.72rem; font-weight:600;">Events</div>
+      <button onclick="game.openHowToPlay()" style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.25); color:#fff; padding:3px 10px; font-size:0.7rem; font-weight:700; cursor:pointer; letter-spacing:0.04em; text-transform:uppercase; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='rgba(0,0,0,0.3)'" onmouseout="this.style.background='rgba(0,0,0,0.15)'">
+        ? How to Play
       </button>
     </div>
-    <div class="flex items-center gap-6 text-sm">
-      <div><span class="text-slate-500">Cash:</span> <span id="headerCash" class="font-bold text-game-green">$300,000</span></div>
-      <div><span class="text-slate-500">Runway:</span> <span id="headerRunway" class="font-bold">12mo</span></div>
-      <div><span class="text-slate-500">Valuation:</span> <span id="headerValuation" class="font-bold text-game-purple">$1M</span></div>
-      <div id="headerMarket" class="flex items-center gap-1"><span class="text-slate-500">Market:</span> <span id="marketBadge" class="font-bold text-slate-700">Stable</span></div>
-      <div class="relative group">
-        <span class="text-slate-500">AP:</span> <span id="headerAP" class="font-bold text-game-yellow">6/6</span>
-        <span class="cursor-help text-slate-400 ml-1 text-xs border border-slate-300 rounded-full w-4 h-4 inline-flex items-center justify-center hover:bg-slate-100">?</span>
-        <div class="absolute right-0 top-6 hidden group-hover:block z-50 bg-white border border-slate-200 rounded-xl shadow-xl p-3 w-64 text-xs text-slate-600">
-          <div class="font-bold text-slate-800 mb-1">Action Points (AP)</div>
+    <!-- Stats right side -->
+    <div style="display:flex; align-items:center; gap:0; margin-left:auto; background:#CC5200;">
+      <div style="display:flex; align-items:center; gap:4px; padding:0 14px; border-left:1px solid rgba(255,255,255,0.15); font-size:0.75rem;">
+        <span style="color:rgba(255,255,255,0.7); font-weight:500;">Cash</span>
+        <span id="headerCash" style="color:#fff; font-weight:700; font-family:'JetBrains Mono',monospace;">$300,000</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:4px; padding:0 14px; border-left:1px solid rgba(255,255,255,0.15); font-size:0.75rem;">
+        <span style="color:rgba(255,255,255,0.7); font-weight:500;">Runway</span>
+        <span id="headerRunway" style="color:#fff; font-weight:700; font-family:'JetBrains Mono',monospace;">12mo</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:4px; padding:0 14px; border-left:1px solid rgba(255,255,255,0.15); font-size:0.75rem;">
+        <span style="color:rgba(255,255,255,0.7); font-weight:500;">Valuation</span>
+        <span id="headerValuation" style="color:#fff; font-weight:700; font-family:'JetBrains Mono',monospace;">$1M</span>
+      </div>
+      <div id="headerMarket" style="display:flex; align-items:center; gap:4px; padding:0 14px; border-left:1px solid rgba(255,255,255,0.15); font-size:0.75rem;">
+        <span style="color:rgba(255,255,255,0.7); font-weight:500;">Market</span>
+        <span id="marketBadge" style="color:#fff; font-weight:700;">Stable</span>
+      </div>
+      <div class="relative group" style="display:flex; align-items:center; gap:4px; padding:0 14px; border-left:1px solid rgba(255,255,255,0.15); font-size:0.75rem; cursor:help;">
+        <span style="color:rgba(255,255,255,0.7); font-weight:500;">AP</span>
+        <span id="headerAP" style="color:#fff; font-weight:700; font-family:'JetBrains Mono',monospace;">6/6</span>
+        <div class="absolute right-0 top-full hidden group-hover:block z-50 bg-white border border-game-border shadow-xl p-3 w-64 text-xs text-game-muted" style="border-top:3px solid #FF6600; margin-top:0;">
+          <div class="font-bold text-game-text mb-2" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">Action Points (AP)</div>
           <div class="space-y-1">
             <div>• <strong>Base:</strong> 5 AP per quarter</div>
             <div>• <strong>+1 AP</strong> per hired executive</div>
             <div>• Each event choice costs 1–3 AP</div>
             <div>• Unused AP is lost at quarter end</div>
-            <div class="text-slate-400 mt-1 italic">More AP = more decisions = more impact</div>
+            <div style="color:#aaa; margin-top:6px; font-style:italic;">More AP = more decisions = more impact</div>
           </div>
         </div>
       </div>
@@ -130,162 +166,187 @@
   </header>
 
   <!-- NEWS TICKER -->
-  <div id="newsTicker" class="bg-blue-600 text-white text-xs py-1 px-4 overflow-hidden flex-shrink-0">
-    <div id="tickerText" class="whitespace-nowrap animate-ticker">Welcome to ESADE Entrepreneurs! Your startup journey begins now...</div>
+  <div id="newsTicker" class="text-white text-xs py-1 px-4 overflow-hidden flex-shrink-0" style="background:#1A1A1A; border-bottom:2px solid #FF6600;">
+    <div id="tickerText" class="whitespace-nowrap animate-ticker" style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:#ccc;">Welcome to ESADE Entrepreneurs! Your startup journey begins now...</div>
   </div>
 
   <!-- MAIN 3-COLUMN GRID -->
-  <div class="flex-1 grid grid-cols-12 gap-3 p-3 overflow-hidden min-h-0">
+  <div class="flex-1 grid grid-cols-12 gap-2 p-2 overflow-hidden min-h-0" style="background:#F6F6EF;">
 
     <!-- LEFT SIDEBAR -->
-    <aside class="col-span-3 flex flex-col gap-3 overflow-y-auto pr-1 min-h-0">
+    <aside class="col-span-3 flex flex-col gap-2 overflow-y-auto pr-1 min-h-0">
       <!-- AP Indicator -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8; border-top:3px solid #FF6600;">
         <div class="flex items-center justify-between mb-2">
-          <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Action Points</h3>
-          <span id="apFraction" class="text-lg font-black text-amber-500">6/6</span>
+          <h3 class="text-xs font-bold uppercase tracking-wider" style="color:#828282; letter-spacing:0.08em;">Action Points</h3>
+          <span id="apFraction" class="font-black" style="font-size:1.1rem; color:#FF6600; font-family:'JetBrains Mono',monospace;">6/6</span>
         </div>
         <div id="apPips" class="flex flex-wrap gap-1.5 mb-2">
           <!-- Pips injected by JS -->
         </div>
-        <div id="apBarTrack" class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-          <div id="apBarFill" class="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full transition-all duration-500" style="width:100%"></div>
+        <div id="apBarTrack" class="w-full overflow-hidden" style="height:4px; background:#E8E3D8;">
+          <div id="apBarFill" class="h-full transition-all duration-500" style="width:100%; background:#FF6600;"></div>
         </div>
-        <p class="text-xs text-slate-400 mt-2">Each event costs 1–3 AP. Unused AP is lost at quarter end. Hire execs to earn bonus AP.</p>
+        <p class="text-xs mt-2" style="color:#aaa; line-height:1.4;">Each event costs 1–3 AP. Unused AP is lost at quarter end. Hire execs for bonus AP.</p>
       </div>
+
       <!-- Financials -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Financials</h3>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between"><span class="text-slate-500">Cash</span><span id="finCash" class="font-bold text-game-green">$300,000</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Burn Rate</span><span id="finBurn" class="font-bold text-game-red">$35,000/mo</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Revenue</span><span id="finRevenue" class="font-bold text-slate-700">$8,000/mo</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Runway</span><span id="finRunway" class="font-bold text-slate-700">12 months</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Valuation</span><span id="finValuation" class="font-bold text-game-purple">$1,000,000</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Stage</span><span id="finStage" class="font-bold text-slate-700">Bootstrap</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Equity Given</span><span id="finEquity" class="font-bold text-slate-700">0%</span></div>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Financials</h3>
+        <div class="space-y-2" style="font-size:0.78rem;">
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Cash</span>
+            <span id="finCash" class="font-bold" style="color:#1A7A3F; font-family:'JetBrains Mono',monospace;">$300,000</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Burn Rate</span>
+            <span id="finBurn" class="font-bold" style="color:#CC2B1C; font-family:'JetBrains Mono',monospace;">$35,000/mo</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Revenue</span>
+            <span id="finRevenue" class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">$8,000/mo</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Runway</span>
+            <span id="finRunway" class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">12 months</span>
+          </div>
+          <div class="flex justify-between items-center" style="border-top:1px solid #E8E3D8; padding-top:6px; margin-top:4px;">
+            <span style="color:#828282;">Valuation</span>
+            <span id="finValuation" class="font-bold" style="color:#FF6600; font-family:'JetBrains Mono',monospace;">$1,000,000</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Stage</span>
+            <span id="finStage" class="font-bold" style="color:#1A1A1A;">Bootstrap</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span style="color:#828282;">Equity Given</span>
+            <span id="finEquity" class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">0%</span>
+          </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Actions</h3>
-        <button onclick="game.openHiringModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm py-2 rounded-lg border border-slate-200 transition-colors">👥 Hire Exec</button>
-        <button onclick="game.openFundingModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm py-2 rounded-lg border border-slate-200 transition-colors">💰 Raise Funding</button>
-        <button onclick="game.skipEvents()" id="skipEventsBtn" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm py-2 rounded-lg border border-slate-200 transition-colors">⏭️ Skip Events</button>
-        <button onclick="game.endQuarter()" id="endQuarterBtn" class="w-full bg-game-accent hover:bg-blue-700 text-white text-sm py-2 rounded-lg font-bold hidden transition-colors">📊 End Quarter</button>
-        <button onclick="game.openBoardReview()" id="boardReviewBtn" class="w-full bg-game-purple hover:bg-purple-700 text-white text-sm py-2 rounded-lg font-bold hidden transition-colors">🏛️ Board Review</button>
-        <!-- AP Explanation -->
-        <div class="text-xs text-slate-500 mt-2 p-2 bg-slate-50 rounded border border-slate-200">
-          <strong class="text-slate-600">AP = Action Points</strong> — your decision budget this quarter.<br>
-          Base 5 AP + 1 per hired exec. Each event costs 1–3 AP. Unused AP is lost at quarter end.
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Actions</h3>
+        <div class="space-y-2">
+          <button onclick="game.openHiringModal()" class="w-full text-sm py-2 transition-colors" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif; cursor:pointer;" onmouseover="this.style.background='#FFF3EB'; this.style.borderColor='#FF6600'; this.style.color='#CC5200';" onmouseout="this.style.background='#FAFAF7'; this.style.borderColor='#E8E3D8'; this.style.color='#1A1A1A';">👥 Hire Exec</button>
+          <button onclick="game.openFundingModal()" class="w-full text-sm py-2 transition-colors" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif; cursor:pointer;" onmouseover="this.style.background='#FFF3EB'; this.style.borderColor='#FF6600'; this.style.color='#CC5200';" onmouseout="this.style.background='#FAFAF7'; this.style.borderColor='#E8E3D8'; this.style.color='#1A1A1A';">💰 Raise Funding</button>
+          <button onclick="game.skipEvents()" id="skipEventsBtn" class="w-full text-sm py-2 transition-colors" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif; cursor:pointer;" onmouseover="this.style.background='#FFF3EB'; this.style.borderColor='#FF6600'; this.style.color='#CC5200';" onmouseout="this.style.background='#FAFAF7'; this.style.borderColor='#E8E3D8'; this.style.color='#1A1A1A';">⏭️ Skip Events</button>
+          <button onclick="game.endQuarter()" id="endQuarterBtn" class="w-full text-sm py-2 font-bold hidden transition-colors" style="background:#FF6600; border:1px solid #CC5200; color:#fff; font-family:'DM Sans',sans-serif; cursor:pointer;" onmouseover="this.style.background='#CC5200';" onmouseout="this.style.background='#FF6600';">📊 End Quarter</button>
+          <button onclick="game.openBoardReview()" id="boardReviewBtn" class="w-full text-sm py-2 font-bold hidden transition-colors" style="background:#1A1A1A; border:1px solid #000; color:#fff; font-family:'DM Sans',sans-serif; cursor:pointer;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1A1A1A';">🏛️ Board Review</button>
+        </div>
+        <div class="text-xs mt-3 p-2" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#828282; line-height:1.4;">
+          <strong style="color:#1A1A1A;">AP = Action Points</strong> — decision budget.<br>
+          Base 5 + 1 per exec. Costs 1–3 per event.
         </div>
       </div>
 
       <!-- Staff Panel -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Staff</h3>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-2" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Staff</h3>
         <div id="staffList" class="space-y-2 text-sm">
-          <div class="text-slate-400 italic text-xs">No executives hired yet</div>
+          <div class="text-xs italic" style="color:#aaa;">No executives hired yet</div>
         </div>
       </div>
 
       <!-- Partner Info -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Partners</h3>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-2" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Partners</h3>
         <div id="partnerInfo" class="text-sm space-y-1">
-          <div class="text-slate-500">Celebrity: <span id="partnerCeleb" class="text-slate-800 font-medium">—</span></div>
-          <div class="text-slate-500">Professor: <span id="partnerProf" class="text-slate-800 font-medium">—</span></div>
+          <div style="color:#828282; font-size:0.78rem;">Celebrity: <span id="partnerCeleb" class="font-semibold" style="color:#1A1A1A;">—</span></div>
+          <div style="color:#828282; font-size:0.78rem;">Professor: <span id="partnerProf" class="font-semibold" style="color:#1A1A1A;">—</span></div>
           <div id="synergyBadges" class="flex flex-wrap gap-1 mt-2"></div>
         </div>
       </div>
     </aside>
 
     <!-- CENTER PANEL -->
-    <main class="col-span-6 flex flex-col gap-3 overflow-y-auto min-h-0">
+    <main class="col-span-6 flex flex-col gap-2 overflow-y-auto min-h-0">
       <!-- Event Cards -->
-      <div id="eventPanel" class="space-y-3">
-        <div id="eventCards" class="space-y-3">
+      <div id="eventPanel" class="space-y-2">
+        <div id="eventCards" class="space-y-2">
           <!-- Event cards injected here -->
         </div>
-        <div id="noEventsMsg" class="hidden bg-white rounded-xl p-8 text-center border border-slate-200 shadow-sm">
+        <div id="noEventsMsg" class="hidden p-8 text-center" style="background:#fff; border:1px solid #E8E3D8; border-left:4px solid #1A7A3F;">
           <div class="text-3xl mb-2">✅</div>
-          <div class="text-slate-500">All events resolved this quarter.</div>
-          <div class="text-sm text-slate-400 mt-1">End the quarter to advance, or hire/raise funds first.</div>
+          <div style="color:#828282; font-size:0.85rem;">All events resolved this quarter.</div>
+          <div class="text-sm mt-1" style="color:#aaa;">End the quarter to advance, or hire/raise funds first.</div>
         </div>
       </div>
 
       <!-- Celebrity Advisor Chat -->
-      <div class="bg-white rounded-xl border border-purple-200 flex flex-col shadow-sm" style="min-height: 200px;">
-        <div class="flex items-center gap-2 px-4 py-2 border-b border-purple-100 bg-purple-50 rounded-t-xl">
+      <div class="flex flex-col" style="background:#fff; border:1px solid #E8E3D8; border-top:3px solid #FF6600; min-height:200px;">
+        <div class="flex items-center gap-2 px-4 py-2" style="border-bottom:1px solid #E8E3D8; background:#FAFAF7;">
           <span id="celebAdvisorIcon" class="text-sm flex-shrink-0">⭐</span>
-          <span class="text-sm font-bold text-purple-700">Celebrity Advisor</span>
-          <span id="celebAdvisorName" class="text-xs text-purple-400 font-medium">—</span>
-          <span id="celebChatSpinner" class="hidden ml-auto text-xs text-purple-400 animate-pulse">Thinking...</span>
+          <span class="text-xs font-bold uppercase tracking-wider" style="color:#FF6600; letter-spacing:0.07em;">Celebrity Advisor</span>
+          <span id="celebAdvisorName" class="text-xs font-medium" style="color:#828282;">—</span>
+          <span id="celebChatSpinner" class="hidden ml-auto text-xs animate-pulse" style="color:#FF6600;">Thinking...</span>
         </div>
         <div id="celebChatMessages" class="flex-1 overflow-y-auto p-3 space-y-2 max-h-44">
-          <div class="text-xs text-slate-400 italic">Ask your celebrity advisor about the current decision...</div>
+          <div class="text-xs italic" style="color:#aaa;">Ask your celebrity advisor about the current decision...</div>
         </div>
-        <div class="flex gap-2 p-3 border-t border-purple-100">
+        <div class="flex gap-2 p-3" style="border-top:1px solid #E8E3D8;">
           <input id="celebChatInput" type="text" placeholder="Message your celebrity advisor..."
-                 class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-100"
+                 class="flex-1 px-3 py-2 text-sm focus:outline-none"
+                 style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif;"
                  onkeypress="if(event.key==='Enter')game.sendCelebrityChat()">
-          <button onclick="game.sendCelebrityChat()" id="celebChatBtn" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-50">Ask</button>
+          <button onclick="game.sendCelebrityChat()" id="celebChatBtn" class="px-4 py-2 text-sm font-bold text-white transition-colors disabled:opacity-50" style="background:#FF6600; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#CC5200'" onmouseout="this.style.background='#FF6600'">Ask</button>
         </div>
       </div>
 
       <!-- Professor Advisor Chat -->
-      <div class="bg-white rounded-xl border border-teal-200 flex flex-col shadow-sm" style="min-height: 200px;">
-        <div class="flex items-center gap-2 px-4 py-2 border-b border-teal-100 bg-teal-50 rounded-t-xl">
+      <div class="flex flex-col" style="background:#fff; border:1px solid #E8E3D8; border-top:3px solid #1A7A3F; min-height:200px;">
+        <div class="flex items-center gap-2 px-4 py-2" style="border-bottom:1px solid #E8E3D8; background:#FAFAF7;">
           <span id="profAdvisorIcon" class="text-sm flex-shrink-0">🎓</span>
-          <span class="text-sm font-bold text-teal-700">Professor Advisor</span>
-          <span id="profAdvisorName" class="text-xs text-teal-400 font-medium">—</span>
-          <span id="profChatSpinner" class="hidden ml-auto text-xs text-teal-400 animate-pulse">Thinking...</span>
+          <span class="text-xs font-bold uppercase tracking-wider" style="color:#1A7A3F; letter-spacing:0.07em;">Professor Advisor</span>
+          <span id="profAdvisorName" class="text-xs font-medium" style="color:#828282;">—</span>
+          <span id="profChatSpinner" class="hidden ml-auto text-xs animate-pulse" style="color:#1A7A3F;">Thinking...</span>
         </div>
         <div id="profChatMessages" class="flex-1 overflow-y-auto p-3 space-y-2 max-h-44">
-          <div class="text-xs text-slate-400 italic">Ask your professor advisor for academic insights...</div>
+          <div class="text-xs italic" style="color:#aaa;">Ask your professor advisor for academic insights...</div>
         </div>
-        <div class="flex gap-2 p-3 border-t border-teal-100">
+        <div class="flex gap-2 p-3" style="border-top:1px solid #E8E3D8;">
           <input id="profChatInput" type="text" placeholder="Message your professor advisor..."
-                 class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                 class="flex-1 px-3 py-2 text-sm focus:outline-none"
+                 style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif;"
                  onkeypress="if(event.key==='Enter')game.sendProfessorChat()">
-          <button onclick="game.sendProfessorChat()" id="profChatBtn" class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-50">Ask</button>
+          <button onclick="game.sendProfessorChat()" id="profChatBtn" class="px-4 py-2 text-sm font-bold text-white transition-colors disabled:opacity-50" style="background:#1A7A3F; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#145C30'" onmouseout="this.style.background='#1A7A3F'">Ask</button>
         </div>
       </div>
     </main>
 
     <!-- RIGHT SIDEBAR -->
-    <aside class="col-span-3 flex flex-col gap-3 overflow-y-auto pl-1 min-h-0">
+    <aside class="col-span-3 flex flex-col gap-2 overflow-y-auto pl-1 min-h-0">
       <!-- 8-Stat Bars -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Stats</h3>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Stats</h3>
         <div id="statBars" class="space-y-2">
           <!-- Stat bars injected here -->
         </div>
       </div>
 
       <!-- Milestone Tracker -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Milestones</h3>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Milestones</h3>
         <div id="milestoneList" class="space-y-2">
           <!-- Milestones injected here -->
         </div>
       </div>
 
       <!-- Rival Scoreboard -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Rivals</h3>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em; border-bottom:1px solid #E8E3D8; padding-bottom:6px;">Rivals</h3>
         <div id="rivalList" class="space-y-2">
           <!-- Rivals injected here -->
         </div>
       </div>
 
       <!-- Success Probability -->
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">ML Prediction</h3>
-        <div class="flex items-center gap-2">
-          <div id="probCircle" class="w-12 h-12 rounded-full border-4 border-green-500 flex items-center justify-center text-sm font-bold text-green-600">50%</div>
-          <div class="text-xs text-slate-400">Success probability based on your current metrics</div>
+      <div class="p-4" style="background:#fff; border:1px solid #E8E3D8; border-left:3px solid #FF6600;">
+        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#828282; letter-spacing:0.08em;">ML Prediction</h3>
+        <div class="flex items-center gap-3">
+          <div id="probCircle" class="flex items-center justify-center text-sm font-bold" style="width:52px; height:52px; border:3px solid #1A7A3F; color:#1A7A3F; font-family:'JetBrains Mono',monospace; flex-shrink:0;">50%</div>
+          <div class="text-xs" style="color:#828282; line-height:1.4;">Success probability based on your current metrics</div>
         </div>
       </div>
     </aside>
@@ -298,35 +359,35 @@
 
 <!-- Quarter Summary Modal -->
 <div id="quarterSummaryModal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 max-h-[85vh] overflow-y-auto">
+  <div class="max-w-lg w-full max-h-[85vh] overflow-y-auto" style="background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.18);">
     <div class="p-6">
-      <h2 id="summaryTitle" class="text-2xl font-black text-slate-800 mb-4">Quarter Summary</h2>
+      <h2 id="summaryTitle" class="font-black mb-4" style="font-family:'Sora',sans-serif; font-size:1.4rem; color:#1A1A1A;">Quarter Summary</h2>
       <div id="summaryContent" class="space-y-4 text-sm"></div>
-      <button onclick="game.closeSummaryModal()" class="w-full mt-6 bg-game-accent hover:bg-blue-700 text-white font-bold py-3 rounded-lg">Continue →</button>
+      <button onclick="game.closeSummaryModal()" class="w-full mt-6 text-white font-bold py-3 transition-colors" style="background:#FF6600; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#CC5200'" onmouseout="this.style.background='#FF6600'">Continue →</button>
     </div>
   </div>
 </div>
 
 <!-- Hiring Modal -->
 <div id="hiringModal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 max-h-[85vh] overflow-y-auto">
+  <div class="max-w-2xl w-full max-h-[85vh] overflow-y-auto" style="background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.18);">
     <div class="p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-black text-slate-800">Hire Executive</h2>
-        <button onclick="game.closeHiringModal()" class="text-slate-400 hover:text-slate-700 text-xl">✕</button>
+      <div class="flex items-center justify-between mb-4" style="border-bottom:1px solid #E8E3D8; padding-bottom:12px;">
+        <h2 class="font-black" style="font-family:'Sora',sans-serif; font-size:1.2rem; color:#1A1A1A;">Hire Executive</h2>
+        <button onclick="game.closeHiringModal()" class="text-xl font-bold transition-colors" style="color:#828282; background:none; border:none; cursor:pointer;" onmouseover="this.style.color='#1A1A1A'" onmouseout="this.style.color='#828282'">✕</button>
       </div>
-      <div id="hiringCandidates" class="space-y-3"></div>
+      <div id="hiringCandidates" class="space-y-2"></div>
     </div>
   </div>
 </div>
 
 <!-- Funding Modal -->
 <div id="fundingModal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200">
+  <div class="max-w-lg w-full" style="background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.18);">
     <div class="p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-black text-slate-800">Raise Funding</h2>
-        <button onclick="game.closeFundingModal()" class="text-slate-400 hover:text-slate-700 text-xl">✕</button>
+      <div class="flex items-center justify-between mb-4" style="border-bottom:1px solid #E8E3D8; padding-bottom:12px;">
+        <h2 class="font-black" style="font-family:'Sora',sans-serif; font-size:1.2rem; color:#1A1A1A;">Raise Funding</h2>
+        <button onclick="game.closeFundingModal()" class="text-xl font-bold transition-colors" style="color:#828282; background:none; border:none; cursor:pointer;" onmouseover="this.style.color='#1A1A1A'" onmouseout="this.style.color='#828282'">✕</button>
       </div>
       <div id="fundingContent" class="space-y-4"></div>
     </div>
@@ -335,15 +396,15 @@
 
 <!-- Game Over Modal -->
 <div id="gameOverModal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200">
+  <div class="max-w-lg w-full" style="background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.18);">
     <div class="p-8 text-center">
       <div id="gameOverEmoji" class="text-6xl mb-4">🎉</div>
-      <h2 id="gameOverTitle" class="text-3xl font-black text-slate-800 mb-2">Game Over</h2>
-      <p id="gameOverReason" class="text-slate-500 mb-4"></p>
-      <div id="gameOverStats" class="text-sm space-y-2 mb-6 text-slate-600"></div>
-      <div class="flex flex-col gap-3">
-        <button onclick="game.showDebrief()" class="bg-game-purple hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">📋 Get Full Debrief</button>
-        <button onclick="location.reload()" class="bg-game-accent hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Play Again</button>
+      <h2 id="gameOverTitle" class="font-black mb-2" style="font-family:'Sora',sans-serif; font-size:2rem; color:#1A1A1A;">Game Over</h2>
+      <p id="gameOverReason" class="mb-4" style="color:#828282; font-size:0.9rem;"></p>
+      <div id="gameOverStats" class="text-sm space-y-2 mb-6" style="color:#1A1A1A; background:#FAFAF7; border:1px solid #E8E3D8; padding:16px; font-family:'JetBrains Mono',monospace; font-size:0.78rem; text-align:left;"></div>
+      <div class="flex flex-col gap-2">
+        <button onclick="game.showDebrief()" class="text-white font-bold py-3 px-8 transition-colors" style="background:#1A1A1A; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1A1A1A'">📋 Get Full Debrief</button>
+        <button onclick="location.reload()" class="text-white font-bold py-3 px-8 transition-colors" style="background:#FF6600; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#CC5200'" onmouseout="this.style.background='#FF6600'">Play Again</button>
       </div>
     </div>
   </div>
@@ -351,72 +412,73 @@
 
 <!-- Board Review Modal -->
 <div id="boardModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl border border-slate-200 flex flex-col" style="max-height: 90vh;">
+  <div class="w-full max-w-2xl flex flex-col" style="max-height:90vh; background:#fff; border:1px solid #E8E3D8; border-top:4px solid #1A1A1A; box-shadow:0 8px 40px rgba(0,0,0,0.22);">
     <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-purple-50 to-slate-50 rounded-t-2xl flex-shrink-0">
+    <div class="flex items-center justify-between px-6 py-4 flex-shrink-0" style="border-bottom:1px solid #E8E3D8; background:#FAFAF7;">
       <div>
-        <h2 id="boardModalTitle" class="text-xl font-black text-slate-800">Board Review</h2>
-        <div class="flex gap-3 mt-1 text-xs text-slate-500">
-          <span>🏦 <span id="boardVCName" class="font-semibold text-red-700">Board VC</span></span>
-          <span>🎓 <span id="boardPartnerName" class="font-semibold text-teal-700">Professor</span></span>
+        <h2 id="boardModalTitle" class="font-black" style="font-family:'Sora',sans-serif; font-size:1.15rem; color:#1A1A1A;">Board Review</h2>
+        <div class="flex gap-3 mt-1 text-xs" style="color:#828282;">
+          <span>🏦 <span id="boardVCName" class="font-semibold" style="color:#CC2B1C;">Board VC</span></span>
+          <span>🎓 <span id="boardPartnerName" class="font-semibold" style="color:#1A7A3F;">Professor</span></span>
         </div>
       </div>
-      <div class="text-xs text-slate-400 italic">Present your case. 3+ exchanges trigger a verdict.</div>
+      <div class="text-xs italic" style="color:#aaa;">Present your case. 3+ exchanges trigger a verdict.</div>
     </div>
 
     <!-- Chat Messages -->
-    <div id="boardChatMessages" class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0" style="min-height: 300px;"></div>
+    <div id="boardChatMessages" class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0" style="min-height:300px;"></div>
 
     <!-- Verdict Area -->
     <div id="boardVerdict" class="hidden mx-4 mb-2"></div>
 
     <!-- Input -->
-    <div class="flex gap-2 p-4 border-t border-slate-200 flex-shrink-0">
+    <div class="flex gap-2 p-4 flex-shrink-0" style="border-top:1px solid #E8E3D8;">
       <input id="boardChatInput" type="text" placeholder="Respond to the board..."
-             class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-100"
+             class="flex-1 px-3 py-2 text-sm focus:outline-none"
+             style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; font-family:'DM Sans',sans-serif;"
              onkeypress="if(event.key==='Enter')game.sendBoardMessage()">
-      <button id="boardSendBtn" onclick="game.sendBoardMessage()" class="bg-game-purple hover:bg-purple-700 px-5 py-2 rounded-lg text-sm font-bold text-white transition-colors disabled:opacity-40">Send</button>
+      <button id="boardSendBtn" onclick="game.sendBoardMessage()" class="px-5 py-2 text-sm font-bold text-white transition-colors disabled:opacity-40" style="background:#1A1A1A; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1A1A1A'">Send</button>
     </div>
   </div>
 </div>
 
 <!-- Debrief Modal -->
 <div id="debriefModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl border border-slate-200 flex flex-col" style="max-height: 90vh;">
+  <div class="w-full max-w-2xl flex flex-col" style="max-height:90vh; background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.22);">
     <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50 rounded-t-2xl flex-shrink-0">
+    <div class="flex items-center justify-between px-6 py-4 flex-shrink-0" style="border-bottom:1px solid #E8E3D8; background:#FAFAF7;">
       <div>
-        <h2 class="text-xl font-black text-slate-800">Startup Post-Mortem</h2>
-        <p class="text-xs text-slate-500 mt-0.5">AI-powered analysis of your 8-quarter journey</p>
+        <h2 class="font-black" style="font-family:'Sora',sans-serif; font-size:1.15rem; color:#1A1A1A;">Startup Post-Mortem</h2>
+        <p class="text-xs mt-0.5" style="color:#828282;">AI-powered analysis of your 8-quarter journey</p>
       </div>
-      <button onclick="game.closeDebrief()" class="text-slate-400 hover:text-slate-700 text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">✕</button>
+      <button onclick="game.closeDebrief()" class="text-xl font-bold w-8 h-8 flex items-center justify-center transition-colors" style="color:#828282; background:none; border:none; cursor:pointer;" onmouseover="this.style.color='#1A1A1A'" onmouseout="this.style.color='#828282'">✕</button>
     </div>
 
     <!-- Content -->
-    <div id="debriefContent" class="flex-1 overflow-y-auto p-6 text-sm text-slate-700 min-h-0 leading-relaxed"></div>
+    <div id="debriefContent" class="flex-1 overflow-y-auto p-6 text-sm min-h-0 leading-relaxed" style="color:#1A1A1A;"></div>
 
     <!-- Footer -->
-    <div class="px-6 py-4 border-t border-slate-200 flex justify-end flex-shrink-0">
-      <button onclick="game.closeDebrief()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-6 rounded-lg transition-colors">Close</button>
+    <div class="px-6 py-4 flex justify-end flex-shrink-0" style="border-top:1px solid #E8E3D8;">
+      <button onclick="game.closeDebrief()" class="font-semibold py-2 px-6 transition-colors" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#1A1A1A; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#E8E3D8'" onmouseout="this.style.background='#FAFAF7'">Close</button>
     </div>
   </div>
 </div>
 
 <!-- How to Play Modal -->
 <div id="howToPlayModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl border border-slate-200 flex flex-col" style="max-height:90vh;">
+  <div class="w-full max-w-2xl flex flex-col" style="max-height:90vh; background:#fff; border:1px solid #E8E3D8; border-top:4px solid #FF6600; box-shadow:0 8px 40px rgba(0,0,0,0.22);">
 
     <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl flex-shrink-0">
+    <div class="flex items-center justify-between px-6 py-4 flex-shrink-0" style="border-bottom:1px solid #E8E3D8; background:#FAFAF7;">
       <div>
-        <h2 class="text-xl font-black text-slate-800">How to Play</h2>
-        <p class="text-xs text-slate-500 mt-0.5">ESADE Entrepreneurs — 8-Quarter Startup Simulation</p>
+        <h2 class="font-black" style="font-family:'Sora',sans-serif; font-size:1.15rem; color:#1A1A1A;">How to Play</h2>
+        <p class="text-xs mt-0.5" style="color:#828282;">ESADE Entrepreneurs — 8-Quarter Startup Simulation</p>
       </div>
-      <button onclick="game.closeHowToPlay()" class="text-slate-400 hover:text-slate-700 text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">✕</button>
+      <button onclick="game.closeHowToPlay()" class="text-xl font-bold w-8 h-8 flex items-center justify-center transition-colors" style="color:#828282; background:none; border:none; cursor:pointer;" onmouseover="this.style.color='#1A1A1A'" onmouseout="this.style.color='#828282'">✕</button>
     </div>
 
     <!-- Tabs -->
-    <div class="flex border-b border-slate-200 flex-shrink-0 overflow-x-auto">
+    <div class="flex flex-shrink-0 overflow-x-auto" style="border-bottom:1px solid #E8E3D8;">
       <button onclick="game.switchHTPTab('overview')"   id="htp-tab-overview"   class="htp-tab htp-tab-active px-4 py-2 text-xs font-semibold whitespace-nowrap">🎯 Overview</button>
       <button onclick="game.switchHTPTab('quarter')"    id="htp-tab-quarter"    class="htp-tab px-4 py-2 text-xs font-semibold whitespace-nowrap">🔄 Quarter Flow</button>
       <button onclick="game.switchHTPTab('ap')"         id="htp-tab-ap"         class="htp-tab px-4 py-2 text-xs font-semibold whitespace-nowrap">⚡ AP System</button>
@@ -426,128 +488,128 @@
     </div>
 
     <!-- Tab Content -->
-    <div class="flex-1 overflow-y-auto p-6 text-sm text-slate-700 space-y-4 min-h-0">
+    <div class="flex-1 overflow-y-auto p-6 text-sm space-y-4 min-h-0" style="color:#1A1A1A;">
 
       <!-- OVERVIEW -->
       <div id="htp-overview" class="htp-panel space-y-4">
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <h3 class="font-black text-blue-800 text-base mb-1">You are the CEO of a startup.</h3>
-          <p class="text-blue-700 text-sm">Survive 8 quarters (2 years), grow your company, beat your rivals, and complete 3 milestones before time runs out.</p>
+        <div class="p-4" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+          <h3 class="font-black text-base mb-1" style="color:#CC5200;">You are the CEO of a startup.</h3>
+          <p class="text-sm" style="color:#8B4000;">Survive 8 quarters (2 years), grow your company, beat your rivals, and complete 3 milestones before time runs out.</p>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="p-3" style="background:#FAFAF7; border:1px solid #E8E3D8;">
             <div class="text-2xl mb-1">📋</div>
-            <div class="font-bold text-slate-800 text-xs mb-1">Decision Events</div>
-            <div class="text-xs text-slate-500">Each quarter you face 2–3 real business dilemmas. Choose wisely — your stats, cash, and reputation are on the line.</div>
+            <div class="font-bold text-xs mb-1" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Decision Events</div>
+            <div class="text-xs" style="color:#828282;">Each quarter you face 2–3 real business dilemmas. Choose wisely — your stats, cash, and reputation are on the line.</div>
           </div>
-          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+          <div class="p-3" style="background:#FAFAF7; border:1px solid #E8E3D8;">
             <div class="text-2xl mb-1">💬</div>
-            <div class="font-bold text-slate-800 text-xs mb-1">Ask Your Advisors</div>
-            <div class="text-xs text-slate-500">Before deciding, chat with your Celebrity co-founder and Professor advisor. They give LLM-powered perspectives.</div>
+            <div class="font-bold text-xs mb-1" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Ask Your Advisors</div>
+            <div class="text-xs" style="color:#828282;">Before deciding, chat with your Celebrity co-founder and Professor advisor. They give LLM-powered perspectives.</div>
           </div>
-          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+          <div class="p-3" style="background:#FAFAF7; border:1px solid #E8E3D8;">
             <div class="text-2xl mb-1">📈</div>
-            <div class="font-bold text-slate-800 text-xs mb-1">8 Stats to Grow</div>
-            <div class="text-xs text-slate-500">Growth · Brand · Product · Tech · Ops · Finance · Innovation · Execution. Events move these stats up or down.</div>
+            <div class="font-bold text-xs mb-1" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">8 Stats to Grow</div>
+            <div class="text-xs" style="color:#828282;">Growth · Brand · Product · Tech · Ops · Finance · Innovation · Execution. Events move these stats up or down.</div>
           </div>
-          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+          <div class="p-3" style="background:#FAFAF7; border:1px solid #E8E3D8;">
             <div class="text-2xl mb-1">🏦</div>
-            <div class="font-bold text-slate-800 text-xs mb-1">Board Reviews</div>
-            <div class="text-xs text-slate-500">Every 2 quarters, your VC board reviews your progress. Impress them → valuation +20%. Disappoint → -10%.</div>
+            <div class="font-bold text-xs mb-1" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Board Reviews</div>
+            <div class="text-xs" style="color:#828282;">Every 2 quarters, your VC board reviews your progress. Impress them → valuation +20%. Disappoint → -10%.</div>
           </div>
         </div>
       </div>
 
       <!-- QUARTER FLOW -->
       <div id="htp-quarter" class="htp-panel hidden space-y-3">
-        <h3 class="font-black text-slate-800">Each quarter follows this flow:</h3>
+        <h3 class="font-black" style="color:#1A1A1A; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em;">Each quarter follows this flow:</h3>
         <div class="space-y-2">
-          <div class="flex gap-3 items-start bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-            <div class="w-7 h-7 rounded-full bg-yellow-400 text-white text-xs font-black flex items-center justify-center flex-shrink-0">1</div>
-            <div><div class="font-bold text-slate-800 text-xs">Events Phase</div><div class="text-xs text-slate-500 mt-0.5">2–3 decision cards appear. Each has 3 choices costing 1–3 AP. You can ask advisors before choosing. Run out of AP → go to step 3.</div></div>
+          <div class="flex gap-3 items-start p-3" style="background:#FFF8E8; border:1px solid #F0DDA0; border-left:3px solid #8B6914;">
+            <div class="w-7 h-7 text-white text-xs font-black flex items-center justify-center flex-shrink-0" style="background:#8B6914;">1</div>
+            <div><div class="font-bold text-xs" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Events Phase</div><div class="text-xs mt-0.5" style="color:#828282;">2–3 decision cards appear. Each has 3 choices costing 1–3 AP. You can ask advisors before choosing. Run out of AP → go to step 3.</div></div>
           </div>
-          <div class="flex gap-3 items-start bg-purple-50 border border-purple-200 rounded-xl p-3">
-            <div class="w-7 h-7 rounded-full bg-purple-500 text-white text-xs font-black flex items-center justify-center flex-shrink-0">2</div>
-            <div><div class="font-bold text-slate-800 text-xs">Hire & Fundraise (Optional)</div><div class="text-xs text-slate-500 mt-0.5">Before ending the quarter, you can hire an exec (adds burn but boosts stats + AP) or raise a funding round (injects cash, dilutes equity).</div></div>
+          <div class="flex gap-3 items-start p-3" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+            <div class="w-7 h-7 text-white text-xs font-black flex items-center justify-center flex-shrink-0" style="background:#FF6600;">2</div>
+            <div><div class="font-bold text-xs" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Hire & Fundraise (Optional)</div><div class="text-xs mt-0.5" style="color:#828282;">Before ending the quarter, you can hire an exec (adds burn but boosts stats + AP) or raise a funding round (injects cash, dilutes equity).</div></div>
           </div>
-          <div class="flex gap-3 items-start bg-blue-50 border border-blue-200 rounded-xl p-3">
-            <div class="w-7 h-7 rounded-full bg-blue-500 text-white text-xs font-black flex items-center justify-center flex-shrink-0">3</div>
-            <div><div class="font-bold text-slate-800 text-xs">End Quarter</div><div class="text-xs text-slate-500 mt-0.5">Click End Quarter. The engine deducts burn, adds revenue, simulates rival moves, shifts the market, and checks milestones. You see a summary.</div></div>
+          <div class="flex gap-3 items-start p-3" style="background:#FAFAF7; border:1px solid #E8E3D8; border-left:3px solid #1A1A1A;">
+            <div class="w-7 h-7 text-white text-xs font-black flex items-center justify-center flex-shrink-0" style="background:#1A1A1A;">3</div>
+            <div><div class="font-bold text-xs" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">End Quarter</div><div class="text-xs mt-0.5" style="color:#828282;">Click End Quarter. The engine deducts burn, adds revenue, simulates rival moves, shifts the market, and checks milestones. You see a summary.</div></div>
           </div>
-          <div class="flex gap-3 items-start bg-red-50 border border-red-200 rounded-xl p-3">
-            <div class="w-7 h-7 rounded-full bg-red-500 text-white text-xs font-black flex items-center justify-center flex-shrink-0">4</div>
-            <div><div class="font-bold text-slate-800 text-xs">Board Review (Q2, Q4, Q6, Q8)</div><div class="text-xs text-slate-500 mt-0.5">Every 2 quarters the VC board reviews you. Have a real conversation — defend your strategy. The verdict changes your valuation.</div></div>
+          <div class="flex gap-3 items-start p-3" style="background:#FDECEA; border:1px solid #FBBFBA; border-left:3px solid #CC2B1C;">
+            <div class="w-7 h-7 text-white text-xs font-black flex items-center justify-center flex-shrink-0" style="background:#CC2B1C;">4</div>
+            <div><div class="font-bold text-xs" style="color:#1A1A1A; text-transform:uppercase; letter-spacing:0.06em;">Board Review (Q2, Q4, Q6, Q8)</div><div class="text-xs mt-0.5" style="color:#828282;">Every 2 quarters the VC board reviews you. Have a real conversation — defend your strategy. The verdict changes your valuation.</div></div>
           </div>
         </div>
-        <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 text-xs text-slate-500">
-          <strong class="text-slate-700">Market Conditions</strong> change each quarter — Boom, Recession, AI Hype, Talent War, etc. They multiply your revenue and burn rate automatically.
+        <div class="p-3 text-xs" style="background:#FAFAF7; border:1px solid #E8E3D8; color:#828282;">
+          <strong style="color:#1A1A1A;">Market Conditions</strong> change each quarter — Boom, Recession, AI Hype, Talent War, etc. They multiply your revenue and burn rate automatically.
         </div>
       </div>
 
       <!-- AP SYSTEM -->
       <div id="htp-ap" class="htp-panel hidden space-y-3">
-        <div class="bg-amber-50 border border-amber-300 rounded-xl p-4">
-          <h3 class="font-black text-amber-800 text-base mb-1">⚡ AP = Action Points</h3>
-          <p class="text-amber-700 text-sm">AP is your <strong>decision budget</strong> each quarter. Think of it as the management attention your team has available.</p>
+        <div class="p-4" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+          <h3 class="font-black text-base mb-1" style="color:#CC5200;">⚡ AP = Action Points</h3>
+          <p class="text-sm" style="color:#8B4000;">AP is your <strong>decision budget</strong> each quarter. Think of it as the management attention your team has available.</p>
         </div>
         <div class="space-y-2">
-          <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span class="text-sm font-semibold text-slate-700">Base AP per quarter</span>
-            <span class="font-black text-amber-600 text-lg">5 AP</span>
+          <div class="flex justify-between items-center p-3" style="background:#FAFAF7; border:1px solid #E8E3D8;">
+            <span class="text-sm font-semibold" style="color:#1A1A1A;">Base AP per quarter</span>
+            <span class="font-black text-lg" style="color:#FF6600; font-family:'JetBrains Mono',monospace;">5 AP</span>
           </div>
-          <div class="flex justify-between items-center p-3 bg-green-50 rounded-xl border border-green-200">
-            <span class="text-sm font-semibold text-slate-700">Bonus per hired exec (CTO/CMO/CFO/COO)</span>
-            <span class="font-black text-green-600 text-lg">+1 AP</span>
+          <div class="flex justify-between items-center p-3" style="background:#E8F5EE; border:1px solid #B3DFC7;">
+            <span class="text-sm font-semibold" style="color:#1A1A1A;">Bonus per hired exec (CTO/CMO/CFO/COO)</span>
+            <span class="font-black text-lg" style="color:#1A7A3F; font-family:'JetBrains Mono',monospace;">+1 AP</span>
           </div>
-          <div class="flex justify-between items-center p-3 bg-red-50 rounded-xl border border-red-200">
-            <span class="text-sm font-semibold text-slate-700">Unused AP at quarter end</span>
-            <span class="font-black text-red-500 text-lg">Lost ❌</span>
-          </div>
-        </div>
-        <div class="rounded-xl border border-slate-200 overflow-hidden">
-          <div class="bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 uppercase tracking-wider">Event Choice Costs</div>
-          <div class="divide-y divide-slate-100">
-            <div class="flex justify-between px-3 py-2 text-xs"><span class="text-slate-600">Low-effort / passive choice</span><span class="font-bold text-slate-800">1 AP</span></div>
-            <div class="flex justify-between px-3 py-2 text-xs"><span class="text-slate-600">Balanced / moderate effort</span><span class="font-bold text-slate-800">2 AP</span></div>
-            <div class="flex justify-between px-3 py-2 text-xs"><span class="text-slate-600">High-investment / bold move</span><span class="font-bold text-slate-800">3 AP</span></div>
-            <div class="flex justify-between px-3 py-2 text-xs"><span class="text-slate-600">Ask Advisors</span><span class="font-bold text-green-600">FREE</span></div>
+          <div class="flex justify-between items-center p-3" style="background:#FDECEA; border:1px solid #FBBFBA;">
+            <span class="text-sm font-semibold" style="color:#1A1A1A;">Unused AP at quarter end</span>
+            <span class="font-black text-lg" style="color:#CC2B1C; font-family:'JetBrains Mono',monospace;">Lost ❌</span>
           </div>
         </div>
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800">
+        <div class="overflow-hidden" style="border:1px solid #E8E3D8;">
+          <div class="px-3 py-2 text-xs font-bold uppercase tracking-wider" style="background:#FAFAF7; color:#828282; border-bottom:1px solid #E8E3D8; letter-spacing:0.08em;">Event Choice Costs</div>
+          <div style="divide-y: #E8E3D8;">
+            <div class="flex justify-between px-3 py-2 text-xs" style="border-bottom:1px solid #F0EDE8;"><span style="color:#828282;">Low-effort / passive choice</span><span class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">1 AP</span></div>
+            <div class="flex justify-between px-3 py-2 text-xs" style="border-bottom:1px solid #F0EDE8;"><span style="color:#828282;">Balanced / moderate effort</span><span class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">2 AP</span></div>
+            <div class="flex justify-between px-3 py-2 text-xs" style="border-bottom:1px solid #F0EDE8;"><span style="color:#828282;">High-investment / bold move</span><span class="font-bold" style="color:#1A1A1A; font-family:'JetBrains Mono',monospace;">3 AP</span></div>
+            <div class="flex justify-between px-3 py-2 text-xs"><span style="color:#828282;">Ask Advisors</span><span class="font-bold" style="color:#1A7A3F; font-family:'JetBrains Mono',monospace;">FREE</span></div>
+          </div>
+        </div>
+        <div class="p-3 text-xs" style="background:#FFF3EB; border:1px solid #FFD4B3; color:#8B4000;">
           <strong>💡 Tip:</strong> Hire all 4 execs to reach 10 AP/quarter — giving you the most decisions. But remember each exec adds to your monthly burn rate.
         </div>
       </div>
 
       <!-- ADVISORS -->
       <div id="htp-advisors" class="htp-panel hidden space-y-3">
-        <div class="space-y-3">
-          <div class="border border-purple-200 bg-purple-50 rounded-xl p-4">
-            <div class="font-black text-purple-800 mb-1">⭐ Celebrity Advisor</div>
-            <div class="text-xs text-purple-700 space-y-1">
+        <div class="space-y-2">
+          <div class="p-4" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+            <div class="font-black mb-1" style="color:#CC5200;">⭐ Celebrity Advisor</div>
+            <div class="text-xs space-y-1" style="color:#8B4000;">
               <p>Your celebrity co-founder gives intuition-driven, bold advice drawn from their real-world domain. They speak from experience, not textbooks.</p>
-              <p class="text-purple-500 italic">Chat with them before choosing an event. Type any question — they'll respond in character based on RAG-retrieved context.</p>
-              <p class="font-semibold text-purple-600">⚠️ Their chat is advisory only — it does NOT affect game stats.</p>
+              <p class="italic" style="color:#aaa;">Chat with them before choosing an event. Type any question — they'll respond in character based on RAG-retrieved context.</p>
+              <p class="font-semibold" style="color:#CC5200;">⚠️ Their chat is advisory only — it does NOT affect game stats.</p>
             </div>
           </div>
-          <div class="border border-teal-200 bg-teal-50 rounded-xl p-4">
-            <div class="font-black text-teal-800 mb-1">🎓 Professor Advisor</div>
-            <div class="text-xs text-teal-700 space-y-1">
+          <div class="p-4" style="background:#E8F5EE; border:1px solid #B3DFC7; border-left:3px solid #1A7A3F;">
+            <div class="font-black mb-1" style="color:#1A7A3F;">🎓 Professor Advisor</div>
+            <div class="text-xs space-y-1" style="color:#145C30;">
               <p>Your ESADE professor gives framework-based, research-backed advice. They reference academic models and strategic principles.</p>
-              <p class="text-teal-500 italic">Chat with them for a more structured, analytical take on the same decision.</p>
-              <p class="font-semibold text-teal-600">⚠️ Their chat is advisory only — it does NOT affect game stats.</p>
+              <p class="italic" style="color:#aaa;">Chat with them for a more structured, analytical take on the same decision.</p>
+              <p class="font-semibold" style="color:#1A7A3F;">⚠️ Their chat is advisory only — it does NOT affect game stats.</p>
             </div>
           </div>
-          <div class="border border-red-200 bg-red-50 rounded-xl p-4">
-            <div class="font-black text-red-800 mb-1">🏦 Board VC (Board Review)</div>
-            <div class="text-xs text-red-700 space-y-1">
+          <div class="p-4" style="background:#FDECEA; border:1px solid #FBBFBA; border-left:3px solid #CC2B1C;">
+            <div class="font-black mb-1" style="color:#CC2B1C;">🏦 Board VC (Board Review)</div>
+            <div class="text-xs space-y-1" style="color:#991B1B;">
               <p>Every 2 quarters, your VC board reviews your startup. They open with an assessment, then you reply back and forth.</p>
               <p>After <strong>3+ exchanges</strong> they issue a verdict:</p>
               <div class="grid grid-cols-3 gap-2 mt-2">
-                <div class="bg-green-100 border border-green-300 rounded-lg p-2 text-center"><div class="text-base">🚀</div><div class="font-bold text-green-700 text-xs">IMPRESSED</div><div class="text-green-600 text-xs">Valuation +20%</div></div>
-                <div class="bg-yellow-100 border border-yellow-300 rounded-lg p-2 text-center"><div class="text-base">🤝</div><div class="font-bold text-yellow-700 text-xs">NEUTRAL</div><div class="text-yellow-600 text-xs">No change</div></div>
-                <div class="bg-red-100 border border-red-300 rounded-lg p-2 text-center"><div class="text-base">⚠️</div><div class="font-bold text-red-700 text-xs">CONCERNED</div><div class="text-red-600 text-xs">Valuation −10%</div></div>
+                <div class="p-2 text-center" style="background:#E8F5EE; border:1px solid #B3DFC7;"><div class="text-base">🚀</div><div class="font-bold text-xs" style="color:#1A7A3F;">IMPRESSED</div><div class="text-xs" style="color:#1A7A3F;">Valuation +20%</div></div>
+                <div class="p-2 text-center" style="background:#FAFAF7; border:1px solid #E8E3D8;"><div class="text-base">🤝</div><div class="font-bold text-xs" style="color:#828282;">NEUTRAL</div><div class="text-xs" style="color:#828282;">No change</div></div>
+                <div class="p-2 text-center" style="background:#FDECEA; border:1px solid #FBBFBA;"><div class="text-base">⚠️</div><div class="font-bold text-xs" style="color:#CC2B1C;">CONCERNED</div><div class="text-xs" style="color:#CC2B1C;">Valuation −10%</div></div>
               </div>
-              <p class="font-semibold text-red-700 mt-2">✅ This DOES affect your game — argue well!</p>
+              <p class="font-semibold mt-2" style="color:#CC2B1C;">✅ This DOES affect your game — argue well!</p>
             </div>
           </div>
         </div>
@@ -555,61 +617,61 @@
 
       <!-- FINANCIALS -->
       <div id="htp-financials" class="htp-panel hidden space-y-3">
-        <div class="rounded-xl border border-slate-200 overflow-hidden text-xs">
-          <div class="bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 uppercase tracking-wider">Key Metrics Explained</div>
-          <div class="divide-y divide-slate-100">
-            <div class="px-3 py-2"><span class="font-bold text-green-700">Cash</span> — money in the bank. Hits zero → game over.</div>
-            <div class="px-3 py-2"><span class="font-bold text-red-600">Burn Rate</span> — monthly spending (salaries, ops). Goes up when you hire execs.</div>
-            <div class="px-3 py-2"><span class="font-bold text-slate-700">Revenue</span> — monthly income. Grows through product events and good decisions.</div>
-            <div class="px-3 py-2"><span class="font-bold text-slate-700">Runway</span> — months until cash runs out at current burn − revenue. Keep it above 6 months.</div>
-            <div class="px-3 py-2"><span class="font-bold text-purple-700">Valuation</span> — your startup's worth. Grows with revenue; affected by board reviews and market conditions.</div>
-            <div class="px-3 py-2"><span class="font-bold text-slate-700">Equity Given</span> — % of company you've sold. Lower is better. Crosses 30% → investor risk zone.</div>
+        <div class="overflow-hidden text-xs" style="border:1px solid #E8E3D8;">
+          <div class="px-3 py-2 text-xs font-bold uppercase tracking-wider" style="background:#FAFAF7; color:#828282; border-bottom:1px solid #E8E3D8; letter-spacing:0.08em;">Key Metrics Explained</div>
+          <div>
+            <div class="px-3 py-2" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A7A3F;">Cash</span> — money in the bank. Hits zero → game over.</div>
+            <div class="px-3 py-2" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#CC2B1C;">Burn Rate</span> — monthly spending (salaries, ops). Goes up when you hire execs.</div>
+            <div class="px-3 py-2" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Revenue</span> — monthly income. Grows through product events and good decisions.</div>
+            <div class="px-3 py-2" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Runway</span> — months until cash runs out at current burn − revenue. Keep it above 6 months.</div>
+            <div class="px-3 py-2" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#FF6600;">Valuation</span> — your startup's worth. Grows with revenue; affected by board reviews and market conditions.</div>
+            <div class="px-3 py-2"><span class="font-bold" style="color:#1A1A1A;">Equity Given</span> — % of company you've sold. Lower is better. Crosses 30% → investor risk zone.</div>
           </div>
         </div>
-        <div class="rounded-xl border border-slate-200 overflow-hidden text-xs">
-          <div class="bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 uppercase tracking-wider">Funding Stages</div>
-          <div class="divide-y divide-slate-100">
-            <div class="px-3 py-2 flex justify-between"><span class="font-bold">Bootstrap</span><span class="text-slate-500">Starting point — no external investors</span></div>
-            <div class="px-3 py-2 flex justify-between"><span class="font-bold">Angels</span><span class="text-slate-500">Small cheques, ~5–8% equity</span></div>
-            <div class="px-3 py-2 flex justify-between"><span class="font-bold">Seed</span><span class="text-slate-500">Bigger round, product-market fit needed</span></div>
-            <div class="px-3 py-2 flex justify-between"><span class="font-bold">Series A</span><span class="text-slate-500">Institutional VC, proven growth</span></div>
-            <div class="px-3 py-2 flex justify-between"><span class="font-bold">Series B</span><span class="text-slate-500">Scale-up capital — final stage in game</span></div>
+        <div class="overflow-hidden text-xs" style="border:1px solid #E8E3D8;">
+          <div class="px-3 py-2 text-xs font-bold uppercase tracking-wider" style="background:#FAFAF7; color:#828282; border-bottom:1px solid #E8E3D8; letter-spacing:0.08em;">Funding Stages</div>
+          <div>
+            <div class="px-3 py-2 flex justify-between" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Bootstrap</span><span style="color:#828282;">Starting point — no external investors</span></div>
+            <div class="px-3 py-2 flex justify-between" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Angels</span><span style="color:#828282;">Small cheques, ~5–8% equity</span></div>
+            <div class="px-3 py-2 flex justify-between" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Seed</span><span style="color:#828282;">Bigger round, product-market fit needed</span></div>
+            <div class="px-3 py-2 flex justify-between" style="border-bottom:1px solid #F0EDE8;"><span class="font-bold" style="color:#1A1A1A;">Series A</span><span style="color:#828282;">Institutional VC, proven growth</span></div>
+            <div class="px-3 py-2 flex justify-between"><span class="font-bold" style="color:#1A1A1A;">Series B</span><span style="color:#828282;">Scale-up capital — final stage in game</span></div>
           </div>
         </div>
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+        <div class="p-3 text-xs" style="background:#FFF3EB; border:1px solid #FFD4B3; color:#8B4000;">
           <strong>💡 Strategy:</strong> Don't raise too early (you'll dilute at a low valuation). Don't raise too late (you'll run out of cash). Watch your runway — raise when you have 6+ months left.
         </div>
       </div>
 
       <!-- WINNING -->
       <div id="htp-winning" class="htp-panel hidden space-y-3">
-        <div class="space-y-3">
-          <div class="bg-green-50 border border-green-300 rounded-xl p-4">
-            <div class="font-black text-green-800 mb-2">🏆 How to Win</div>
-            <div class="text-xs text-green-700 space-y-1">
+        <div class="space-y-2">
+          <div class="p-4" style="background:#E8F5EE; border:1px solid #B3DFC7; border-left:3px solid #1A7A3F;">
+            <div class="font-black mb-2" style="color:#1A7A3F;">🏆 How to Win</div>
+            <div class="text-xs space-y-1" style="color:#145C30;">
               <p>Complete <strong>all 3 sector milestones</strong> by the end of Q8. Each milestone requires your stats to hit certain thresholds.</p>
               <p>You also need to survive — if cash hits 0 at any quarter end, it's game over regardless of stats.</p>
             </div>
           </div>
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div class="font-black text-slate-800 mb-2">🏁 Milestones</div>
-            <div class="text-xs text-slate-600 space-y-1">
+          <div class="p-4" style="background:#FAFAF7; border:1px solid #E8E3D8; border-left:3px solid #1A1A1A;">
+            <div class="font-black mb-2" style="color:#1A1A1A;">🏁 Milestones</div>
+            <div class="text-xs space-y-1" style="color:#828282;">
               <p>3 milestones are set at the start based on your sector (e.g. AI: Model-Market Fit, Enterprise Pipeline, AI Platform Dominance).</p>
               <p>Each requires a combination of high stats (e.g. Tech + Product ≥ 25, or Growth + Brand ≥ 30).</p>
               <p>Check the Milestones panel on the right to track progress.</p>
             </div>
           </div>
-          <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
-            <div class="font-black text-orange-800 mb-2">⚔️ Rivals</div>
-            <div class="text-xs text-orange-700 space-y-1">
+          <div class="p-4" style="background:#FFF3EB; border:1px solid #FFD4B3; border-left:3px solid #FF6600;">
+            <div class="font-black mb-2" style="color:#CC5200;">⚔️ Rivals</div>
+            <div class="text-xs space-y-1" style="color:#8B4000;">
               <p>3 rival startups compete in your sector. They gain 1–3 points per quarter automatically.</p>
               <p>If a rival reaches a milestone before you, you lose the advantage — and potential valuation.</p>
               <p>Watch the Rivals panel to track their momentum (Rising / Steady / Falling).</p>
             </div>
           </div>
-          <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-            <div class="font-black text-red-800 mb-2">💀 Game Over Conditions</div>
-            <div class="text-xs text-red-700 space-y-1">
+          <div class="p-4" style="background:#FDECEA; border:1px solid #FBBFBA; border-left:3px solid #CC2B1C;">
+            <div class="font-black mb-2" style="color:#CC2B1C;">💀 Game Over Conditions</div>
+            <div class="text-xs space-y-1" style="color:#991B1B;">
               <p>• <strong>Cash runs out</strong> at the end of any quarter → Bankruptcy</p>
               <p>• <strong>ML score drops below 30%</strong> from Q3 onwards → Investors pull out</p>
               <p>• <strong>Q8 ends</strong> → final score based on valuation, milestones, and ML probability</p>
@@ -620,12 +682,12 @@
     </div>
 
     <!-- Footer Nav -->
-    <div class="px-6 py-3 border-t border-slate-200 flex justify-between items-center flex-shrink-0">
-      <button id="htpPrevBtn" onclick="game.prevHTPTab()" class="text-xs text-slate-500 hover:text-slate-800 font-semibold disabled:opacity-30 disabled:cursor-not-allowed">← Previous</button>
+    <div class="px-6 py-3 flex justify-between items-center flex-shrink-0" style="border-top:1px solid #E8E3D8;">
+      <button id="htpPrevBtn" onclick="game.prevHTPTab()" class="text-xs font-semibold disabled:opacity-30 disabled:cursor-not-allowed" style="color:#828282; background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='#1A1A1A'" onmouseout="this.style.color='#828282'">← Previous</button>
       <div id="htpDots" class="flex gap-1.5">
         <!-- Dots injected by JS -->
       </div>
-      <button id="htpNextBtn" onclick="game.nextHTPTab()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold">Next →</button>
+      <button id="htpNextBtn" onclick="game.nextHTPTab()" class="text-xs font-semibold" style="color:#FF6600; background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='#CC5200'" onmouseout="this.style.color='#FF6600'">Next →</button>
     </div>
   </div>
 </div>
